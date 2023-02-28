@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+
+/* body::before{
+    content: '';
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-image: url(./assets/book-bg.jpg);
+    background-size: cover;
+    background-position: bottom center;
+    background-attachment: fixed;
+    opacity: 0.9;
+    z-index: -1;
+    height: 100vh;
+} */
+
+a.dropdown-item{
+    margin-right: 4em;
+}
+
+.fa-book-reader{
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
+    margin-top: -1em;
+    margin-right: auto;
+    color: darkgrey;
+}
+
+.ms-auto{
+    margin-right: 7%;
+}
+
+div.changing a{
+    text-decoration: none;
+    color: darkslategray;
+}
+
+div.changing:hover{
+    background-color: #3e8e41;
+}
+
+div.changing a:hover{
+    color: white;
+}
+
+p.card-text a{
+    text-decoration: none;
+    color: darkslategray;
+}
+
+#button-up{
+    width: 2.75em;
+    height: 2.75em;
+    background: #0d6efd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 50%;
+    font-size: 1em;
+    position: fixed;
+    bottom: 2.5em;
+    right: 2.5em;
+    cursor: pointer;
+    border: .3em solid transparent;
+    transition: all 300ms ease;
+    transform: scale(0);
+}
+
+#button-up:hover{
+    transform: scale(1.1);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.logo1{
+    border-radius: 1em;
+    width: 5em;
+}
+
+.change{
+    font-family: 'IM Fell English SC', serif;
+    color: white;
+}
+
+.fonth5{
+    font-family: 'IM Fell English SC', serif;    
+}
+
+.fa-blogger{
+    color: orangered;
+}
+
+.fa-desktop{
+    font-size: 1.7em;
+    color: black;
+}
+
+.card{
+    box-shadow: .1em .1em .5em black;
+}
+
+.noline{
+    text-decoration: none;
+}
+
+.fontsize{
+    font-size: .9em;
+}
+
+/* // X-Small devices (portrait phones, less than 576px)
+// No media query for `xs` since this is the default in Bootstrap */
+
+/* // Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) { 
+    .container-fluid{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1em;
+    }
+ }
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+    .container-fluid{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1em;
+    }
+ }
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+    .container-fluid{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1em;
+    }
+ }
+
+/* // X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+    .container-fluid{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1em;
+    }
+    .dscreen{
+        display: flex;
+        justify-content: center;
+        margin: 0 20rem 0 20rem;
+    }
+ }
+
+/* // XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) { 
+    .container-fluid{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1em;
+    }
+
+    .dscreen{
+        display: flex;
+        justify-content: center;
+       margin: 0 auto;
+    }
+ }
