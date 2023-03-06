@@ -14,23 +14,12 @@
     <title>Bibliotecas Populares de San Juan</title>
     <link rel="icon" href="./assets/icon2.png" type="image/x-icon">
       <script src="https://code.jquery.com/jquery-3.6.2.min.js"></script>
-      <script>
-        $(function() {
-          $('#search-form').submit(function(e) {
-            e.preventDefault();
-            var searchTerm = $('#search-box').val();
-            $.post('/search', {q: searchTerm}, function(data) {
-              $('#search-results').html(data);
-            });
-          });
-        });
-      </script>
 
   </head>
   <body>
       <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid position">
+            <div class="container-fluid">
               <a class="navbar-brand" href="index.html"><img class="logo1" src="./assets/icon.png" alt="LOGO-2" width="100"></a>
               <div class="move">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +31,7 @@
                       <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="nosotros.html">Sobre Nosotros</a>
+                      <a class="nav-link" href="nosotros.html">Biografia</a>
                     </li>
                     <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
