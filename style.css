@@ -129,6 +129,23 @@ p.card-text a{
         grid-template-columns: repeat(2, 1fr);
         gap: 1em;
     }
+
+    div.position{
+        display: flex;
+        flex-direction: row;
+    }
+
+    .position a{
+        order: -1;
+    }
+
+    .position button{
+        order: 3;
+    }
+
+    .position form{
+        order: 1;
+    }
  }
 
 /* // Large devices (desktops, 992px and up) */
@@ -137,6 +154,23 @@ p.card-text a{
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1em;
+    }
+
+    div.position{
+        display: flex;
+        flex-direction: row;
+    }
+
+    .position a{
+        order: -1;
+    }
+
+    .position button{
+        order: 3;
+    }
+
+    .position form{
+        order: 1;
     }
  }
 
@@ -147,11 +181,30 @@ p.card-text a{
         grid-template-columns: repeat(3, 1fr);
         gap: 1em;
     }
+
+    div.position{
+        display: flex;
+        flex-direction: row-reverse;
+    }
+
+    .position a{
+        order: 1;
+    }
+
+    .position div.move{
+        order: 3;
+    }
+
+    .position form{
+        order: 2;
+    }
+
     .dscreen{
         display: flex;
         justify-content: center;
         margin: 0 20rem 0 20rem;
     }
+
  }
 
 /* // XX-Large devices (larger desktops, 1400px and up) */
