@@ -1,0 +1,86 @@
+[
+    {
+      "id": 1,
+      "title": "Actividades en la BP Sarmiento en Jachal",
+      "content": "Escuelas que participan ...",
+      "link": "https://www.ejemplo.com/noticia1",
+      "thumbnail": "https://i.ibb.co/PgsK0x6/bp-sarmiento-jachal.jpg"
+    },
+    {
+      "id": 2,
+      "thumbnail": "imagen2.jpg",
+      "title": "Título de la noticia 2",
+      "content": "Contenido de la noticia 2...",
+      "link": "noticia2.html"
+    },
+    {
+      "id": 3,
+      "thumbnail": "imagen3.jpg",
+      "title": "Título de la noticia 3",
+      "content": "Contenido de la noticia 3...",
+      "link": "noticia3.html"
+    },
+    {
+      "id": 4,
+      "thumbnail": "imagen4.jpg",
+      "title": "Título de la noticia 4",
+      "content": "Contenido de la noticia 4...",
+      "link": "noticia4.html"
+    },
+    {
+      "id": 5,
+      "thumbnail": "imagen5.jpg",
+      "title": "Título de la noticia 5",
+      "content": "Contenido de la noticia 5...",
+      "link": "noticia5.html"
+    },
+    {
+      "id": 6,
+      "thumbnail": "imagen6.jpg",
+      "title": "Título de la noticia 6",
+      "content": "Contenido de la noticia 6...",
+      "link": "noticia6.html"
+    },
+    {
+      "id": 7,
+      "thumbnail": "imagen7.jpg",
+      "title": "Título de la noticia 7",
+      "content": "Contenido de la noticia 7...",
+      "link": "noticia7.html"
+    },
+    {
+      "id": 8,
+      "thumbnail": "imagen8.jpg",
+      "title": "Título de la noticia 8 hola",
+      "content": "Contenido de la noticia 8...",
+      "link": "noticia8.html"
+    },
+    {
+      "id": 9,
+      "thumbnail": "imagen9.jpg",
+      "title": "Título de la noticia 9",
+      "content": "Contenido de la noticia 9...",
+      "link": "noticia9.html"
+    },
+    {
+      "id": 10,
+      "thumbnail": "imagen10.jpg",
+      "title": "Título de la noticia 10",
+      "content": "Contenido de la noticia 10...",
+      "link": "noticia10.html"
+    },
+    {
+      "id": 11,
+      "thumbnail": "imagen11.jpg",
+      "title": "Título de la noticia 11",
+      "content": "Contenido de la noticia 11...",
+      "link": "noticia11.html"
+    },
+    {
+      "id": 12,
+      "thumbnail": "imagen12.jpg",
+      "title": "Título de la noticia 12",
+      "content": "Contenido de la noticia 12...",
+      "link": "noticia12.html"
+    }
+  ]

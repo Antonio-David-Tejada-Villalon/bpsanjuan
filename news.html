@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página de Noticias</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="banner text-center bg-primary text-white py-2">
+      <h1>Bienvenido a nuestro sitio de noticias</h1>
+      <p>Encuentra las últimas noticias aquí</p>
+    </div>
+  </header>
+
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a href="index.html" id="btn-home" class="btn btn-primary btn-block">Inicio</a>
+          <form id="search-form" class="d-flex">
+            <input type="text" placeholder="Buscar noticias..." class="form-control me-2">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+          </form>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+
+    <div id="news-list" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <!-- Las noticias se cargarán aquí -->
+    </div>
+
+    <ul id="pagination" class="pagination justify-content-center"></ul>
+  </div>
+
+  <script src="data.json"></script>
+  <script src="news.js"></script>
+  <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+    -->
+</body>
+</html>
