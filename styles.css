@@ -1,3 +1,11 @@
+/*Centrar Galeria*/
+.carousel{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25%;
+}
+
 /* Estilos para el header y el formulario de búsqueda */
 header {
   background-color: #f0f0f0;
@@ -45,6 +53,12 @@ article {
   margin-top: 20px;
 }
 
+.gallery{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /*Nuevo*/
 
 /* Estilos para el banner */
@@ -66,6 +80,31 @@ article {
 
 .navbar{
   margin: 1rem;
+}
+
+/*Button Up*/
+#button-up{
+  width: 2.75em;
+  height: 2.75em;
+  background: #0d6efd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 50%;
+  font-size: 1em;
+  position: fixed;
+  bottom: 2.5em;
+  right: 2.5em;
+  cursor: pointer;
+  border: .3em solid transparent;
+  transition: all 300ms ease;
+  transform: scale(0);
+}
+
+#button-up:hover{
+  transform: scale(1.1);
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 
