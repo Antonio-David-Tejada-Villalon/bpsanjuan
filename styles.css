@@ -1,9 +1,57 @@
 /*Centrar Galeria*/
-.carousel{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 25%;
+/* // X-Small devices (portrait phones, less than 576px)
+// No media query for `xs` since this is the default in Bootstrap */
+
+/* // Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) { 
+  .carousel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+  .carousel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+  .carousel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+  }
+
+}
+
+/* // X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+  .carousel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+  }
+
+}
+
+/* // XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) { 
+  .carousel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+  }
 }
 
 /* Estilos para el header y el formulario de búsqueda */
@@ -107,5 +155,34 @@ article {
   border-color: rgba(0, 0, 0, 0.1);
 }
 
+/*Estilos Boton Me gusta y No me gusta*/
+.btn-cont{
+  display: flex;
+}
 
+button{
+  width: 5rem;
+  height: 2rem;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  margin-top: 1rem;
+}
 
+button:hover{
+  background-color: #ccc;
+}
+
+button:active{
+  background-color: #eee;
+}
+
+button:nth-child(1){
+  border-radius: 3rem 0 0 3rem;
+  border-right: solid 1px #ccc;
+}
+
+button:nth-child(2){
+  border-radius: 0 3rem 3rem 0;
+  border-left: solid 1px #ccc;
+}

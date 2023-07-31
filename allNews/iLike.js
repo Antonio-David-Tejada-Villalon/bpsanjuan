@@ -1,52 +1,75 @@
-// Función para obtener el valor de una cookie por su nombre
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+/*Likes*/
+const like = document.getElementById('like')
+const countLike = document.getElementById('count-like')
+
+//Dislikes
+const dislike = document.getElementById('dislike')
+const countDislike = document.getElementById('count-dislike')
+
+//Creando evento para hacer click en like
+
+like.addEventListener('click', function(){
+  if (countLike.textContent <= 0) {
+    countLike.textContent++
+    saveLikeToLocal()
+    deleteDislikeToLocal()
+    displayDislikeItem()
+  } else {
+    countLike.textContent--
+    deleteLikeToLocal()
   }
-  
-  // Función para establecer una cookie
-  function setCookie(name, value) {
-    document.cookie = `${name}=${value}; path=/`;
+})
+
+//Mostrar el valor guardado en LocalStorage
+function displayLikeItem(){
+  let likeItem = localStorage.getItem("myLike")
+  countLike.textContent = likeItem
+}
+
+//llamando a la funcion
+displayLikeItem()
+
+//Creando evento para hacer click en dislike
+
+dislike.addEventListener('click', function(){
+  if (countDislike.textContent <= 0) {
+    countDislike.textContent++
+    saveDislikeToLocal()
+    deleteLikeToLocal()
+    displayLikeItem()
+  } else {
+    countDislike.textContent--
+    deleteDislikeToLocal()
   }
-  
-  // Función para obtener los datos de "Me gusta" almacenados en la cookie
-  function getLikes() {
-    const likesCookie = getCookie('likes');
-    return likesCookie ? JSON.parse(likesCookie) : { count: 0, hasLiked: false };
-  }
-  
-  // Función para guardar los datos de "Me gusta" en la cookie
-  function saveLikes(likes) {
-    setCookie('likes', JSON.stringify(likes));
-  }
-  
-  // Función para actualizar el botón de "Me gusta"
-  function updateLikeButton() {
-    const likes = getLikes();
-    const likeButton = document.getElementById('likeButton');
-    const likeCount = document.getElementById('likeCount');
-    likeCount.textContent = likes.count;
-    likeButton.innerHTML = `<i class="bi ${likes.hasLiked ? 'bi-heart-fill' : 'bi-heart'}"></i> <span id="likeCount">${likes.count}</span> Me gusta`;
-  }
-  
-  // Función para manejar el clic en el botón de "Me gusta"
-  function handleLikeButtonClick() {
-    const likes = getLikes();
-    if (likes.hasLiked) {
-      likes.count--;
-      likes.hasLiked = false;
-    } else {
-      likes.count++;
-      likes.hasLiked = true;
-    }
-    saveLikes(likes);
-    updateLikeButton();
-  }
-  
-  // Agregar el evento click al botón de "Me gusta"
-  document.getElementById('likeButton').addEventListener('click', handleLikeButtonClick);
-  
-  // Actualizar el botón de "Me gusta" al cargar la página
-  updateLikeButton();
-  
+})
+
+//Guardando Like en LocalStorage
+function saveLikeToLocal () {
+  localStorage.setItem('myLike', countLike.textContent)
+}
+
+//Eliminando Like en LocalStorage
+function deleteLikeToLocal(){
+  localStorage.removeItem('myLike')
+}
+
+//Guardando Dislike en LocalStorage
+function saveDislikeToLocal () {
+  localStorage.setItem('myDislike', countDislike.textContent)
+}
+
+//Eliminando Disike en LocalStorage
+function deleteDislikeToLocal(){
+  localStorage.removeItem('myDislike')
+}
+
+//Si cambio de Dislike a Like
+
+//Mostrar el valor guardado en LocalStorage
+function displayDislikeItem(){
+  let dislikeItem = localStorage.getItem("myDislike")
+  countDislike.textContent = dislikeItem
+}
+
+//Llamando a la funcion
+displayDislikeItem()
