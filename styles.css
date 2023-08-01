@@ -154,35 +154,3 @@ article {
   transform: scale(1.1);
   border-color: rgba(0, 0, 0, 0.1);
 }
-
-/*Estilos Boton Me gusta y No me gusta*/
-.btn-cont{
-  display: flex;
-}
-
-button{
-  width: 5rem;
-  height: 2rem;
-  border: none;
-  background-color: #eee;
-  cursor: pointer;
-  margin-top: 1rem;
-}
-
-button:hover{
-  background-color: #ccc;
-}
-
-button:active{
-  background-color: #eee;
-}
-
-button:nth-child(1){
-  border-radius: 3rem 0 0 3rem;
-  border-right: solid 1px #ccc;
-}
-
-button:nth-child(2){
-  border-radius: 0 3rem 3rem 0;
-  border-left: solid 1px #ccc;
-}
