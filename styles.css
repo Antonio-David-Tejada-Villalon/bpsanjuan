@@ -154,3 +154,8 @@ article {
   transform: scale(1.1);
   border-color: rgba(0, 0, 0, 0.1);
 }
+
+/*Boton me gusta*/
+.fb-social{
+  margin-top: 1rem;
+}
