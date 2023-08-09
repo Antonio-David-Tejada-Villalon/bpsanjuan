@@ -10,6 +10,12 @@
     align-items: center;
     width: 100%;
   }
+  .adjusting{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 }
 
 /* Medium devices (tablets, 768px and up) */
@@ -20,11 +26,23 @@
     align-items: center;
     width: 100%;
   }
+  .adjusting{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 }
 
 /* // Large devices (desktops, 992px and up) */
 @media (min-width: 992px) { 
   .carousel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+  }
+  .adjusting{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,12 +59,24 @@
     align-items: center;
     width: 50%;
   }
+  .adjusting{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+  }
 
 }
 
 /* // XX-Large devices (larger desktops, 1400px and up) */
 @media (min-width: 1400px) { 
   .carousel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+  }
+  .adjusting{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -158,4 +188,9 @@ article {
 /*Boton me gusta*/
 .fb-social{
   margin-top: 1rem;
+}
+
+.custom-text {
+  text-indent: 20px;
+  text-align: justify;
 }
