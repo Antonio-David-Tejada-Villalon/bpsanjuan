@@ -194,3 +194,7 @@ article {
   text-indent: 20px;
   text-align: justify;
 }
+
+i{
+  color: #ccc;
+}
