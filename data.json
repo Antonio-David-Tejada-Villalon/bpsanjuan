@@ -29,10 +29,10 @@
     },
     {
       "id": 5,
-      "thumbnail": "imagen5.jpg",
-      "title": "Título de la noticia 5",
-      "content": "Contenido de la noticia 5...",
-      "link": "noticia5.html"
+      "title": "Picnic Cultural en Villa Aberastain - Pocito",
+      "content": "¡El Bibliomóvil llegó al departamento de Pocito!...",
+      "link": "allNews/news882023.html",
+      "thumbnail": "https://i.ibb.co/McPyjk4/flyer.jpg"
     },
     {
       "id": 6,
