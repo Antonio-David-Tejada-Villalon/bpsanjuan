@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const itemsPerPage = 5; // Cantidad de noticias por página
+  const itemsPerPage = 6; // Cantidad de noticias por página
   let currentPage = 1; // Página actual
   let newsData = []; // Variable para almacenar los datos de las noticias
 
