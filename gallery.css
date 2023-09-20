@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #6d52da;
+}
+
+.container{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 1.25rem;
+  width: 50rem;
+  height: 31.25rem;
+  background: #6d52da;
+  transition: 0.25s;
+}
+
+.container .box{
+  position: relative;
+  background: var(--img);
+  background-position: center;
+  background-size: cover;
+  transition: 0.25s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: grayscale(0) brightness(1);
+}
+
+.container:hover .box{
+  filter: grayscale(1);
+}
+
+.container .box:hover{
+  filter: grayscale(0) brightness(1);
+}
+
+.container:has(.one:hover){
+  grid-template-columns: 2fr .5fr .5fr .5fr .5fr;  
+}
+
+.container:has(.two:hover){
+  grid-template-columns: .5fr 2fr .5fr .5fr .5fr;  
+}
+
+.container:has(.three:hover){
+  grid-template-columns: .5fr .5fr 2fr .5fr .5fr;  
+}
+
+.container:has(.four:hover){
+  grid-template-columns: .5fr .5fr .5fr 2fr .5fr;  
+}
+
+.container:has(.five:hover){
+  grid-template-columns: .5fr .5fr .5fr .5fr 2fr;  
+}
+
+.container .box::before{
+  content: "";
+  position: absolute;
+  top: -1px;
+  width: 100%;
+  height: calc(100% + 2px);
+  background: linear-gradient(#6d52da, transparent, transparent, transparent, #6d52da);
+}
+
+.container .box:nth-child(even){
+  transform: translateY(2rem);
+}
+
+.container .box:nth-child(odd){
+  transform: translateY(-2rem);
+}
+
+.container .box::after{
+  content: attr(data-text);
+  position: absolute;
+  bottom: 6.25rem;
+  background: #fff;
+  color: #6d52da;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  white-space: nowrap;
+  transition: 0.5s;
+  text-transform: uppercase;
+  letter-spacing: 0.5rem;
+  opacity: 0;
+  transition-delay: 0s;
+  -webkit-box-reflect: below 0.125rem linear-gradient(transparent, #5137bb);
+}
+
+.container .box:hover::after{
+  opacity: 1;
+  bottom: 3.75rem;
+  transition-delay: 0.25s;
+}
