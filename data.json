@@ -1,17 +1,17 @@
 [
     {
       "id": 1,
-      "title": "Leer Memoria - Capital",
-      "content": "23 de Septiembre - Dia de las Bibliotecas Populares ...",
-      "link": "allNews/news9232023.html",
-      "thumbnail": "https://i.ibb.co/xhqW3jC/23-DE-SEPTIEMBRE-DIA-DE-LAS-BIBLIOTECAS.jpg"      
+      "title": "Apertura de Biblioteca de Autores Sanjuaninos",
+      "content": "22 de Septiembre - Biblioteca de Autores Sanjuaninos ...",
+      "link": "allNews/news9222023.html",
+      "thumbnail": "https://i.ibb.co/YNtGYPX/ortada-biblioteca.jpg"      
     },
     {
       "id": 2,
-      "title": "Actividades en la BPs en el Parque de Mayo",
-      "content": "Recreacion ...",
-      "link": "allNews/news7152023.html",
-      "thumbnail": "https://drive.google.com/uc?export=view&id=1thyBbPiA_gZk9OhNbMTW42ZOjUQRpjIV"
+      "title": "Leer Memoria - Capital",
+      "content": "23 de Septiembre - Dia de las Bibliotecas Populares ...",
+      "link": "allNews/news9232023.html",
+      "thumbnail": "https://i.ibb.co/xhqW3jC/23-DE-SEPTIEMBRE-DIA-DE-LAS-BIBLIOTECAS.jpg"
     },
     {
       "id": 3,
@@ -43,10 +43,10 @@
     },
     {
       "id": 7,
-      "thumbnail": "imagen7.jpg",
-      "title": "Título de la noticia 7",
-      "content": "Contenido de la noticia 7...",
-      "link": "noticia7.html"
+      "title": "Actividades en la BPs en el Parque de Mayo",
+      "content": "Recreacion ...",
+      "link": "allNews/news7152023.html",
+      "thumbnail": "https://drive.google.com/uc?export=view&id=1thyBbPiA_gZk9OhNbMTW42ZOjUQRpjIV"
     },
     {
       "id": 8,
