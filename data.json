@@ -47,40 +47,5 @@
       "content": "Recreacion ...",
       "link": "allNews/news7152023.html",
       "thumbnail": "https://drive.google.com/uc?export=view&id=1thyBbPiA_gZk9OhNbMTW42ZOjUQRpjIV"
-    },
-    {
-      "id": 8,
-      "thumbnail": "imagen8.jpg",
-      "title": "Título de la noticia 8 hola",
-      "content": "Contenido de la noticia 8...",
-      "link": "noticia8.html"
-    },
-    {
-      "id": 9,
-      "thumbnail": "imagen9.jpg",
-      "title": "Título de la noticia 9",
-      "content": "Contenido de la noticia 9...",
-      "link": "noticia9.html"
-    },
-    {
-      "id": 10,
-      "thumbnail": "imagen10.jpg",
-      "title": "Título de la noticia 10",
-      "content": "Contenido de la noticia 10...",
-      "link": "noticia10.html"
-    },
-    {
-      "id": 11,
-      "thumbnail": "imagen11.jpg",
-      "title": "Título de la noticia 11",
-      "content": "Contenido de la noticia 11...",
-      "link": "noticia11.html"
-    },
-    {
-      "id": 12,
-      "thumbnail": "imagen12.jpg",
-      "title": "Título de la noticia 12",
-      "content": "Contenido de la noticia 12...",
-      "link": "noticia12.html"
     }
   ]
