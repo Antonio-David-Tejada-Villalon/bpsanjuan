@@ -109,6 +109,13 @@ p.card-text a{
     font-size: .9em;
 }
 
+iframe{
+    width: 3000px;
+    height: 1000px;
+    /*Sólo para que se vea, ya que la dirección al parecer está mal*/
+    border: 5px solid green;
+  }
+
 /* // X-Small devices (portrait phones, less than 576px)
 // No media query for `xs` since this is the default in Bootstrap */
 
