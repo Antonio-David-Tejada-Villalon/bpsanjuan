@@ -1,0 +1,34 @@
+/* Estilo de la imagen agrandada */
+.enlarged-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Estilo de la imagen dentro del div de imagen agrandada */
+.enlarged-image img {
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Mostrar la imagen agrandada cuando la clase "enlarged" está presente */
+.enlarged-image.active {
+    opacity: 1;
+}
+
+/* Estilo cuando la imagen se hace más grande */
+.card img.enlarged {
+    transform: scale(1.2);
+}
+
