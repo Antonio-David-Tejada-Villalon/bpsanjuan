@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="dates.css">
+    <title>Cumpleaños</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <div id="cumpleanosBanner" class="alert alert-success d-none">
+            <p id="cumpleanosMensaje"></p>
+        </div>
+    </div>
+
+  <!-- Modal para mostrar información sobre cumpleaños -->
+  <div class="modal fade" id="cumpleModal" tabindex="-1" aria-labelledby="cumpleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cumpleModalLabel">¡Cumpleaños!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="cumpleModalBody">
+          <!-- Aquí se mostrará la información del cumpleaños -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+    <!-- Bootstrap JS y dependencias de Popper y jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="dates.js"></script>
+</body>
+</html>

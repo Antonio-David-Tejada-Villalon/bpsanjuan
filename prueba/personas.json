@@ -1,0 +1,27 @@
+[
+    {
+      "nombre": "John Doe",
+      "fechaNacimiento": "10-06-1990"
+    },
+    {
+      "nombre": "Jane Smith",
+      "fechaNacimiento": "10-07-1985"
+    },
+    {
+      "nombre": "Bob Johnson",
+      "fechaNacimiento": "10-06-1988"
+    },
+    {
+      "nombre": "Alice Brown",
+      "fechaNacimiento": "10-05-1992"
+    },
+    {
+      "nombre": "Charlie Davis",
+      "fechaNacimiento": "10-12-1975"
+    },
+    {
+      "nombre": "Eva White",
+      "fechaNacimiento": "10-25-1980"
+    }
+  ]
+  
