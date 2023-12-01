@@ -61,5 +61,12 @@
       "content": "Acto de entrega de Digesto Jurídico ...",
       "link": "allNews/news11162023.html",
       "thumbnail": "https://digestosanjuan.gob.ar/img/logo-digesto.png"
+    },
+    {
+      "id": 10,
+      "title": "Bibliotecas de la Memoria",
+      "content": "Reflexiones de la Memoria ...",
+      "link": "allNews/11162023-BM.html",
+      "thumbnail": "https://i.ibb.co/5RJhZTK/biblioteca-de-la-memoria.jpg"
     }
   ]

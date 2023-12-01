@@ -199,4 +199,11 @@ i{
   color: #ccc;
 }
 
+.custom-quote{
+  color: black;
+  font-weight: bolder;
+  font-style: italic;
+  text-indent: 1rem;
+}
+
 /*Estilos de galeria*/
