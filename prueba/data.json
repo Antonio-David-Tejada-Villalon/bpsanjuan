@@ -1,0 +1,23 @@
+[
+    {
+      "nombre": "Juan",
+      "fechaNacimiento": "1990-01-15"
+    },
+    {
+      "nombre": "María",
+      "fechaNacimiento": "1985-01-05"
+    },
+    {
+      "nombre": "Carlos",
+      "fechaNacimiento": "1992-01-25"
+    },
+    {
+      "nombre": "Ana",
+      "fechaNacimiento": "1988-01-10"
+    },
+    {
+      "nombre": "Sandra",
+      "fechaNacimiento": "1988-01-02"
+    }
+  ]
+  
