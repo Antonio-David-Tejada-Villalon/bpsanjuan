@@ -1,0 +1,202 @@
+[
+    {
+      "title": "El señor de los anillos: La comunidad del anillo",
+      "author": "J.R.R. Tolkien",
+      "editorial": "Minotauro",
+      "price": 25.99,
+      "isbn": "978-84-450-0001-2",
+      "dimensions": "15x23 cm",
+      "pages": 423,
+      "code": "B001"
+    },
+    {
+      "title": "El señor de los anillos: Las dos torres",
+      "author": "J.R.R. Tolkien",
+      "editorial": "Minotauro",
+      "price": 24.99,
+      "isbn": "978-84-450-0002-9",
+      "dimensions": "15x23 cm",
+      "pages": 352,
+      "code": "B002"
+    },
+    {
+      "title": "El señor de los anillos: El retorno del rey",
+      "author": "J.R.R. Tolkien",
+      "editorial": "Minotauro",
+      "price": 26.99,
+      "isbn": "978-84-450-0003-6",
+      "dimensions": "15x23 cm",
+      "pages": 416,
+      "code": "B003"
+    },
+    {
+      "title": "El hobbit",
+      "author": "J.R.R. Tolkien",
+      "editorial": "Minotauro",
+      "price": 18.99,
+      "isbn": "978-84-450-0004-3",
+      "dimensions": "15x23 cm",
+      "pages": 320,
+      "code": "B004"
+    },
+    {
+      "title": "Cien años de soledad",
+      "author": "Gabriel García Márquez",
+      "editorial": "Debolsillo",
+      "price": 18.50,
+      "isbn": "978-84-9998-456-7",
+      "dimensions": "14x21 cm",
+      "pages": 416,
+      "code": "B005"
+    },
+    {
+      "title": "El amor en los tiempos del cólera",
+      "author": "Gabriel García Márquez",
+      "editorial": "Debolsillo",
+      "price": 16.75,
+      "isbn": "978-84-9998-457-4",
+      "dimensions": "14x21 cm",
+      "pages": 368,
+      "code": "B006"
+    },
+    {
+      "title": "Crónica de una muerte anunciada",
+      "author": "Gabriel García Márquez",
+      "editorial": "Debolsillo",
+      "price": 12.50,
+      "isbn": "978-84-9998-458-1",
+      "dimensions": "14x21 cm",
+      "pages": 128,
+      "code": "B007"
+    },
+    {
+      "title": "1984",
+      "author": "George Orwell",
+      "editorial": "Seix Barral",
+      "price": 12.99,
+      "isbn": "978-84-322-1984-5",
+      "dimensions": "13x20 cm",
+      "pages": 328,
+      "code": "B008"
+    },
+    {
+      "title": "Rebelión en la granja",
+      "author": "George Orwell",
+      "editorial": "Seix Barral",
+      "price": 9.99,
+      "isbn": "978-84-322-1985-2",
+      "dimensions": "13x20 cm",
+      "pages": 128,
+      "code": "B009"
+    },
+    {
+      "title": "Matar a un ruiseñor",
+      "author": "Harper Lee",
+      "editorial": "Planeta",
+      "price": 15.75,
+      "isbn": "978-84-08-13076-1",
+      "dimensions": "15x23 cm",
+      "pages": 320,
+      "code": "B010"
+    },
+    {
+      "title": "To Kill a Mockingbird (Edición original en inglés)",
+      "author": "Harper Lee",
+      "editorial": "HarperCollins",
+      "price": 14.99,
+      "isbn": "978-0-06-112008-4",
+      "dimensions": "14x21 cm",
+      "pages": 320,
+      "code": "B011"
+    },
+    {
+      "title": "Don Quijote de la Mancha",
+      "author": "Miguel de Cervantes",
+      "editorial": "Alianza Editorial",
+      "price": 22.50,
+      "isbn": "978-84-206-1659-8",
+      "dimensions": "14x21 cm",
+      "pages": 980,
+      "code": "B012"
+    },
+    {
+      "title": "Viaje al centro de la Tierra",
+      "author": "Julio Verne",
+      "editorial": "Salamandra",
+      "price": 11.99,
+      "isbn": "978-84-9838-123-7",
+      "dimensions": "14x21 cm",
+      "pages": 288,
+      "code": "B013"
+    },
+    {
+      "title": "Veinte mil leguas de viaje submarino",
+      "author": "Julio Verne",
+      "editorial": "Salamandra",
+      "price": 12.99,
+      "isbn": "978-84-9838-124-4",
+      "dimensions": "14x21 cm",
+      "pages": 352,
+      "code": "B014"
+    },
+    {
+      "title": "La isla misteriosa",
+      "author": "Julio Verne",
+      "editorial": "Salamandra",
+      "price": 13.50,
+      "isbn": "978-84-9838-125-1",
+      "dimensions": "14x21 cm",
+      "pages": 384,
+      "code": "B015"
+    },
+    {
+      "title": "Crimen y castigo",
+      "author": "Fiódor Dostoyevski",
+      "editorial": "Tusquets Editores",
+      "price": 16.99,
+      "isbn": "978-84-9066-417-7",
+      "dimensions": "14x21 cm",
+      "pages": 608,
+      "code": "B016"
+    },
+    {
+      "title": "Los hermanos Karamazov",
+      "author": "Fiódor Dostoyevski",
+      "editorial": "Tusquets Editores",
+      "price": 24.99,
+      "isbn": "978-84-9066-418-4",
+      "dimensions": "15x23 cm",
+      "pages": 816,
+      "code": "B017"
+    },
+    {
+      "title": "Ulises",
+      "author": "James Joyce",
+      "editorial": "Lumen",
+      "price": 32.99,
+      "isbn": "978-84-264-1578-3",
+      "dimensions": "15x23 cm",
+      "pages": 1104,
+      "code": "B018"
+    },
+    {
+      "title": "Dublineses",
+      "author": "James Joyce",
+      "editorial": "Lumen",
+      "price": 14.99,
+      "isbn": "978-84-264-1579-0",
+      "dimensions": "14x21 cm",
+      "pages": 256,
+      "code": "B019"
+    },
+    {
+      "title": "El retrato de Dorian Gray",
+      "author": "Oscar Wilde",
+      "editorial": "Salamandra",
+      "price": 12.99,
+      "isbn": "978-84-9838-375-3",
+      "dimensions": "14x21 cm",
+      "pages": 304,
+      "code": "B020"
+    }
+  ]
