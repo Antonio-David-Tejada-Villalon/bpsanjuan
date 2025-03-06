@@ -1,76 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    /* Estilos adicionales */
-    .suggestions {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      background: #fff;
-      border: 1px solid #ccc;
-      max-height: 200px; /* Altura máxima para las sugerencias */
-      overflow-y: auto;
-      position: absolute;
-      width: auto;
-      z-index: 10;
-    }
-    .suggestions li {
-      padding: 10px;
-      cursor: pointer;
-    }
-    .suggestions li:hover {
-      background-color: #f0f0f0;
-    }
-    .book-details {
-      margin-top: 20px;
-    }
-  
-    /* Responsive design */
-    @media (max-width: 768px) {
-      /* Ajuste para el campo de búsqueda */
-      .form-control {
-        font-size: 16px !important; /* Aumenta el tamaño del texto */
-        height: 40px !important; /* Aumenta la altura del campo */
-        padding: 8px 12px; /* Ajusta el espacio interior */
-      }
-  
-      /* Ajuste para el botón */
-      .btn-primary {
-        width: 100%; /* Botón ocupa toda la anchura */
-        margin-top: 10px; /* Espaciado entre input y botón */
-        font-size: 16px; /* Aumenta el tamaño del texto del botón */
-        height: 40px; /* Alinea con la altura del campo de búsqueda */
-      }
-  
-      /* Ajuste para la lista de resultados */
-      .list-group-item {
-        font-size: 14px; /* Ajusta el tamaño del texto de los resultados */
-        padding: 10px 15px; /* Ajusta el espacio interior */
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos adicionales */
+        .suggestions {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        }
+        .suggestions li {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestions li:hover {
+            background-color: #f0f0f0;
+        }
+        .book-details {
+            margin-top: 20px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            .btn-primary {
+                width: 100%;
+                margin-top: 10px;
+                font-size: 16px;
+                height: 40px;
+            }
+            .list-group-item {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container mt-5">
-    <h1 class="text-center mb-4">Biblioteca</h1>
-    <div class="input-group mb-3">
-      <input type="text" id="searchInput" class="form-control" placeholder="Buscar libro..." aria-label="Buscar libro" aria-describedby="button-addon2">
-      <button class="btn btn-primary" id="searchButton" type="button" id="button-addon2">Buscar</button>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Biblioteca</h1>
+        <div class="input-group mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar libro..." aria-label="Buscar libro">
+            <button class="btn btn-primary" id="searchButton" type="button">Buscar</button>
+        </div>
+        <ul id="suggestions" class="suggestions"></ul>
+        <h3>Resultados:</h3>
+        <ul id="bookList" class="list-group"></ul>
+        <div id="bookDetails" class="book-details"></div>
     </div>
-    <ul id="suggestions" class="suggestions"></ul>
-    <h3>Resultados:</h3>
-    <ul id="bookList" class="list-group"></ul>
-    <div id="bookDetails" class="book-details"></div>
-  </div>
 
-  <!-- Bootstrap JS (Opcional) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
