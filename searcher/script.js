@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
   fetch('data.json')
       .then(response => response.json())
       .then(data => {
-          const books = data.filter(book => book.title.trim() !== ""); // Eliminar libros sin título
+          // Filtrar libros sin título vacío
+          const books = data.filter(book => book.title.trim() !== "");
 
           const searchInput = document.getElementById('searchInput');
           const searchButton = document.getElementById('searchButton');
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
               filtered.forEach(book => {
                   const li = document.createElement('li');
-                  li.textContent = `${book.title} - ${book.author}`;
+                  li.textContent = `${book.title} - ${book.author} (${book.editorial})`;
                   li.addEventListener('click', () => {
                       searchInput.value = book.title;
                       searchBooks(book.title);
@@ -58,24 +59,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
           // Mostrar detalles del libro
           function showDetails(book) {
-              const price = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(book.price);
+              const formattedPrice = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(book.price);
               bookDetails.innerHTML = `
                   <div class="card mb-3">
                       <div class="row g-0">
-                      <div class="col-md-8">
+                          <div class="col-md-4">
+                              <img src="${book.image}" class="img-fluid rounded-start" alt="${book.title}">
+                          </div>
+                          <div class="col-md-8">
                               <div class="card-body">
                                   <h5 class="card-title">${book.title}</h5>
                                   <p class="card-text"><strong>Autor:</strong> ${book.author}</p>
                                   <p class="card-text"><strong>Editorial:</strong> ${book.editorial}</p>
-                                  <p class="card-text"><strong>Precio:</strong> ${price}</p>
+                                  <p class="card-text"><strong>Precio:</strong> ${formattedPrice}</p>
                                   <p class="card-text"><strong>ISBN:</strong> ${book.isbn}</p>
                                   <p class="card-text"><strong>Dimensiones:</strong> ${book.dimensions}</p>
                                   <p class="card-text"><strong>Páginas:</strong> ${book.pages}</p>
                                   <p class="card-text"><strong>Código:</strong> ${book.code}</p>
                               </div>
-                          </div>
-                          <div class="col-md-4">
-                              <img src="${book.image}" class="img-fluid rounded-start" alt="${book.title}">
                           </div>
                       </div>
                   </div>
