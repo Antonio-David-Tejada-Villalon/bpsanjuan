@@ -103,7 +103,7 @@
     "author": "Cardó, Raúl",
     "editorial": "El Autor",
     "price": 15000.00,
-    "image": "https://img.freepik.com/vector-premium/error-404-pagina-no-encontrada-icono-concepto-vectorial-sitio-web-internet-inactivo-diseno-plano-simple_570429-4170.jpg",
+    "image": "https://i.ibb.co/8Dt6bQC5/ARROYOS-P-RPURAS-RA-L-CARD.jpg",
     "isbn": "979-8328-9163-94",
     "dimensions": "20x14",
     "pages": 105,
@@ -261,6 +261,72 @@
     "isbn": "978-987-8264-15-8",
     "dimensions": "20x14",
     "pages": 124,
+    "code": "A861"
+  },
+  {
+    "title": "Más que un yo",
+    "author": "Domínguez, Reyna María",
+    "editorial": "Libros de Tierra Firme",
+    "price": 5000.00,
+    "image": "https://i.ibb.co/3yk5ZwXm/L-grimas-de-tinta-poes-a-Noll-n-Ana-Paula-Abdulah.jpg",
+    "isbn": "987-540-017-3",
+    "dimensions": "20x14",
+    "pages": 46,
+    "code": "A861"
+  },
+  {
+    "title": "Envivir",
+    "author": "Domínguez, Reyna María",
+    "editorial": "Vinciguerra",
+    "price": 3000.00,
+    "image": "https://i.ibb.co/s26FFJT/Envivir-Dominguez-Reyna.png",
+    "isbn": "978-950-843-738-9",
+    "dimensions": "18x15",
+    "pages": 32,
+    "code": "A861"
+  },
+  {
+    "title": "Cuando el amor muere lento",
+    "author": "Cortez, Milagros",
+    "editorial": "Arlion",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/VcT3fvGJ/Cuando-el-amor-muere-lento-Yumara-Arlion.jpg",
+    "isbn": "978-631-00-4467-5",
+    "dimensions": "18x13",
+    "pages": 60,
+    "code": "158.1"
+  },
+  {
+    "title": "Anotaciones",
+    "author": "Domínguez, Reyna María",
+    "editorial": "Del Dock",
+    "price": 18000.00,
+    "image": "https://i.ibb.co/rRzDJKzp/Anotaciones-Reyna-Dominguez-DOCK.jpg",
+    "isbn": "978-987-559-462-3",
+    "dimensions": "20x14",
+    "pages": 184,
+    "code": "A861"
+  },
+  {
+    "title": "Suspiros de un aspirante",
+    "author": "Las Peñas, Tomás Pablo",
+    "editorial": "El Autor",
+    "price": 8000.00,
+    "image": "https://i.ibb.co/dw8f2CC0/Suspiros-de-un-aspirante-Tom-s-Pablo-Las-Pe-as-El-Vi-atero.jpg",
+    "isbn": "978-987-88-9452-2",
+    "dimensions": "21x14",
+    "pages": 54,
+    "code": "A861"
+  },
+  {
+    "title": "Compilación: San Juan escribe 2023. Poesía",
+    "author": "Las Peñas, Tomás Pablo",
+    "editorial": "Fondo Editorial Cámara de Diputados de San Juan",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/FbV4KChb/Compilaci-n-San-Juan-Escribe-Poes-a-T-Las-Pe-as-y-T-Signorato-C-mara-de-Diputados-San-Juan.jpg",
+    "isbn": "978-631-90341-0-3",
+    "dimensions": "21x15",
+    "pages": 103,
     "code": "A861"
   }
 ]
