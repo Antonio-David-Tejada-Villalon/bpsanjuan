@@ -702,5 +702,60 @@
     "dimensions": "22x15",
     "pages": 64,
     "code": "A861"
+  },
+  {
+    "title": "Otros territorios posibles",
+    "author": "Scelta, Marinés",
+    "editorial": "elandamio",
+    "price": 9000.00,
+    "image": "https://i.ibb.co/99y68LLj/Otros-territorios-posibles-Scelta-Marin-s-Elandamio.jpg",
+    "isbn": "978-987-46641-02-3",
+    "dimensions": "19x13",
+    "pages": 76,
+    "code": "A861"
+  },
+  {
+    "title": "Un ojo aplastado",
+    "author": "Gómez Oviedo, Lorenzo",
+    "editorial": "elandamio",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/wrY0wX2j/Un-ojo-aplastado-Gomez-Oviedo-Lorenzo-Elandamio.jpg",
+    "isbn": "978-987-46641-8-1",
+    "dimensions": "19x13",
+    "pages": 78,
+    "code": "A861"
+  },
+  {
+    "title": "Herencia china/Fondo blanco",
+    "author": "Segura, Eugenia",
+    "editorial": "elandamio",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/wFcnn35L/Herencia-china-Fondo-blanco-Segura-Eugenia-Elandamio.jpg",
+    "isbn": "978-987-46641-1-2",
+    "dimensions": "19x13",
+    "pages": 86,
+    "code": "A861"
+  },
+  {
+    "title": "Nobles defensores: señorío, caballería y justicia en el pensamiento de don Juan Manuel",
+    "author": "Asiss González, Federico J.",
+    "editorial": "Editorial UNSJ",
+    "price": 30000.00,
+    "image": "https://i.ibb.co/SDLDSZ6f/Nobles-defensores-Assis-Gonz-lez-Federico-J-UNSJ.jpg",
+    "isbn": "978-987-8395-46-3",
+    "dimensions": "23x16",
+    "pages": 456,
+    "code": "909"
+  },
+  {
+    "title": "El resto es poesía: bibliografía de Reyna Domínguez",
+    "author": "Podda, José Antonio",
+    "editorial": "Editorial UNSJ",
+    "price": 19000.00,
+    "image": "https://i.ibb.co/0VvXdK1F/El-resto-es-poes-a-Biograf-a-de-Reyna-Dom-nguez-Podda-Jos-Antonio-UNSJ.jpg",
+    "isbn": "978-950-605-938-5",
+    "dimensions": "20x14",
+    "pages": 446,
+    "code": "864"
   }
 ]
