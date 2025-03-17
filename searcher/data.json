@@ -570,5 +570,137 @@
     "dimensions": "20x15",
     "pages": 136,
     "code": "864"
+  },
+  {
+    "title": "Arqueología de Angualasto: historia, ruinas y cóndores",
+    "author": "Michieli, Catalina Teresa",
+    "editorial": "FFHA UNSJ",
+    "price": 40000.00,
+    "image": "https://i.ibb.co/0K8ptFy/Arqueolog-a-de-Angualasto-Hist-ria-ruinas-y-c-ndores-Michieli.jpg",
+    "isbn": "978-950-605-825-8",
+    "dimensions": "23x19",
+    "pages": 156,
+    "code": "907.2"
+  },
+  {
+    "title": "Lágrimas.",
+    "author": "Las Peñas, Tomás Pablo",
+    "editorial": "Tinta Libre",
+    "price": 12000.00,
+    "image": "https://i.ibb.co/qFkZvNPp/L-grimas-Tom-s-Pablo-Las-Pe-as-Tinta-Libre.jpg",
+    "isbn": "978-987-824-380-1",
+    "dimensions": "21x15",
+    "pages": 124,
+    "code": "A861"
+  },
+  {
+    "title": "Esqueleto lírico: poemas que sangran emociones",
+    "author": "Las Peñas, Tomás Pablo",
+    "editorial": "El Autor",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/8DvRZTQc/Esqueleto-L-rico-Tom-s-Pablo-Las-Pe-as-El-Vi-atero.jpg",
+    "isbn": "978-631-00-0889-9",
+    "dimensions": "21x15",
+    "pages": 158,
+    "code": "A861"
+  },
+  {
+    "title": "El estigma de los Andes",
+    "author": "Carbajal, Federico",
+    "editorial": "DIGIT.AR",
+    "price": 8000.00,
+    "image": "https://i.ibb.co/hR9M9sPr/El-estigma-de-Los-Andes-Federico-Carbajal-Digit-ar.jpg",
+    "isbn": "978-987-29279-0-5",
+    "dimensions": "21x15",
+    "pages": 72,
+    "code": "A863"
+  },
+  {
+    "title": "A través del tango: descubriendo mi yo interior",
+    "author": "Aguero, Claudia Elizabeth",
+    "editorial": "Dunken",
+    "price": 15000.00,
+    "image": "https://i.ibb.co/2SbDCwF/A-trav-s-del-tango-descubriendo-mi-yo-interior-Ag-ero-Claudia.jpg",
+    "isbn": "978-987-85-0206-9",
+    "dimensions": "23x16",
+    "pages": 120,
+    "code": "784.18885"
+  },
+  {
+    "title": "Amores sanos y de los otros: mirada e intervenciones gestálticas en el funcionamiento de pareja",
+    "author": "Giménes Bawden, Sonia",
+    "editorial": "Autores de Argentina",
+    "price": 32000.00,
+    "image": "https://i.ibb.co/hxNqhLVG/Amores-sanos-y-de-los-otros-Sonia-Gim-nes-Bawden-Editorial-Autores-de-Argentina.jpg",
+    "isbn": "978-987-87-4752-1",
+    "dimensions": "21x15",
+    "pages": 250,
+    "code": "250"
+  },
+  {
+    "title": "Amores sanos y de los otros: mirada e intervenciones gestálticas en el funcionamiento de pareja",
+    "author": "Giménes Bawden, Sonia",
+    "editorial": "Autores de Argentina",
+    "price": 32000.00,
+    "image": "https://i.ibb.co/hxNqhLVG/Amores-sanos-y-de-los-otros-Sonia-Gim-nes-Bawden-Editorial-Autores-de-Argentina.jpg",
+    "isbn": "978-987-87-4752-1",
+    "dimensions": "21x15",
+    "pages": 250,
+    "code": "250"
+  },
+  {
+    "title": "Algo más que comer o no comer: abordaje gestáltico a la alimentación y sus trastornos",
+    "author": "Giménes Bawden, Sonia",
+    "editorial": "Autores de Argentina",
+    "price": 32000.00,
+    "image": "https://i.ibb.co/6RZCJqLt/Algo-m-s-que-comer-o-no-comer-Sonia-Gim-nes-Bawden-Editorial-Autores-de-Argentina.jpg",
+    "isbn": "978-987-87-2287-0",
+    "dimensions": "21x15",
+    "pages": 270,
+    "code": "150"
+  },
+  {
+    "title": "22 minutos sin vida: vivimos como inmortales en un mundo de mortales",
+    "author": "Las Peñas, Tomás Pablo",
+    "editorial": "Tinta Libre",
+    "price": 5000.00,
+    "image": "https://i.ibb.co/swYkL7J/22-minutos-sin-vida-Las-pe-as-Tom-s-Pablo.jpg",
+    "isbn": "978-987-817-832-5",
+    "dimensions": "21x15",
+    "pages": 134,
+    "code": "158.1"
+  },
+  {
+    "title": "Umbral",
+    "author": "Dibella, Bruno",
+    "editorial": "elandamio",
+    "price": 7000.00,
+    "image": "https://i.ibb.co/tMkj319v/Umbral-Dibella-Bruno-Elandamio.jpg",
+    "isbn": "978-987-26591-7-2",
+    "dimensions": "19x13",
+    "pages": 60,
+    "code": "A861"
+  },
+  {
+    "title": "Series",
+    "author": "Zonana, Gustavo",
+    "editorial": "elandamio",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/JFkzyJ99/Series-Zonana-V-ctor-Gustavo-Elandamio.jpg",
+    "isbn": "978-987-46641-2-9",
+    "dimensions": "19x13",
+    "pages": 100,
+    "code": "A861"
+  },
+  {
+    "title": "Grietas Vivas",
+    "author": "Luna, Adriana",
+    "editorial": "elandamio",
+    "price": 8000.00,
+    "image": "https://i.ibb.co/7J0StKpY/Grietas-vivas-Luna-Adriana-Elandamio.jpg",
+    "isbn": "978-987-45285-7-5",
+    "dimensions": "22x15",
+    "pages": 64,
+    "code": "A861"
   }
 ]
