@@ -856,5 +856,126 @@
     "dimensions": "19x13",
     "pages": 106,
     "code": "A861"
+  },
+  {
+    "title": "100 años de la Biblioteca Popular San Martín",
+    "author": "Hernández, Mafalda",
+    "editorial": "Leeme un Cuento",
+    "price": 18000.00,
+    "image": "https://i.ibb.co/PsxdpHtp/A-100-a-os-Biblioteca-Popular-San-Martin-Hern-ndez-Mafalda-L-e.jpg",
+    "isbn": "978-631-90434-5-7",
+    "dimensions": "23x15",
+    "pages": 164,
+    "code": "027.009"
+  },
+  {
+    "title": "Umami",
+    "author": "Benacot, Débora",
+    "editorial": "elandamio",
+    "price": 9000.00,
+    "image": "https://i.ibb.co/SXLRcz13/Umami-Benacot-D-bora-Elandamio.jpg",
+    "isbn": "978-987-8441-06-1",
+    "dimensions": "19x13",
+    "pages": 82,
+    "code": "A861"
+  },
+  {
+    "title": "La palabra taxi/ ciclo vitales",
+    "author": "Lopez, Juan",
+    "editorial": "elandamio",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/3mFdKPzj/La-palabra-taxi-Ciclos-vitales-L-pez-Juan-Elandamio.jpg",
+    "isbn": "978-987-46641-3-6",
+    "dimensions": "19x13",
+    "pages": 86,
+    "code": "A861"
+  },
+  {
+    "title": "Poemas",
+    "author": "Escudero, Carlos Guido",
+    "editorial": "elandamio",
+    "price": 7000.00,
+    "image": "https://i.ibb.co/01M6QTj/Poemas-Escudero-Carlos-Guido-Elandamio.jpg",
+    "isbn": "978-987-46641-7-4",
+    "dimensions": "19x13",
+    "pages": 60,
+    "code": "A861"
+  },
+  {
+    "title": "Psicopollo",
+    "author": "Hausen, Juan",
+    "editorial": "elandamio",
+    "price": 12000.00,
+    "image": "https://i.ibb.co/HDc75Png/Psicopollo-Hausen-Juan-Elandamio.jpg",
+    "isbn": "978-987-8441-21-4",
+    "dimensions": "13x19",
+    "pages": 124,
+    "code": "741.5982"
+  },
+  {
+    "title": "Realidades huérfanas",
+    "author": "Cassino, Silvana",
+    "editorial": "El Autor",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/Y4L5kbrL/Realidades-huerfanas-Cassino-Silvana-el-autor.jpg",
+    "isbn": "978-631-00-3018-0",
+    "dimensions": "21x15",
+    "pages": 134,
+    "code": "A861"
+  },
+  {
+    "title": "Pasiones Misterios",
+    "author": "Pin, Nora",
+    "editorial": "El Autor",
+    "price": 15000.00,
+    "image": "https://i.ibb.co/4RDjKxv/Pasiones-Misterios-Pin-Nora.jpg",
+    "isbn": "978-987-42-5290-6",
+    "dimensions": "21x15",
+    "pages": 278,
+    "code": "A863"
+  },
+  {
+    "title": "La mirada del desvelo",
+    "author": "Cassino, Silvana",
+    "editorial": "Abdulah",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/5h1VjZb/La-mirada-del-desvelo-Cassino-Silvana.jpg",
+    "isbn": "978-987-48421-2-1",
+    "dimensions": "20x14",
+    "pages": 76,
+    "code": "A861"
+  },
+  {
+    "title": "La búsqueda",
+    "author": "Pin, Nora",
+    "editorial": "El Autor",
+    "price": 15000.00,
+    "image": "https://i.ibb.co/ZRkxh4bL/La-b-squeda-Pin-Nora-el-autor.jpg",
+    "isbn": "978-631-00-2503-2",
+    "dimensions": "21x15",
+    "pages": 203,
+    "code": "A863"
+  },
+  {
+    "title": "Relatos de mi abuela",
+    "author": "Jaled, Sarui Lola",
+    "editorial": "Autores de Argentina",
+    "price": 8000.00,
+    "image": "https://i.ibb.co/Jkztcwr/Relatos-de-mi-abuela-Sarui-Lola-Jaled.jpg",
+    "isbn": "978-987-87-0700-6",
+    "dimensions": "21x15",
+    "pages": 70,
+    "code": "A863"
+  },
+  {
+    "title": "Un pájaro ocre intenso",
+    "author": "Araya Castro, Elida Margarita",
+    "editorial": "Gipsy",
+    "price": 10000.00,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg",
+    "isbn": "978-987-88-2171-9",
+    "dimensions": "21x15",
+    "pages": 220,
+    "code": "A861"
   }
 ]
