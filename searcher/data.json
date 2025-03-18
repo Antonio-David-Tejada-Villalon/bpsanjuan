@@ -757,5 +757,104 @@
     "dimensions": "20x14",
     "pages": 446,
     "code": "864"
+  },
+  {
+    "title": "Muertes fabulosas",
+    "author": "Despouy, Juan Andrés",
+    "editorial": "elandamio",
+    "price": 8000.00,
+    "image": "https://i.ibb.co/xKK0FjPN/Muertes-fabulosas-Despouy-Juan-Andr-s-Elandamio.jpg",
+    "isbn": "978-987-47037-0-5",
+    "dimensions": "19x13",
+    "pages": 74,
+    "code": "A861"
+  },
+  {
+    "title": "Placebo",
+    "author": "Cangialosi, Marisa",
+    "editorial": "Abdulah",
+    "price": 15000.00,
+    "image": "https://i.ibb.co/HTxvmtxf/PLACEBO-MARISA-CANGIALOSI.jpg",
+    "isbn": "978-987-8264-68-4",
+    "dimensions": "20x14",
+    "pages": 84,
+    "code": "A861"
+  },
+  {
+    "title": "Placebo",
+    "author": "Cangialosi, Marisa",
+    "editorial": "Abdulah",
+    "price": 15000.00,
+    "image": "https://i.ibb.co/HTxvmtxf/PLACEBO-MARISA-CANGIALOSI.jpg",
+    "isbn": "978-987-8264-68-4",
+    "dimensions": "20x14",
+    "pages": 84,
+    "code": "A861"
+  },
+  {
+    "title": "Los tiempos y sus pausas: poemas",
+    "author": "Araya Castro, Elida Margarita",
+    "editorial": "Gipsy",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/5YzwTM2/Los-tiempos-y-sus-pausas.jpg",
+    "isbn": "978-987-778-459-6",
+    "dimensions": "20x14",
+    "pages": 56,
+    "code": "A861"
+  },
+  {
+    "title": "Los tiempos y sus pausas: poemas",
+    "author": "Araya Castro, Elida Margarita",
+    "editorial": "Gipsy",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/5YzwTM2/Los-tiempos-y-sus-pausas.jpg",
+    "isbn": "978-987-778-459-6",
+    "dimensions": "20x14",
+    "pages": 56,
+    "code": "A861"
+  },
+  {
+    "title": "Desarmadero",
+    "author": "Araya, Federico",
+    "editorial": "elandamio",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/zVFQXMDj/Desarmadero-Araya-Federico-Elandamio.jpg",
+    "isbn": "978-987-47037-1-2",
+    "dimensions": "19x13",
+    "pages": 78,
+    "code": "A861"
+  },
+  {
+    "title": "Postrimerías del siglo XXI",
+    "author": "Casas, José",
+    "editorial": "elandamio",
+    "price": 9000.00,
+    "image": "https://i.ibb.co/nq048w6g/Postrimer-as-del-siglo-XXI-Casas-Jos-Elandamio.jpg",
+    "isbn": "978-987-8441-31-3",
+    "dimensions": "19x13",
+    "pages": 92,
+    "code": "A861"
+  },
+  {
+    "title": "Algo permanece indomable",
+    "author": "García Pareja, Leonardo",
+    "editorial": "elandamio",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/rR18QswX/Algo-permanece-indomable-Garc-a-Pareja-Leonardo-Elandamio.jpg",
+    "isbn": "978-987-47204-3-6",
+    "dimensions": "19x13",
+    "pages": 82,
+    "code": "A863"
+  },
+  {
+    "title": "Todas las cosas son una en el fuego",
+    "author": "Cúneo, Víctor Hugo",
+    "editorial": "elandamio",
+    "price": 12000.00,
+    "image": "https://i.ibb.co/XfmFSSmb/Todas-las-cosas-son-una-en-el-fuego-C-neo-V-ctor-Hugo-Elandamio.jpg",
+    "isbn": "978-987-46641-4-3",
+    "dimensions": "19x13",
+    "pages": 106,
+    "code": "A861"
   }
 ]
