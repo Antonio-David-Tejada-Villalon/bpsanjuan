@@ -972,10 +972,142 @@
     "author": "Araya Castro, Elida Margarita",
     "editorial": "Gipsy",
     "price": 10000.00,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg",
+    "image": "https://i.ibb.co/qY26G5Q6/un-pajaro-ocre-intenso-Elida-Margarita-Araya-Castro.jpg",
     "isbn": "978-987-88-2171-9",
     "dimensions": "21x15",
     "pages": 220,
     "code": "A861"
+  },
+  {
+    "title": "Juan de mi vida",
+    "author": "Colom, Analia",
+    "editorial": "Puntoaparte",
+    "price": 15000.00,
+    "image": "https://i.ibb.co/R40pfnBD/Juan-de-mi-vida-Anal-a-Colom.jpg",
+    "isbn": "978-987-8269-30-6",
+    "dimensions": "23x15",
+    "pages": 212,
+    "code": "A863"
+  },
+  {
+    "title": "La luna y ella, un llamado: poemas",
+    "author": "Araya Castro, Elida Margarita",
+    "editorial": "Gipsy",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/39hmSrs4/LA-LUNA-Y-ELLA-UN-LLAMADO-POEMAS-ELIDA-MARGARITA-ARAYA-CASTR.jpg",
+    "isbn": "978-987-88-3004-9",
+    "dimensions": "21x15",
+    "pages": 95,
+    "code": "A861"
+  },
+  {
+    "title": "San Juan en la historia de las islas malvinas",
+    "author": "Montaño, Miguel - Rodríguez, Analia",
+    "editorial": "Abdulah",
+    "price": 25000.00,
+    "image": "https://i.ibb.co/5WHLs80H/SAN-JUAN-EN-LA-HISTORIA-DE-LAS-ISLAS-MALVINAS-MIGUEL-MONTA-O.jpg",
+    "isbn": "978-987-8264-48-6",
+    "dimensions": "29x20",
+    "pages": 98,
+    "code": "982"
+  },
+  {
+    "title": "Publicación N° 29 (nueva serie) Huarpes, Españoles y Jesuitas en Cuyo (siglos XVI a XVIII)",
+    "author": "Michieli, Catalina Teresa (comp.)",
+    "editorial": "FFHA UNSJ",
+    "price": 30000.00,
+    "image": "https://i.ibb.co/BtHF5M8/Publicaciones-29-nueva-serie-Michieli-Catalina-Teresa-comp.png",
+    "isbn": "978-950-605-722-0",
+    "dimensions": "29x21",
+    "pages": 102,
+    "code": "305.8"
+  },
+  {
+    "title": "Coordenadas de una era Millennial",
+    "author": "Avila, Luis",
+    "editorial": "EFU",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/bWFHz0L/Coordenadas-de-una-era-Millennial-Avila-Luis.jpg",
+    "isbn": "978-987-3984-69-3",
+    "dimensions": "21x15",
+    "pages": 108,
+    "code": "none"
+  },
+  {
+    "title": "Publicación N° 30 (nueva serie) Modificaciones del paisaje cultural del sitio Rincon de Vallejos (San Juan)…",
+    "author": "Mallea, Claudia N. - Genini, Guillermo F.",
+    "editorial": "FFHA UNSJ",
+    "price": 30000.00,
+    "image": "https://i.ibb.co/n8BT8fY7/Publicaci-n-N-30-nueva-serie-Modificaciones-del-paisaje-cultural-del-sitio-Rincon-de-Vallejos-San-Ju.jpg",
+    "isbn": "978-950-605-886-9",
+    "dimensions": "29x21",
+    "pages": 86,
+    "code": "907"
+  },
+  {
+    "title": "Sueños con Altura (incluye kit)",
+    "author": "Hernández, Mafalda",
+    "editorial": "Leeme un Cuento",
+    "price": 25000.00,
+    "image": "https://i.ibb.co/nrzWYgY/sue-os-con-altura-incluye-libreta-se-alador-stickers-Hernandez-Mafalda.jpg",
+    "isbn": "978-987-88-3007-0",
+    "dimensions": "20x20",
+    "pages": 50,
+    "code": "A863.9282"
+  },
+  {
+    "title": "Cruce de los Andes: aportes historicos y genealógicos, listados de oficiales y soldados",
+    "author": "Arancibia, Juan José",
+    "editorial": "Abdulah",
+    "price": 35000.00,
+    "image": "https://i.ibb.co/LqQwZFT/Cruce-de-Los-Andes-Aportes-Hist-ricos-y-Geneal-gicos-Listados-d.jpg",
+    "isbn": "978-631-6625-24-3",
+    "dimensions": "20x14",
+    "pages": 638,
+    "code": "929.10982"
+  },
+  {
+    "title": "Prehistoria e historia colonial de San Juan: una visión integral",
+    "author": "Mallea, Claudia N. - Genini, Guillermo F.",
+    "editorial": "Abdulah",
+    "price": 30000.00,
+    "image": "https://i.ibb.co/d0M20TRW/Prehistoria-e-historia-colonial-de-San-Juan-Una-visi-n-integral-Instituto-de-Investigaci-n-Arqueol-g.jpg",
+    "isbn": "978-631-6625-55-7",
+    "dimensions": "20x14",
+    "pages": 172,
+    "code": "930.1"
+  },
+  {
+    "title": "Las travesuras de Sebastián",
+    "author": "Jaled, Sarui Lola",
+    "editorial": "Autores de Argentina",
+    "price": 8000.00,
+    "image": "https://i.ibb.co/mQdcKg1/Las-travesuras-de-Sebastian-Sarui-Lola-Jaled-Autores-de-Argentina.jpg",
+    "isbn": "978-987-87-2069-2",
+    "dimensions": "21x15",
+    "pages": 50,
+    "code": "A863.9282"
+  },
+  {
+    "title": "Simba, el gatito viajero",
+    "author": "Jaled, Sarui Lola",
+    "editorial": "Autores de Argentina",
+    "price": 5000.00,
+    "image": "https://i.ibb.co/PGb8DZzD/Simba-el-gatito-viajero-Lola-Jaled-Sarui-Autores-de-Argentina.jpg",
+    "isbn": "978-987-87-2390-7",
+    "dimensions": "20x20",
+    "pages": 24,
+    "code": "860.9282"
+  },
+  {
+    "title": "Los juegos del jefe",
+    "author": "Ávila, Luis",
+    "editorial": "Planeta",
+    "price": 10000.00,
+    "image": "https://i.ibb.co/SRyr7MN/Los-juegos-del-jefe-vila-Luis.jpg",
+    "isbn": "978-950-49-6567-1",
+    "dimensions": "23x15",
+    "pages": 464,
+    "code": "A863.9283"
   }
 ]
