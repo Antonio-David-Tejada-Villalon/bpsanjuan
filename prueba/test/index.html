@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos personalizados */
+        .suggestions {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            width: auto;
+            z-index: 10;
+        }
+        .suggestions li {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestions li:hover {
+            background-color: #cfcaca;
+            color: #fff;
+        }
+        .book-details {
+            margin-top: 20px;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: row;
+            }
+            .btn-primary {
+                width: 100%;
+                margin-top: 10px;
+                font-size: 16px;
+                height: 40px;
+            }
+            .list-group-item {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Biblioteca</h1>
+        <div class="input-group mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar libro..." aria-label="Buscar libro">
+            <button class="btn btn-primary" id="searchButton" type="button">Buscar</button>
+        </div>
+        <ul id="suggestions" class="suggestions"></ul>
+        <h3>Resultados:</h3>
+        <ul id="bookList" class="list-group"></ul>
+        <div id="bookDetails" class="book-details"></div>
+        <!-- Formulario para editar stock -->
+        <div id="editStockForm" style="display: none;" class="mt-4">
+            <h4>Editar Stock</h4>
+            <div class="mb-3">
+                <label for="newStock" class="form-label">Nuevo Stock:</label>
+                <input type="number" id="newStock" class="form-control" min="0">
+            </div>
+            <button id="updateStockButton" class="btn btn-success">Actualizar Stock</button>
+            <p id="errorMessage" style="color: red; margin-top: 10px;"></p>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
