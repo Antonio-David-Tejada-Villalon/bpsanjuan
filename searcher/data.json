@@ -4458,5 +4458,38 @@
     "dimensions": "31x23",
     "pages": 320,
     "code": "708.982"
+  },
+  {
+    "title": "Entretelones",
+    "image": "https://i.ibb.co/BHw2qwzn/Entretelones-Soler-Sergio-Gustavo.jpg",
+    "author": "Soler, Segio Gustavo ",
+    "editorial": "Jarilla",
+    "price": 12000,
+    "isbn": "978-631-00-7816-8",
+    "dimensions": "15x21",
+    "pages": 154,
+    "code": "A860"
+  },
+  {
+    "title": "El tero grita siempre lejos del nido.",
+    "image": "https://i.ibb.co/GffqWykr/El-tero-grita-siempre-lejos-del-nido-Isaurralde-Facundo.jpg",
+    "author": "Insaurralde, Facundo",
+    "editorial": "Jarilla",
+    "price": 24000,
+    "isbn": "978-631-00-8298-1",
+    "dimensions": "22x15",
+    "pages": 544,
+    "code": "A860"
+  },
+  {
+    "title": "Los sueños de Frau Frida.",
+    "image": "https://i.ibb.co/wZ2tjp0N/Los-sue-os-de-Frau-Frida-Escales-Lonn-Helena.jpg",
+    "author": "Escales Lonné, Helena",
+    "editorial": "Jarilla",
+    "price": 18000,
+    "isbn": "978-631-6625-64-9",
+    "dimensions": "20x14",
+    "pages": 80,
+    "code": "A860"
   }
 ]
