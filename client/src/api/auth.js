@@ -15,4 +15,7 @@ export const changePassword = (currentPassword, newPassword) =>
 export const updateProfile = (data) =>
   api.patch('/auth/update-profile', data).then(res => res.data);
 
-export const googleLoginUrl = () => '/api/auth/google';
+export const googleLoginUrl = () =>
+  import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL}/api/auth/google`
+    : '/api/auth/google';
