@@ -1,0 +1,173 @@
+.navbar {
+  background: rgba(200, 80, 4, 0.92);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border-bottom: 1px solid rgba(255, 200, 100, 0.18);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  animation: slideDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+}
+
+.navbar-brand {
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: none;
+  letter-spacing: -0.3px;
+  transition: opacity 0.2s ease;
+}
+.navbar-brand:hover { text-decoration: none; opacity: 0.88; }
+
+.navbar-toggle {
+  display: none;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: background 0.18s ease;
+}
+.navbar-toggle:hover { background: rgba(255,255,255,0.20); }
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.navbar-links a {
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 500;
+  font-size: 15px;
+  transition: color 0.18s ease;
+  position: relative;
+}
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+.navbar-links a:hover,
+.navbar-links a.active {
+  color: #fff;
+  text-decoration: none;
+}
+.navbar-links a:hover::after,
+.navbar-links a.active::after {
+  transform: scaleX(1);
+}
+
+.navbar-staff-link {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  padding: 5px 14px !important;
+  border-radius: 999px;
+  font-size: 13px !important;
+  transition: background 0.18s ease, border-color 0.18s ease !important;
+}
+.navbar-staff-link:hover {
+  background: rgba(255,255,255,0.22) !important;
+}
+.navbar-staff-link::after { display: none; }
+
+.navbar-links .btn-outline {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(255,255,255,0.10);
+}
+.navbar-links .btn-outline:hover {
+  background: rgba(255,255,255,0.20);
+  border-color: rgba(255,255,255,0.65);
+}
+
+.navbar-public-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 14px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.20);
+  border-radius: 999px;
+  padding: 4px 12px 4px 6px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.18s ease;
+}
+.navbar-public-user:hover { background: rgba(255,255,255,0.18); }
+
+.navbar-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255,255,255,0.5);
+}
+
+.navbar-theme-toggle {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.85);
+  transition: background 0.18s ease, color 0.18s ease, transform 0.22s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+.navbar-theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.24);
+  color: #fff;
+  transform: rotate(20deg);
+}
+
+@media (max-width: 800px) {
+  .navbar-toggle { display: block; }
+  .navbar-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(180, 65, 2, 0.97);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border-bottom: 1px solid rgba(255, 200, 100, 0.14);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 20px;
+    gap: 14px;
+    display: none;
+  }
+  .navbar-links.open {
+    display: flex;
+    animation: slideDown 0.22s cubic-bezier(0.4,0,0.2,1) both;
+  }
+}
