@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 const SHARE_OPTIONS = [
   {
@@ -50,16 +51,47 @@ const SHARE_OPTIONS = [
 export default function ShareBtn({ url, title }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const ref = useRef(null);
+  const [menuStyle, setMenuStyle] = useState({});
+  const triggerRef = useRef(null);
 
   const fullUrl = url || window.location.href;
   const shareTitle = title || document.title;
 
-  useEffect(() => {
-    const fn = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', fn);
-    return () => document.removeEventListener('mousedown', fn);
+  const calcPosition = useCallback(() => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const menuWidth = 210;
+    let right = window.innerWidth - rect.right;
+    if (right < 8) right = 8;
+    setMenuStyle({
+      position: 'fixed',
+      top: rect.bottom + 8,
+      right,
+      minWidth: menuWidth,
+      zIndex: 9999,
+    });
   }, []);
+
+  const toggleOpen = () => {
+    if (!open) calcPosition();
+    setOpen(o => !o);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const close = e => {
+      if (triggerRef.current && !triggerRef.current.contains(e.target)) setOpen(false);
+    };
+    const reposition = () => calcPosition();
+    document.addEventListener('mousedown', close);
+    window.addEventListener('resize', reposition);
+    window.addEventListener('scroll', reposition, true);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      window.removeEventListener('resize', reposition);
+      window.removeEventListener('scroll', reposition, true);
+    };
+  }, [open, calcPosition]);
 
   const copyLink = async () => {
     try {
@@ -71,12 +103,41 @@ export default function ShareBtn({ url, title }) {
     }
   };
 
+  const menu = open && (
+    <div className="share-menu" style={menuStyle}>
+      <p className="share-menu-title">Compartir</p>
+      {SHARE_OPTIONS.map(opt => (
+        <a
+          key={opt.key}
+          href={opt.getUrl(fullUrl, shareTitle)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="share-item"
+          style={{ '--share-color': opt.color }}
+          onClick={() => setOpen(false)}
+        >
+          <span className="share-item-icon">{opt.icon}</span>
+          {opt.label}
+        </a>
+      ))}
+      <button type="button" className="share-item share-item--copy" onClick={copyLink}>
+        <span className="share-item-icon">
+          {copied
+            ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          }
+        </span>
+        {copied ? '¡Enlace copiado!' : 'Copiar enlace'}
+      </button>
+    </div>
+  );
+
   return (
-    <div ref={ref} className="share-wrap">
+    <div ref={triggerRef} className="share-wrap" style={{ position: 'relative' }}>
       <button
         type="button"
         className="share-trigger"
-        onClick={() => setOpen(o => !o)}
+        onClick={toggleOpen}
         title="Compartir"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -86,34 +147,7 @@ export default function ShareBtn({ url, title }) {
         Compartir
       </button>
 
-      {open && (
-        <div className="share-menu">
-          <p className="share-menu-title">Compartir</p>
-          {SHARE_OPTIONS.map(opt => (
-            <a
-              key={opt.key}
-              href={opt.getUrl(fullUrl, shareTitle)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="share-item"
-              style={{ '--share-color': opt.color }}
-              onClick={() => setOpen(false)}
-            >
-              <span className="share-item-icon">{opt.icon}</span>
-              {opt.label}
-            </a>
-          ))}
-          <button type="button" className="share-item share-item--copy" onClick={copyLink}>
-            <span className="share-item-icon">
-              {copied
-                ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              }
-            </span>
-            {copied ? '¡Enlace copiado!' : 'Copiar enlace'}
-          </button>
-        </div>
-      )}
+      {createPortal(menu, document.body)}
     </div>
   );
 }
