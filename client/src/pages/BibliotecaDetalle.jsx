@@ -342,11 +342,6 @@ export default function BibliotecaDetalle() {
         </div>
       )}
 
-      {/* ── Like + login ── */}
-      <div style={{ marginTop: 24, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-        {!publicUser && <GoogleLoginBtn />}
-      </div>
-
       {error && <p className="alert alert-error" style={{ marginTop: 12 }}>{error}</p>}
 
       {/* ── Comentarios ── */}
