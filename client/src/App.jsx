@@ -23,17 +23,25 @@ import NoticiaForm from './pages/admin/NoticiaForm';
 import Aprobaciones from './pages/admin/Aprobaciones';
 import GestionUsuariosPublicos from './pages/admin/GestionUsuariosPublicos';
 import ActivityLogs from './pages/admin/ActivityLogs';
+import Analytics from './pages/admin/Analytics';
 import MiPerfil from './pages/MiPerfil';
+import { usePageView } from './hooks/usePageView';
 import PanelLayout from './pages/bibliotecario/PanelLayout';
 import MiBiblioteca from './pages/bibliotecario/MiBiblioteca';
 import ModeracionComentarios from './pages/bibliotecario/ModeracionComentarios';
 import Mensajes from './pages/bibliotecario/Mensajes';
+
+function PageViewTracker() {
+  usePageView();
+  return null;
+}
 
 function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
       <AuthProvider>
+        <PageViewTracker />
         <Navbar />
         <main>
           <Routes>
@@ -67,6 +75,7 @@ function App() {
               <Route path="aprobaciones" element={<Aprobaciones />} />
               <Route path="comunidad" element={<GestionUsuariosPublicos />} />
               <Route path="actividad" element={<ActivityLogs />} />
+              <Route path="analiticas" element={<Analytics />} />
             </Route>
             <Route
               path="/panel"

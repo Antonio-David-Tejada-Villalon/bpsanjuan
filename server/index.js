@@ -23,6 +23,7 @@ const messageRoutes = require('./routes/messages');
 const publicUserRoutes = require('./routes/publicUsers');
 const presenceRoutes = require('./routes/presence');
 const activityLogRoutes = require('./routes/activityLogs');
+const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 
@@ -67,6 +68,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/public-users', publicUserRoutes);
 app.use('/api/presence', presenceRoutes);
 app.use('/api/activity-logs', activityLogRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // ─── Ruta de health check ─────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

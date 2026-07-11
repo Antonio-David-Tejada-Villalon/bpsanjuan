@@ -1,0 +1,435 @@
+import { useState, useEffect, useCallback } from 'react';
+import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import { getOverview, getGeo, getPopular, getInteractions, exportAnalytics } from '../../api/analyticsApi';
+
+// ISO alpha-2 → ISO numeric (para world-atlas topojson)
+const A2N = {
+  AD:20,AE:784,AF:4,AG:28,AL:8,AM:51,AO:24,AR:32,AT:40,AU:36,AZ:31,
+  BA:70,BB:52,BD:50,BE:56,BF:854,BG:100,BH:48,BI:108,BJ:204,BN:96,
+  BO:68,BR:76,BS:44,BT:64,BW:72,BY:112,BZ:84,CA:124,CD:180,CF:140,
+  CG:178,CH:756,CI:384,CL:152,CM:120,CN:156,CO:170,CR:188,CU:192,
+  CV:132,CY:196,CZ:203,DE:276,DJ:262,DK:208,DM:212,DO:214,DZ:12,
+  EC:218,EE:233,EG:818,ER:232,ES:724,ET:231,FI:246,FJ:242,FR:250,
+  GA:266,GB:826,GD:308,GE:268,GH:288,GM:270,GN:324,GQ:226,GR:300,
+  GT:320,GW:624,GY:328,HN:340,HR:191,HT:332,HU:348,ID:360,IE:372,
+  IL:376,IN:356,IQ:368,IR:364,IS:352,IT:380,JM:388,JO:400,JP:392,
+  KE:404,KG:417,KH:116,KI:296,KM:174,KN:659,KP:408,KR:410,KW:414,
+  KZ:398,LA:418,LB:422,LC:662,LI:438,LK:144,LR:430,LS:426,LT:440,
+  LU:442,LV:428,LY:434,MA:504,MC:492,MD:498,ME:499,MG:450,MH:584,
+  MK:807,ML:466,MM:104,MN:496,MR:478,MT:470,MU:480,MV:462,MW:454,
+  MX:484,MY:458,MZ:508,NA:516,NE:562,NG:566,NI:558,NL:528,NO:578,
+  NP:524,NR:520,NZ:554,OM:512,PA:591,PE:604,PG:598,PH:608,PK:586,
+  PL:616,PT:620,PW:585,PY:600,QA:634,RO:642,RS:688,RU:643,RW:646,
+  SA:682,SB:90,SC:690,SD:729,SE:752,SG:702,SI:705,SK:703,SL:694,
+  SM:674,SN:686,SO:706,SR:740,SS:728,ST:678,SV:222,SY:760,SZ:748,
+  TD:148,TG:768,TH:764,TJ:762,TL:626,TM:795,TN:788,TO:776,TR:792,
+  TT:780,TV:798,TZ:834,UA:804,UG:800,US:840,UY:858,UZ:860,VA:336,
+  VC:670,VE:862,VN:704,VU:548,WS:882,YE:887,ZA:710,ZM:894,ZW:716,
+  TW:158,HK:344,PS:275,MO:446,GL:304
+};
+
+const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+function flag(code) {
+  if (!code || code.length !== 2) return '🌐';
+  return String.fromCodePoint(127397 + code.charCodeAt(0)) +
+         String.fromCodePoint(127397 + code.charCodeAt(1));
+}
+
+function getMapColor(count, max) {
+  if (!count) return null;
+  const intensity = Math.log(count + 1) / Math.log(max + 1);
+  const alpha = Math.round((0.2 + intensity * 0.8) * 255).toString(16).padStart(2, '0');
+  return `#f97316${alpha}`;
+}
+
+function StatCard({ label, value, icon }) {
+  return (
+    <div style={{
+      background: 'var(--card-bg, var(--surface))',
+      border: '1px solid var(--border-color)',
+      borderRadius: 12,
+      padding: '1.25rem 1.5rem',
+      flex: 1,
+      minWidth: 140
+    }}>
+      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+        {icon} {label}
+      </div>
+      <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)' }}>{value ?? '—'}</div>
+    </div>
+  );
+}
+
+function TypeBadge({ type }) {
+  const cfg = {
+    biblioteca: { bg: 'rgba(249,115,22,0.12)', color: '#ea580c', label: 'Biblioteca' },
+    noticia:    { bg: 'rgba(59,130,246,0.12)',  color: '#2563eb', label: 'Noticia' },
+    home:       { bg: 'rgba(34,197,94,0.12)',  color: '#16a34a', label: 'Inicio' },
+    nosotros:   { bg: 'rgba(168,85,247,0.12)', color: '#9333ea', label: 'Nosotros' },
+    noticias:   { bg: 'rgba(59,130,246,0.12)',  color: '#2563eb', label: 'Noticias' },
+    departamento:{ bg:'rgba(20,184,166,0.12)', color: '#0d9488', label: 'Departamento' },
+    otro:       { bg: 'rgba(107,114,128,0.12)', color: '#6b7280', label: 'Otro' }
+  };
+  const c = cfg[type] || cfg.otro;
+  return (
+    <span style={{ background: c.bg, color: c.color, borderRadius: 8, padding: '2px 8px', fontSize: '0.78rem', fontWeight: 600 }}>
+      {c.label}
+    </span>
+  );
+}
+
+export default function Analytics() {
+  const [period, setPeriod] = useState('week');
+  const [overview, setOverview] = useState(null);
+  const [geo, setGeo] = useState([]);
+  const [popular, setPopular] = useState([]);
+  const [interactions, setInteractions] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(null);
+  const [error, setError] = useState('');
+
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const [ov, g, pop, inter] = await Promise.all([
+        getOverview(period),
+        getGeo(period),
+        getPopular(period),
+        getInteractions(period)
+      ]);
+      setOverview(ov);
+      setGeo(g.countries || []);
+      setPopular(pop.pages || []);
+      setInteractions(inter);
+    } catch {
+      setError('Error al cargar los datos de analíticas.');
+    } finally {
+      setLoading(false);
+    }
+  }, [period]);
+
+  useEffect(() => { loadAll(); }, [loadAll]);
+
+  const handleExport = async (format) => {
+    setExporting(format);
+    try {
+      await exportAnalytics(format, period);
+    } catch {
+      setError('Error al exportar.');
+    } finally {
+      setExporting(null);
+    }
+  };
+
+  // Build numeric → count map for choropleth
+  const maxCount = geo.length > 0 ? Math.max(...geo.map(c => c.count)) : 1;
+  const countByNumeric = {};
+  geo.forEach(c => {
+    const num = A2N[c.countryCode];
+    if (num) countByNumeric[num] = c.count;
+  });
+
+  const periodLabels = { week: 'Última semana', month: 'Último mes', year: 'Último año' };
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h2 style={{ margin: 0 }}>Analíticas del Sitio</h2>
+          <p style={{ margin: '0.25rem 0 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+            Visitas, geografía, contenido popular e interacciones
+          </p>
+        </div>
+
+        {/* Export buttons */}
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {['xlsx', 'docx', 'txt'].map(fmt => (
+            <button
+              key={fmt}
+              className="btn btn-outline btn-sm"
+              onClick={() => handleExport(fmt)}
+              disabled={!!exporting || loading}
+              title={`Descargar ${fmt.toUpperCase()}`}
+            >
+              {exporting === fmt ? '…' : `↓ ${fmt.toUpperCase()}`}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Period tabs */}
+      <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '1.5rem' }}>
+        {Object.entries(periodLabels).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setPeriod(key)}
+            style={{
+              padding: '0.4rem 1rem',
+              borderRadius: 20,
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: period === key ? 700 : 400,
+              fontSize: '0.875rem',
+              background: period === key ? 'var(--primary)' : 'var(--surface)',
+              color: period === key ? '#fff' : 'var(--text-muted)',
+              transition: 'all 0.15s'
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {error && <div className="alert alert-error" style={{ marginBottom: '1rem' }}>{error}</div>}
+
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
+          Cargando analíticas…
+        </div>
+      ) : (
+        <>
+          {/* Overview cards */}
+          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            <StatCard label="Total visitas" value={overview?.totalViews?.toLocaleString('es-AR')} icon="👁" />
+            <StatCard label="Visitantes únicos" value={overview?.uniqueVisitors?.toLocaleString('es-AR')} icon="👤" />
+            <StatCard label="Países" value={overview?.countries} icon="🌍" />
+            <StatCard label="Compartidos" value={overview?.totalShares?.toLocaleString('es-AR')} icon="🔗" />
+          </div>
+
+          {/* World Map */}
+          <div style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--border-color)',
+            borderRadius: 12,
+            padding: '1.25rem',
+            marginBottom: '1.5rem'
+          }}>
+            <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>Mapa de Visitas</h3>
+            {geo.length === 0 ? (
+              <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>
+                Sin datos geográficos para este período. Las visitas locales (localhost) no se geolocalzan.
+              </p>
+            ) : (
+              <div style={{ background: 'var(--card-bg, #f8fafc)', borderRadius: 8, overflow: 'hidden' }}>
+                <ComposableMap
+                  width={800}
+                  height={380}
+                  projectionConfig={{ scale: 130, center: [10, 15] }}
+                  style={{ width: '100%', height: 'auto' }}
+                >
+                  <Geographies geography={GEO_URL}>
+                    {({ geographies }) =>
+                      geographies.map(geo => {
+                        const geoId = typeof geo.id === 'string' ? parseInt(geo.id, 10) : geo.id;
+                        const count = countByNumeric[geoId] || 0;
+                        const fill = count > 0 ? getMapColor(count, maxCount) : 'var(--border-color, #e5e7eb)';
+                        return (
+                          <Geography
+                            key={geo.rsmKey}
+                            geography={geo}
+                            fill={fill || '#e5e7eb'}
+                            stroke="#fff"
+                            strokeWidth={0.5}
+                            style={{
+                              default: { outline: 'none' },
+                              hover: { outline: 'none', fill: '#fbbf24', opacity: 0.9 },
+                              pressed: { outline: 'none' }
+                            }}
+                          />
+                        );
+                      })
+                    }
+                  </Geographies>
+                </ComposableMap>
+              </div>
+            )}
+
+            {/* Country list */}
+            {geo.length > 0 && (
+              <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.5rem' }}>
+                {geo.slice(0, 20).map((c, i) => (
+                  <div key={c.countryCode} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '1.1rem', minWidth: 24 }}>{flag(c.countryCode)}</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {i + 1}. {c.country || c.countryCode}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <div style={{
+                          height: 4,
+                          background: 'var(--primary)',
+                          borderRadius: 2,
+                          width: `${Math.max(8, (c.count / geo[0].count) * 100)}%`,
+                          opacity: 0.8,
+                          transition: 'width 0.3s'
+                        }} />
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{c.count}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {geo.length > 20 && (
+              <p style={{ margin: '0.75rem 0 0', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                + {geo.length - 20} países más. Descargá el reporte para ver el listado completo.
+              </p>
+            )}
+          </div>
+
+          {/* Popular pages */}
+          <div style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--border-color)',
+            borderRadius: 12,
+            padding: '1.25rem',
+            marginBottom: '1.5rem'
+          }}>
+            <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>Páginas Más Visitadas</h3>
+            {popular.length === 0 ? (
+              <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '1.5rem' }}>Sin visitas en este período.</p>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Página</th>
+                      <th>Tipo</th>
+                      <th style={{ textAlign: 'right' }}>Visitas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {popular.map((p, i) => (
+                      <tr key={p._id}>
+                        <td style={{ color: 'var(--text-muted)', width: 36 }}>{i + 1}</td>
+                        <td>
+                          <div style={{ fontWeight: 500, fontSize: '0.875rem' }}>
+                            {p.resourceName || p._id}
+                          </div>
+                          {p.resourceName && (
+                            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{p._id}</div>
+                          )}
+                        </td>
+                        <td><TypeBadge type={p.resourceType} /></td>
+                        <td style={{ textAlign: 'right' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                            <div style={{
+                              height: 6,
+                              background: 'var(--primary)',
+                              borderRadius: 3,
+                              width: `${Math.max(8, (p.count / popular[0].count) * 80)}px`,
+                              opacity: 0.6
+                            }} />
+                            <span style={{ fontWeight: 700, minWidth: 40 }}>{p.count.toLocaleString('es-AR')}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Interactions */}
+          {interactions && (
+            <>
+              {/* Content likes/dislikes */}
+              <div style={{
+                background: 'var(--surface)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 12,
+                padding: '1.25rem',
+                marginBottom: '1.5rem'
+              }}>
+                <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>Me Gusta y Reacciones por Contenido</h3>
+                <p style={{ margin: '-0.5rem 0 1rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                  Los Me gusta de bibliotecas y noticias son acumulados históricos, no sólo del período seleccionado.
+                </p>
+                {interactions.content?.length === 0 ? (
+                  <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '1.5rem' }}>Sin datos de reacciones.</p>
+                ) : (
+                  <div style={{ overflowX: 'auto' }}>
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Contenido</th>
+                          <th>Tipo</th>
+                          <th style={{ textAlign: 'center' }}>👍 Me gusta</th>
+                          <th style={{ textAlign: 'center' }}>💬 Likes en comentarios</th>
+                          <th style={{ textAlign: 'center' }}>👎 Dislikes en comentarios</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {interactions.content?.map(item => (
+                          <tr key={item._id}>
+                            <td style={{ fontWeight: 500, fontSize: '0.875rem', maxWidth: 280 }}>
+                              <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</div>
+                            </td>
+                            <td><TypeBadge type={item.type} /></td>
+                            <td style={{ textAlign: 'center' }}>
+                              <span style={{ fontWeight: 700, color: '#16a34a' }}>{item.likes.toLocaleString('es-AR')}</span>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <span style={{ color: '#2563eb' }}>{item.commentLikes.toLocaleString('es-AR')}</span>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <span style={{ color: '#dc2626' }}>{item.commentDislikes.toLocaleString('es-AR')}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Shares */}
+              {interactions.shares?.length > 0 && (
+                <div style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: 12,
+                  padding: '1.25rem',
+                  marginBottom: '1.5rem'
+                }}>
+                  <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>Compartidos en el Período</h3>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Página</th>
+                          <th>Tipo</th>
+                          <th style={{ textAlign: 'right' }}>Veces compartido</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {interactions.shares.map(s => (
+                          <tr key={s._id}>
+                            <td style={{ fontSize: '0.875rem' }}>
+                              <div style={{ fontWeight: 500 }}>{s.resourceName || s._id}</div>
+                              {s.resourceName && <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{s._id}</div>}
+                            </td>
+                            <td><TypeBadge type={s.resourceType} /></td>
+                            <td style={{ textAlign: 'right', fontWeight: 700, color: 'var(--primary)' }}>
+                              🔗 {s.shares}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}

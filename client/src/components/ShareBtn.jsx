@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import { trackShare } from '../api/analyticsApi';
 
 const SHARE_OPTIONS = [
   {
@@ -48,7 +49,7 @@ const SHARE_OPTIONS = [
   },
 ];
 
-export default function ShareBtn({ url, title }) {
+export default function ShareBtn({ url, title, resourceId, resourceType, resourceName }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [menuStyle, setMenuStyle] = useState({});
@@ -114,7 +115,10 @@ export default function ShareBtn({ url, title }) {
           rel="noopener noreferrer"
           className="share-item"
           style={{ '--share-color': opt.color }}
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            trackShare(window.location.pathname, resourceId, resourceType, resourceName || shareTitle);
+          }}
         >
           <span className="share-item-icon">{opt.icon}</span>
           {opt.label}

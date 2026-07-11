@@ -49,6 +49,11 @@ export default function Dashboard() {
             Actividad
           </NavLink>
         )}
+        {user.role === 'admin' && (
+          <NavLink to="/admin/analiticas" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Analíticas
+          </NavLink>
+        )}
       </nav>
 
       <Outlet />
