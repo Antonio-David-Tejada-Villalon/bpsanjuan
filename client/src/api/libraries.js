@@ -32,3 +32,12 @@ export const restoreComment = (libraryId, commentId) =>
 
 export const deleteComment = (libraryId, commentId) =>
   api.delete(`/libraries/${libraryId}/comments/${commentId}`).then(res => res.data);
+
+export const addReply = (libraryId, commentId, text) =>
+  api.post(`/libraries/${libraryId}/comments/${commentId}/replies`, { text }).then(res => res.data);
+
+export const reactToComment = (libraryId, commentId, type) =>
+  api.post(`/libraries/${libraryId}/comments/${commentId}/react`, { type }).then(res => res.data);
+
+export const reactToReply = (libraryId, commentId, replyId, type) =>
+  api.post(`/libraries/${libraryId}/comments/${commentId}/replies/${replyId}/react`, { type }).then(res => res.data);

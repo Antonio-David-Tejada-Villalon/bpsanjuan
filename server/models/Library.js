@@ -6,40 +6,35 @@ const scheduleSchema = new mongoose.Schema({
   close: String
 }, { _id: false });
 
+const OId = mongoose.Schema.Types.ObjectId;
+
+const replySchema = new mongoose.Schema({
+  publicUser: { type: OId, ref: 'PublicUser', default: null },
+  staffUser:  { type: OId, ref: 'User',       default: null },
+  authorType: { type: String, enum: ['public', 'staff'], default: 'public' },
+  text:       { type: String, required: true, maxlength: [500, 'Máximo 500 caracteres'] },
+  createdAt:  { type: Date, default: Date.now },
+  likes:    [{ type: OId }],
+  dislikes: [{ type: OId }],
+  hidden:      { type: Boolean, default: false },
+  hiddenBy:    { type: OId, ref: 'User', default: null },
+  hiddenReason:{ type: String, default: null },
+  hiddenAt:    { type: Date, default: null }
+}, { _id: true });
+
 const commentSchema = new mongoose.Schema({
-  publicUser: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'PublicUser',
-    required: true
-  },
-  text: {
-    type: String,
-    required: true,
-    maxlength: [500, 'El comentario no puede superar 500 caracteres']
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  // Moderación: el bibliotecario asignado puede ocultar directo, pero queda
-  // auditable por supervisor/admin (pueden restaurar o confirmar el borrado)
-  hidden: {
-    type: Boolean,
-    default: false
-  },
-  hiddenBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    default: null
-  },
-  hiddenReason: {
-    type: String,
-    default: null
-  },
-  hiddenAt: {
-    type: Date,
-    default: null
-  }
+  publicUser: { type: OId, ref: 'PublicUser', default: null },
+  staffUser:  { type: OId, ref: 'User',       default: null },
+  authorType: { type: String, enum: ['public', 'staff'], default: 'public' },
+  text:       { type: String, required: true, maxlength: [500, 'Máximo 500 caracteres'] },
+  createdAt:  { type: Date, default: Date.now },
+  likes:    [{ type: OId }],
+  dislikes: [{ type: OId }],
+  replies:  [replySchema],
+  hidden:      { type: Boolean, default: false },
+  hiddenBy:    { type: OId, ref: 'User', default: null },
+  hiddenReason:{ type: String, default: null },
+  hiddenAt:    { type: Date, default: null }
 }, { _id: true });
 
 const librarySchema = new mongoose.Schema({

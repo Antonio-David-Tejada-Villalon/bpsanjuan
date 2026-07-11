@@ -20,7 +20,7 @@ const urlValidators = [
   body('socialMedia.youtube').optional({ checkFalsy: true }).isURL({ protocols: ['http', 'https'], require_protocol: true }).withMessage('El link de YouTube debe ser una URL válida (https://youtube.com/...)')
 ];
 
-// Helper: detectar usuario público por token (opcional, no bloquea)
+// Helper: detectar usuario público por token (para /like legacy)
 const getPublicUser = async (req) => {
   try {
     const authHeader = req.headers.authorization;
@@ -31,6 +31,41 @@ const getPublicUser = async (req) => {
     return await PublicUser.findById(decoded.id);
   } catch {
     return null;
+  }
+};
+
+// Helper: detecta cualquier usuario autenticado (público o staff)
+const getAnyUser = async (req) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.type === 'public') {
+      const pub = await PublicUser.findById(decoded.id);
+      if (!pub) return null;
+      return { id: pub._id, authorType: 'public', publicUser: pub._id, staffUser: null };
+    } else {
+      const staff = await User.findById(decoded.id);
+      if (!staff || !staff.isActive) return null;
+      return { id: staff._id, authorType: 'staff', publicUser: null, staffUser: staff._id };
+    }
+  } catch {
+    return null;
+  }
+};
+
+// Helper: toggle like/dislike en un subdoc (comment o reply)
+const toggleReaction = (subdoc, userId, type) => {
+  const uid = userId.toString();
+  const likedIdx    = subdoc.likes.findIndex(id => id.toString() === uid);
+  const dislikedIdx = subdoc.dislikes.findIndex(id => id.toString() === uid);
+  if (type === 'like') {
+    if (likedIdx >= 0) { subdoc.likes.splice(likedIdx, 1); }
+    else { subdoc.likes.push(userId); if (dislikedIdx >= 0) subdoc.dislikes.splice(dislikedIdx, 1); }
+  } else {
+    if (dislikedIdx >= 0) { subdoc.dislikes.splice(dislikedIdx, 1); }
+    else { subdoc.dislikes.push(userId); if (likedIdx >= 0) subdoc.likes.splice(likedIdx, 1); }
   }
 };
 
@@ -73,15 +108,19 @@ router.get('/:id', async (req, res) => {
   try {
     const library = await Library.findById(req.params.id)
       .populate('department', 'name slug')
-      .populate('comments.publicUser', 'name picture');
+      .populate('comments.publicUser', 'name picture')
+      .populate('comments.staffUser', 'name role')
+      .populate('comments.replies.publicUser', 'name picture')
+      .populate('comments.replies.staffUser', 'name role');
 
     if (!library || !library.isActive) {
       return res.status(404).json({ success: false, message: 'Biblioteca no encontrada.' });
     }
 
-    // Los comentarios ocultos por moderación no se muestran públicamente
     const libraryResponse = library.toObject();
-    libraryResponse.comments = libraryResponse.comments.filter(c => !c.hidden);
+    libraryResponse.comments = libraryResponse.comments
+      .filter(c => !c.hidden)
+      .map(c => ({ ...c, replies: (c.replies || []).filter(r => !r.hidden) }));
 
     res.status(200).json({ success: true, library: libraryResponse });
   } catch (error) {
@@ -222,15 +261,23 @@ router.post('/:id/like', async (req, res) => {
   }
 });
 
-// ─── POST /api/libraries/:id/comments — Comentar (usuario público) ────────
+// Helper: populate completo de comments
+const populateComments = (query) =>
+  query
+    .populate('comments.publicUser', 'name picture')
+    .populate('comments.staffUser', 'name role')
+    .populate('comments.replies.publicUser', 'name picture')
+    .populate('comments.replies.staffUser', 'name role');
+
+// ─── POST /api/libraries/:id/comments — Comentar (público o staff) ─────────
 router.post('/:id/comments', [
   body('text').trim().notEmpty().withMessage('El comentario no puede estar vacío')
     .isLength({ max: 500 }).withMessage('Máximo 500 caracteres')
 ], async (req, res) => {
   try {
-    const publicUser = await getPublicUser(req);
-    if (!publicUser) {
-      return res.status(401).json({ success: false, message: 'Debes iniciar sesión con Google para comentar.' });
+    const auth = await getAnyUser(req);
+    if (!auth) {
+      return res.status(401).json({ success: false, message: 'Debes iniciar sesión para comentar.' });
     }
 
     const errors = validationResult(req);
@@ -243,15 +290,116 @@ router.post('/:id/comments', [
       return res.status(404).json({ success: false, message: 'Biblioteca no encontrada.' });
     }
 
-    library.comments.push({ publicUser: publicUser._id, text: req.body.text });
+    library.comments.push({
+      publicUser: auth.publicUser,
+      staffUser: auth.staffUser,
+      authorType: auth.authorType,
+      text: req.body.text
+    });
     await library.save();
 
-    const updatedLibrary = await Library.findById(req.params.id)
-      .populate('comments.publicUser', 'name picture');
+    const updated = await populateComments(Library.findById(req.params.id));
+    const comments = updated.comments
+      .filter(c => !c.hidden)
+      .map(c => ({ ...c.toObject(), replies: (c.replies || []).filter(r => !r.hidden) }));
 
-    res.status(201).json({ success: true, comments: updatedLibrary.comments });
+    res.status(201).json({ success: true, comments });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error al guardar el comentario.' });
+  }
+});
+
+// ─── POST /api/libraries/:id/comments/:commentId/replies — Responder ────────
+router.post('/:id/comments/:commentId/replies', [
+  body('text').trim().notEmpty().withMessage('La respuesta no puede estar vacía')
+    .isLength({ max: 500 }).withMessage('Máximo 500 caracteres')
+], async (req, res) => {
+  try {
+    const auth = await getAnyUser(req);
+    if (!auth) {
+      return res.status(401).json({ success: false, message: 'Debes iniciar sesión para responder.' });
+    }
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const library = await Library.findById(req.params.id);
+    if (!library) return res.status(404).json({ success: false, message: 'Biblioteca no encontrada.' });
+
+    const comment = library.comments.id(req.params.commentId);
+    if (!comment) return res.status(404).json({ success: false, message: 'Comentario no encontrado.' });
+
+    comment.replies.push({
+      publicUser: auth.publicUser,
+      staffUser: auth.staffUser,
+      authorType: auth.authorType,
+      text: req.body.text
+    });
+    await library.save();
+
+    const updated = await populateComments(Library.findById(req.params.id));
+    const comments = updated.comments
+      .filter(c => !c.hidden)
+      .map(c => ({ ...c.toObject(), replies: (c.replies || []).filter(r => !r.hidden) }));
+
+    res.status(201).json({ success: true, comments });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al guardar la respuesta.' });
+  }
+});
+
+// ─── POST /api/libraries/:id/comments/:commentId/react — Like/dislike ───────
+router.post('/:id/comments/:commentId/react', async (req, res) => {
+  try {
+    const { type } = req.body;
+    if (!['like', 'dislike'].includes(type)) {
+      return res.status(400).json({ success: false, message: 'Tipo de reacción inválido.' });
+    }
+    const auth = await getAnyUser(req);
+    if (!auth) return res.status(401).json({ success: false, message: 'Inicia sesión para reaccionar.' });
+
+    const library = await Library.findById(req.params.id);
+    if (!library) return res.status(404).json({ success: false, message: 'Biblioteca no encontrada.' });
+
+    const comment = library.comments.id(req.params.commentId);
+    if (!comment) return res.status(404).json({ success: false, message: 'Comentario no encontrado.' });
+
+    toggleReaction(comment, auth.id, type);
+    await library.save();
+
+    res.json({ success: true, likes: comment.likes.length, dislikes: comment.dislikes.length });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al procesar la reacción.' });
+  }
+});
+
+// ─── POST /api/libraries/:id/comments/:commentId/replies/:replyId/react ─────
+router.post('/:id/comments/:commentId/replies/:replyId/react', async (req, res) => {
+  try {
+    const { type } = req.body;
+    if (!['like', 'dislike'].includes(type)) {
+      return res.status(400).json({ success: false, message: 'Tipo de reacción inválido.' });
+    }
+    const auth = await getAnyUser(req);
+    if (!auth) return res.status(401).json({ success: false, message: 'Inicia sesión para reaccionar.' });
+
+    const library = await Library.findById(req.params.id);
+    if (!library) return res.status(404).json({ success: false, message: 'Biblioteca no encontrada.' });
+
+    const comment = library.comments.id(req.params.commentId);
+    if (!comment) return res.status(404).json({ success: false, message: 'Comentario no encontrado.' });
+
+    const reply = comment.replies.id(req.params.replyId);
+    if (!reply) return res.status(404).json({ success: false, message: 'Respuesta no encontrada.' });
+
+    toggleReaction(reply, auth.id, type);
+    await library.save();
+
+    res.json({ success: true, likes: reply.likes.length, dislikes: reply.dislikes.length });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al procesar la reacción.' });
   }
 });
 
@@ -269,7 +417,10 @@ router.get('/:id/comments', protect, async (req, res) => {
   try {
     const library = await Library.findById(req.params.id)
       .populate('comments.publicUser', 'name picture')
-      .populate('comments.hiddenBy', 'name');
+      .populate('comments.staffUser', 'name role')
+      .populate('comments.hiddenBy', 'name')
+      .populate('comments.replies.publicUser', 'name picture')
+      .populate('comments.replies.staffUser', 'name role');
 
     if (!library) {
       return res.status(404).json({ success: false, message: 'Biblioteca no encontrada.' });

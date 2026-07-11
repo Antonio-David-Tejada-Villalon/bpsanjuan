@@ -546,8 +546,71 @@ img { max-width: 100%; display: block; }
   -webkit-backdrop-filter: blur(8px);
 }
 .comment-list { list-style: none; padding: 0; }
-.comment-list li { border-top: 1px solid var(--border); padding: 12px 0; }
-.comment-list li p { margin-top: 4px; color: var(--text-soft); }
+
+/* ── Sistema de comentarios con respuestas y reacciones ── */
+.comment-item { border-top: 1px solid var(--border); padding: 14px 0 10px; }
+.comment-item:first-child { border-top: none; }
+
+.comment-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.comment-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.comment-avatar--initials {
+  background: var(--primary); color: #fff;
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  letter-spacing: 0.04em;
+}
+.comment-meta { display: flex; flex-direction: column; gap: 1px; }
+.comment-author { font-size: 13px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.comment-role-badge {
+  font-size: 10px; font-weight: 600;
+  background: rgba(250,117,6,0.12); color: var(--primary);
+  border: 1px solid rgba(250,117,6,0.25);
+  border-radius: 4px; padding: 1px 6px; letter-spacing: 0.03em;
+}
+.comment-time { font-size: 11px; color: var(--text-soft); }
+.comment-text { font-size: 14px; color: var(--text); margin: 0 0 8px 46px; line-height: 1.55; }
+.comment-actions { display: flex; align-items: center; gap: 12px; margin-left: 46px; }
+
+.comment-reactions { display: flex; align-items: center; gap: 4px; }
+.reaction-btn {
+  display: flex; align-items: center; gap: 4px;
+  background: none; border: 1px solid transparent;
+  border-radius: 20px; padding: 3px 8px;
+  font-size: 12px; font-weight: 600; color: var(--text-soft);
+  cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.reaction-btn:hover { background: rgba(250,117,6,0.08); color: var(--primary); border-color: rgba(250,117,6,0.2); }
+.reaction-btn--liked    { color: var(--primary); border-color: rgba(250,117,6,0.35); background: rgba(250,117,6,0.08); }
+.reaction-btn--disliked { color: var(--error);   border-color: rgba(213,69,69,0.3);  background: rgba(213,69,69,0.06); }
+
+.comment-reply-btn {
+  display: flex; align-items: center; gap: 5px;
+  background: none; border: none; border-radius: 6px;
+  font-size: 12px; font-weight: 600; color: var(--text-soft);
+  cursor: pointer; padding: 3px 6px;
+  transition: color 0.15s, background 0.15s;
+}
+.comment-reply-btn:hover { color: var(--primary); background: rgba(250,117,6,0.07); }
+
+.comment-replies {
+  margin: 10px 0 0 46px;
+  border-left: 2px solid rgba(250,117,6,0.18);
+  padding-left: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.reply-item .comment-avatar { width: 28px; height: 28px; font-size: 11px; }
+.reply-item .comment-text   { margin-left: 38px; }
+.reply-item .comment-reactions { margin-left: 38px; }
+
+.reply-form { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.reply-form textarea {
+  resize: vertical; min-height: 60px;
+  border: 1.5px solid rgba(250,117,6,0.28);
+  border-radius: var(--radius); padding: 8px 10px;
+  font-size: 13px; background: var(--surface); color: var(--text);
+  transition: border-color 0.2s;
+}
+.reply-form textarea:focus { outline: none; border-color: var(--primary); }
 
 /* ─── Admin / Panel ───────────────────────────────────────────── */
 .admin-header { margin-bottom: 24px; animation: fadeInUp 0.4s var(--ease) both; }
@@ -1349,6 +1412,13 @@ img { max-width: 100%; display: block; }
   border-color: rgba(255, 255, 255, 0.12);
   color: var(--text);
 }
+[data-theme="dark"] .reply-form textarea {
+  background: rgba(32, 32, 32, 0.92);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text);
+}
+[data-theme="dark"] .reaction-btn:hover { background: rgba(250,117,6,0.12); }
+[data-theme="dark"] .comment-role-badge { background: rgba(250,117,6,0.18); }
 [data-theme="dark"] .btn-like {
   background: rgba(26, 26, 26, 0.72);
   border-color: rgba(255, 255, 255, 0.10);
