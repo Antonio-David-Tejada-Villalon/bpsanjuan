@@ -52,6 +52,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
+  lastSeen: {
+    type: Date,
+    default: null
+  },
   passwordChangedAt: {
     type: Date,
     default: null

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import * as usersApi from '../../api/users';
 import { getLibraries } from '../../api/libraries';
+import { OnlineIndicator } from '../../components/OnlineIndicator';
 
 const emptyForm = {
   name: '',
@@ -192,7 +193,12 @@ export default function GestionUsuarios() {
           <tbody>
             {users.map(u => (
               <tr key={u._id}>
-                <td>{u.name}</td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <OnlineIndicator lastSeen={u.lastSeen} size={9} />
+                    {u.name}
+                  </div>
+                </td>
                 <td>{u.email}</td>
                 <td><span className="badge">{u.role}</span></td>
                 <td>

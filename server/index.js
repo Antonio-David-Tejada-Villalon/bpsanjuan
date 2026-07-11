@@ -20,6 +20,9 @@ const libraryRoutes = require('./routes/libraries');
 const newsRoutes = require('./routes/news');
 const librarySubmissionRoutes = require('./routes/librarySubmissions');
 const messageRoutes = require('./routes/messages');
+const publicUserRoutes = require('./routes/publicUsers');
+const presenceRoutes = require('./routes/presence');
+const activityLogRoutes = require('./routes/activityLogs');
 
 const app = express();
 
@@ -61,6 +64,9 @@ app.use('/api/libraries', libraryRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/library-submissions', librarySubmissionRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/public-users', publicUserRoutes);
+app.use('/api/presence', presenceRoutes);
+app.use('/api/activity-logs', activityLogRoutes);
 
 // ─── Ruta de health check ─────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

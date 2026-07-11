@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Library = require('../models/Library');
 const { protect, restrictTo } = require('../middleware/authMiddleware');
 const { createAccountLimiter } = require('../middleware/rateLimiter');
+const logActivity = require('../helpers/logActivity');
 
 const router = express.Router();
 
@@ -59,6 +60,7 @@ router.post('/', restrictTo('admin'), createAccountLimiter, [
     });
 
     newUser.password = undefined;
+    logActivity({ userId: req.user._id, userType: 'staff', userName: req.user.name, userEmail: req.user.email, userRole: req.user.role, action: `Creó usuario: ${newUser.name} (${newUser.role})`, resource: newUser.name, resourceId: newUser._id, ip: req.ip });
     res.status(201).json({ success: true, user: newUser });
   } catch (error) {
     console.error(error);
@@ -118,6 +120,7 @@ router.patch('/:id', restrictTo('admin'), [
       return res.status(404).json({ success: false, message: 'Usuario no encontrado.' });
     }
 
+    logActivity({ userId: req.user._id, userType: 'staff', userName: req.user.name, userEmail: req.user.email, userRole: req.user.role, action: `Editó usuario: ${user.name}`, resource: user.name, resourceId: user._id, ip: req.ip });
     res.status(200).json({ success: true, user });
   } catch (error) {
     if (error.code === 11000) {
@@ -169,6 +172,7 @@ router.delete('/:id', restrictTo('admin'), async (req, res) => {
     // Limpiar referencia informativa en bibliotecas asignadas a este usuario
     await Library.updateMany({ assignedUser: user._id }, { assignedUser: null });
 
+    logActivity({ userId: req.user._id, userType: 'staff', userName: req.user.name, userEmail: req.user.email, userRole: req.user.role, action: `Eliminó usuario: ${user.name} (${user.role})`, resource: user.name, ip: req.ip });
     res.status(200).json({ success: true, message: 'Usuario eliminado correctamente.' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error al eliminar el usuario.' });

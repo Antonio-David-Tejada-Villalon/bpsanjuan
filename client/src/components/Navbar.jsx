@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useHeartbeat } from '../hooks/useHeartbeat';
+import { OnlineIndicator } from './OnlineIndicator';
 import './Navbar.css';
 
 function IconSun() {
@@ -33,6 +35,7 @@ const dashboardPathByRole = {
 export default function Navbar() {
   const { user, logout, publicUser, logoutPublic } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const connState = useHeartbeat();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -64,7 +67,8 @@ export default function Navbar() {
           {user ? (
             <>
               <NavLink to={dashboardPathByRole[user.role] || '/'}>Panel</NavLink>
-              <button className="btn btn-outline btn-sm" onClick={handleLogout}>
+              <button className="btn btn-outline btn-sm" onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <OnlineIndicator overrideStatus={connState} size={8} style={{ border: '1.5px solid rgba(255,255,255,0.5)' }} />
                 Salir ({user.name})
               </button>
             </>
@@ -75,9 +79,13 @@ export default function Navbar() {
           {publicUser && (
             <span className="navbar-public-user">
               {publicUser.picture && <img src={publicUser.picture} alt={publicUser.name} className="navbar-avatar" />}
-              <span>{publicUser.name}</span>
+              <NavLink to="/perfil" style={{ fontWeight: 500 }}>{publicUser.name}</NavLink>
               <button className="btn btn-outline btn-sm" onClick={logoutPublic}>Salir</button>
             </span>
+          )}
+
+          {user && (
+            <NavLink to="/perfil" className="navbar-staff-link" style={{ fontSize: '0.85rem' }}>Mi Perfil</NavLink>
           )}
 
           <button

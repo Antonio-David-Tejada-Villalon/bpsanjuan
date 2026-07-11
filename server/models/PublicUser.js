@@ -30,6 +30,15 @@ const publicUserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'News'
   }],
+  bio: {
+    type: String,
+    default: null,
+    maxlength: [200, 'Máximo 200 caracteres']
+  },
+  lastSeen: {
+    type: Date,
+    default: null
+  },
   isActive: {
     type: Boolean,
     default: true

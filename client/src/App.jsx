@@ -4,7 +4,6 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
-
 import Home from './pages/Home';
 import Nosotros from './pages/Nosotros';
 import Noticias from './pages/Noticias';
@@ -22,6 +21,9 @@ import GestionDepartamentos from './pages/admin/GestionDepartamentos';
 import BibliotecaForm from './pages/admin/BibliotecaForm';
 import NoticiaForm from './pages/admin/NoticiaForm';
 import Aprobaciones from './pages/admin/Aprobaciones';
+import GestionUsuariosPublicos from './pages/admin/GestionUsuariosPublicos';
+import ActivityLogs from './pages/admin/ActivityLogs';
+import MiPerfil from './pages/MiPerfil';
 import PanelLayout from './pages/bibliotecario/PanelLayout';
 import MiBiblioteca from './pages/bibliotecario/MiBiblioteca';
 import ModeracionComentarios from './pages/bibliotecario/ModeracionComentarios';
@@ -43,6 +45,7 @@ function App() {
             <Route path="/bibliotecas/:id" element={<BibliotecaDetalle />} />
             <Route path="/login" element={<Login />} />
             <Route path="/auth/google-callback" element={<GoogleCallback />} />
+            <Route path="/perfil" element={<MiPerfil />} />
 
             <Route
               path="/admin"
@@ -62,6 +65,8 @@ function App() {
               <Route path="noticias/editar/:id" element={<NoticiaForm />} />
               <Route path="departamentos" element={<GestionDepartamentos />} />
               <Route path="aprobaciones" element={<Aprobaciones />} />
+              <Route path="comunidad" element={<GestionUsuariosPublicos />} />
+              <Route path="actividad" element={<ActivityLogs />} />
             </Route>
             <Route
               path="/panel"

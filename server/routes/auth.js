@@ -4,6 +4,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const PublicUser = require('../models/PublicUser');
+const logActivity = require('../helpers/logActivity');
 const { sendTokenResponse, protect } = require('../middleware/authMiddleware');
 const { loginLimiter } = require('../middleware/rateLimiter');
 
@@ -45,6 +46,8 @@ router.post('/login', loginLimiter, loginValidations, async (req, res) => {
     // Actualizar último login
     user.lastLogin = new Date();
     await user.save({ validateBeforeSave: false });
+
+    logActivity({ userId: user._id, userType: 'staff', userName: user.name, userEmail: user.email, userRole: user.role, action: 'Inició sesión', ip: req.ip });
 
     sendTokenResponse(user, 200, res);
   } catch (error) {
@@ -155,7 +158,8 @@ router.get('/me-public', async (req, res) => {
       return res.status(401).json({ success: false, message: 'No autorizado.' });
     }
 
-    const publicUser = await PublicUser.findById(decoded.id);
+    const publicUser = await PublicUser.findById(decoded.id)
+      .populate('likedLibraries', 'name thumbnail address');
     if (!publicUser) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado.' });
     }
@@ -166,9 +170,46 @@ router.get('/me-public', async (req, res) => {
         _id: publicUser._id,
         name: publicUser.name,
         email: publicUser.email,
-        picture: publicUser.picture
+        picture: publicUser.picture,
+        bio: publicUser.bio,
+        createdAt: publicUser.createdAt,
+        likedLibraries: publicUser.likedLibraries,
+        isActive: publicUser.isActive
       }
     });
+  } catch {
+    res.status(401).json({ success: false, message: 'Token inválido o expirado.' });
+  }
+});
+
+// ─── PATCH /api/auth/update-profile-public — Actualizar bio del usuario público ─
+router.patch('/update-profile-public', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer')) {
+      return res.status(401).json({ success: false, message: 'No autorizado.' });
+    }
+
+    const decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
+    if (decoded.type !== 'public') {
+      return res.status(401).json({ success: false, message: 'No autorizado.' });
+    }
+
+    const { bio } = req.body;
+    if (bio !== undefined && bio.length > 200) {
+      return res.status(400).json({ success: false, message: 'La bio no puede superar 200 caracteres.' });
+    }
+
+    const publicUser = await PublicUser.findByIdAndUpdate(
+      decoded.id,
+      { bio: bio ?? null },
+      { new: true }
+    );
+    if (!publicUser) {
+      return res.status(404).json({ success: false, message: 'Usuario no encontrado.' });
+    }
+
+    res.json({ success: true, publicUser: { _id: publicUser._id, bio: publicUser.bio } });
   } catch {
     res.status(401).json({ success: false, message: 'Token inválido o expirado.' });
   }

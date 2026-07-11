@@ -39,6 +39,16 @@ export default function Dashboard() {
             Departamentos
           </NavLink>
         )}
+        {user.role === 'admin' && (
+          <NavLink to="/admin/comunidad" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Comunidad
+          </NavLink>
+        )}
+        {user.role === 'admin' && (
+          <NavLink to="/admin/actividad" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Actividad
+          </NavLink>
+        )}
       </nav>
 
       <Outlet />
