@@ -54,6 +54,7 @@ export default function ShareBtn({ url, title, resourceId, resourceType, resourc
   const [copied, setCopied] = useState(false);
   const [menuStyle, setMenuStyle] = useState({});
   const triggerRef = useRef(null);
+  const menuRef = useRef(null);
 
   const fullUrl = url || window.location.href;
   const shareTitle = title || document.title;
@@ -81,7 +82,10 @@ export default function ShareBtn({ url, title, resourceId, resourceType, resourc
   useEffect(() => {
     if (!open) return;
     const close = e => {
-      if (triggerRef.current && !triggerRef.current.contains(e.target)) setOpen(false);
+      if (
+        triggerRef.current && !triggerRef.current.contains(e.target) &&
+        menuRef.current && !menuRef.current.contains(e.target)
+      ) setOpen(false);
     };
     const reposition = () => calcPosition();
     document.addEventListener('mousedown', close);
@@ -105,7 +109,7 @@ export default function ShareBtn({ url, title, resourceId, resourceType, resourc
   };
 
   const menu = open && (
-    <div className="share-menu" style={menuStyle}>
+    <div ref={menuRef} className="share-menu" style={menuStyle}>
       <p className="share-menu-title">Compartir</p>
       {SHARE_OPTIONS.map(opt => (
         <a
