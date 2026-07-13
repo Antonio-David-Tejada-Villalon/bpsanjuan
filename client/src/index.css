@@ -440,9 +440,10 @@ img { max-width: 100%; display: block; }
 }
 .footer-inner strong { color: #fff; font-size: 16px; }
 .footer-inner p      { margin-top: 6px; font-size: 14px; max-width: 360px; }
-.footer-social       { display: flex; gap: 16px; }
-.footer-social a     { color: rgba(255,255,255,0.80); font-size: 14px; transition: color var(--transition); }
-.footer-social a:hover { color: #fff; text-decoration: none; }
+.footer-social            { display: flex; align-items: center; gap: 20px; }
+.footer-social-link       { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,0.75); font-size: 14px; transition: color var(--transition), transform var(--transition); }
+.footer-social-link:hover { color: #fff; text-decoration: none; transform: translateY(-2px); }
+.footer-social-link svg   { flex-shrink: 0; }
 .footer-copy {
   text-align: center;
   font-size: 13px;
