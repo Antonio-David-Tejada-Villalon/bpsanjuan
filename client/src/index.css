@@ -21,11 +21,33 @@
   --danger: #D64545;
   --warning: #F4A300;
   --info: #2F80ED;
+  --radius-sm: 6px;
   --radius: 12px;
   --radius-lg: 20px;
+  --radius-xl: 28px;
+  --shadow-xs: 0 1px 4px rgba(0, 0, 0, 0.07);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.09);
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
   --shadow-lg: 0 10px 30px rgba(250, 117, 6, 0.18);
-  --sans: 'Segoe UI', system-ui, Roboto, sans-serif;
+  --shadow-xl: 0 20px 56px rgba(0, 0, 0, 0.14);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-md: 17px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --sans: 'Inter', 'Segoe UI', system-ui, Roboto, sans-serif;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -53,8 +75,11 @@
   --danger: #D64545;
   --warning: #F4A300;
   --info: #2F80ED;
+  --shadow-xs: 0 1px 4px rgba(0, 0, 0, 0.20);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.65);
 }
 
 /* ─── Keyframes ───────────────────────────────────────────────── */
@@ -81,6 +106,10 @@
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+@keyframes skeletonShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 @keyframes orbFloat {
   0%, 100% { transform: translateY(0) scale(1); }
@@ -1357,7 +1386,34 @@ img { max-width: 100%; display: block; }
   color: #374151;
   box-shadow: none;
 }
+/* ─── Skeleton loading ────────────────────────────────────────── */
+.skeleton-block {
+  background: linear-gradient(
+    90deg,
+    rgba(250, 117, 6, 0.07) 25%,
+    rgba(250, 117, 6, 0.14) 50%,
+    rgba(250, 117, 6, 0.07) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.6s ease-in-out infinite;
+  border-radius: 6px;
+  display: block;
+}
+.skeleton-card .card-body { gap: 10px; display: flex; flex-direction: column; }
+.page-loading-skeleton { animation: fadeIn 0.3s var(--ease) both; }
+
 /* ─── Dark mode overrides ─────────────────────────────────────── */
+[data-theme="dark"] .skeleton-block {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.10) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.6s ease-in-out infinite;
+}
+
 [data-theme="dark"] .field input,
 [data-theme="dark"] .field textarea,
 [data-theme="dark"] .field select {
