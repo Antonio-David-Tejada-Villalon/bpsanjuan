@@ -483,7 +483,6 @@ img { max-width: 100%; display: block; }
   padding: 72px 0;
   text-align: center;
   position: relative;
-  overflow: hidden;
 }
 .hero::before {
   content: '';
@@ -523,7 +522,7 @@ img { max-width: 100%; display: block; }
   border: 2px solid rgba(255,255,255,0.5);
   background: rgba(255,255,255,0.95);
   font-size: 16px;
-  color: var(--text);
+  color: #232323;
   transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
