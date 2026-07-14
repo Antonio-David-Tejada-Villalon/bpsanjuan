@@ -103,6 +103,24 @@ router.get('/', async (req, res) => {
   }
 });
 
+// ─── GET /api/libraries/suggest?q=text — Autocomplete (público) ──────────
+router.get('/suggest', async (req, res) => {
+  try {
+    const q = (req.query.q || '').trim();
+    if (q.length < 1) return res.json({ success: true, libraries: [] });
+    const libraries = await Library.find({
+      name: { $regex: q, $options: 'i' },
+      isActive: true
+    })
+      .populate('department', 'name slug')
+      .select('name department address')
+      .limit(6);
+    res.json({ success: true, libraries });
+  } catch {
+    res.status(500).json({ success: false, libraries: [] });
+  }
+});
+
 // ─── GET /api/libraries/:id — Ver una biblioteca (público) ────────────────
 router.get('/:id', async (req, res) => {
   try {

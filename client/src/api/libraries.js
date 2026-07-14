@@ -3,6 +3,9 @@ import api from './axios';
 export const getLibraries = (params = {}) =>
   api.get('/libraries', { params }).then(res => res.data);
 
+export const searchLibraries = (q) =>
+  api.get('/libraries/suggest', { params: { q } }).then(res => res.data);
+
 export const getLibrary = (id) =>
   api.get(`/libraries/${id}`).then(res => res.data);
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getDepartments } from '../api/departments';
+import LibrarySearch from '../components/LibrarySearch';
 
 export default function Home() {
   const [departments, setDepartments] = useState([]);
@@ -22,6 +23,7 @@ export default function Home() {
           <p className="hero-subtitle">
             Explorá la red de bibliotecas populares distribuidas en los 19 departamentos de la provincia.
           </p>
+          <LibrarySearch departments={departments} />
         </div>
       </section>
 
