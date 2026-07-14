@@ -53,7 +53,9 @@ const librarySchema = new mongoose.Schema({
     street: String,
     locality: String,
     zipCode: String,
-    mapsUrl: String
+    mapsUrl: String,
+    lat: Number,
+    lng: Number
   },
   contact: {
     phone: String,

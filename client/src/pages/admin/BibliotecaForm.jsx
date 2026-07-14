@@ -10,7 +10,7 @@ const DESC_MAX = 2000;
 const emptyForm = {
   name: '',
   department: '',
-  address: { street: '', locality: '', zipCode: '', mapsUrl: '' },
+  address: { street: '', locality: '', zipCode: '', mapsUrl: '', lat: '', lng: '' },
   contact: { phone: '', whatsapp: '', email: '', website: '' },
   socialMedia: { facebook: '', instagram: '', youtube: '' },
   digibepe: '',
@@ -49,7 +49,7 @@ export default function BibliotecaForm() {
           setForm({
             name:        lib.name || '',
             department:  lib.department?._id || lib.department || '',
-            address:     { street: lib.address?.street || '', locality: lib.address?.locality || '', zipCode: lib.address?.zipCode || '', mapsUrl: lib.address?.mapsUrl || '' },
+            address:     { street: lib.address?.street || '', locality: lib.address?.locality || '', zipCode: lib.address?.zipCode || '', mapsUrl: lib.address?.mapsUrl || '', lat: lib.address?.lat ?? '', lng: lib.address?.lng ?? '' },
             contact:     { phone: lib.contact?.phone || '', whatsapp: lib.contact?.whatsapp || '', email: lib.contact?.email || '', website: lib.contact?.website || '' },
             socialMedia: { facebook: lib.socialMedia?.facebook || '', instagram: lib.socialMedia?.instagram || '', youtube: lib.socialMedia?.youtube || '' },
             digibepe:    lib.digibepe || '',
@@ -98,6 +98,11 @@ export default function BibliotecaForm() {
     try {
       const payload = {
         ...form,
+        address: {
+          ...form.address,
+          lat: form.address.lat !== '' ? Number(form.address.lat) : undefined,
+          lng: form.address.lng !== '' ? Number(form.address.lng) : undefined,
+        },
         foundedYear:  form.foundedYear  ? Number(form.foundedYear)  : undefined,
         foundedMonth: form.foundedMonth ? Number(form.foundedMonth) : undefined,
         foundedDay:   form.foundedDay   ? Number(form.foundedDay)   : undefined,
@@ -221,6 +226,31 @@ export default function BibliotecaForm() {
             <label>Link de Google Maps <span className="field-hint-inline">(el usuario solo ve la dirección de arriba)</span></label>
             <input value={form.address.mapsUrl} onChange={e => setAddr('mapsUrl', e.target.value)} placeholder="https://maps.google.com/..." />
           </div>
+          <div className="form-grid">
+            <div className="field">
+              <label>Latitud</label>
+              <input
+                type="number"
+                step="any"
+                value={form.address.lat}
+                onChange={e => setAddr('lat', e.target.value)}
+                placeholder="-31.5375"
+              />
+            </div>
+            <div className="field">
+              <label>Longitud</label>
+              <input
+                type="number"
+                step="any"
+                value={form.address.lng}
+                onChange={e => setAddr('lng', e.target.value)}
+                placeholder="-68.5364"
+              />
+            </div>
+          </div>
+          <span className="field-hint">
+            Para obtener las coordenadas: abrí Google Maps, buscá la biblioteca, hacé clic derecho sobre el pin y seleccioná <strong>"Copiar coordenadas"</strong>. El primer número es la latitud y el segundo la longitud.
+          </span>
         </fieldset>
 
         <fieldset className="form-section">

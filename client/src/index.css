@@ -1024,8 +1024,9 @@ img { max-width: 100%; display: block; }
 .lib-contact-item--wa    .lib-contact-icon { background: rgba(22,163,74,0.10);  color: #16a34a; }
 .lib-contact-item--mail  .lib-contact-icon { background: rgba(124,58,237,0.10); color: #7c3aed; }
 .lib-contact-item--digi  .lib-contact-icon { background: rgba(180,83,9,0.10);   color: #b45309; }
-.lib-contact-item--web   .lib-contact-icon { background: rgba(8,145,178,0.10);  color: #0891b2; }
-.lib-contact-item--plain .lib-contact-icon { background: rgba(91,95,107,0.10);  color: var(--text-soft); }
+.lib-contact-item--web     .lib-contact-icon { background: rgba(8,145,178,0.10);  color: #0891b2; }
+.lib-contact-item--transit .lib-contact-icon { background: rgba(234,88,12,0.10);  color: #ea580c; }
+.lib-contact-item--plain   .lib-contact-icon { background: rgba(91,95,107,0.10);  color: var(--text-soft); }
 
 .lib-contact-label { flex: 1; word-break: break-all; }
 
@@ -1042,7 +1043,8 @@ img { max-width: 100%; display: block; }
 .lib-contact-item--wa    .lib-contact-badge { background: rgba(22,163,74,0.12);  color: #16a34a; }
 .lib-contact-item--mail  .lib-contact-badge { background: rgba(124,58,237,0.12); color: #7c3aed; }
 .lib-contact-item--digi  .lib-contact-badge { background: rgba(180,83,9,0.12);   color: #b45309; }
-.lib-contact-item--web   .lib-contact-badge { background: rgba(8,145,178,0.12);  color: #0891b2; }
+.lib-contact-item--web     .lib-contact-badge { background: rgba(8,145,178,0.12);  color: #0891b2; }
+.lib-contact-item--transit .lib-contact-badge { background: rgba(234,88,12,0.12);  color: #ea580c; }
 
 /* ─── Social buttons ─────────────────────────────────────────── */
 .lib-social-row { display: flex; gap: 10px; flex-wrap: wrap; }
