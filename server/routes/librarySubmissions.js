@@ -11,7 +11,7 @@ const router = express.Router();
 // PATCH /api/libraries/:id para admin/supervisor, menos los admin-only:
 // department, assignedUser, conabipRegistered, isActive)
 const allowedChangeFields = [
-  'name', 'foundedYear', 'address', 'contact', 'socialMedia',
+  'name', 'foundedYear', 'foundedMonth', 'foundedDay', 'address', 'contact', 'socialMedia',
   'schedule', 'description', 'services', 'images', 'thumbnail'
 ];
 
@@ -19,6 +19,10 @@ const submissionValidators = [
   body('name').trim().notEmpty().withMessage('El nombre es requerido'),
   body('foundedYear').optional({ checkFalsy: true })
     .isInt({ min: 1800, max: new Date().getFullYear() }).withMessage('Año de fundación inválido'),
+  body('foundedMonth').optional({ checkFalsy: true })
+    .isInt({ min: 1, max: 12 }).withMessage('Mes de fundación inválido'),
+  body('foundedDay').optional({ checkFalsy: true })
+    .isInt({ min: 1, max: 31 }).withMessage('Día de fundación inválido'),
   body('description').optional({ checkFalsy: true })
     .isLength({ max: 2000 }).withMessage('La descripción no puede superar 2000 caracteres'),
   body('contact.website').optional({ checkFalsy: true })

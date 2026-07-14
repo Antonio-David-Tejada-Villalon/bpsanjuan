@@ -822,6 +822,11 @@ img { max-width: 100%; display: block; }
   gap: 8px;
   align-items: center;
 }
+.badge-outline {
+  background: transparent;
+  border: 1px solid rgba(250,117,6,0.5);
+  color: var(--primary);
+}
 .badge-conabip {
   background: linear-gradient(135deg, #d97706, #b45309);
   box-shadow: 0 2px 8px rgba(180,83,9,0.28);

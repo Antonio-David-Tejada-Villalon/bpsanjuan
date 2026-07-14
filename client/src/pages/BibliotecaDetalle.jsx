@@ -251,10 +251,14 @@ export default function BibliotecaDetalle() {
               <h1 className="lib-title">{library.name}</h1>
               <div className="lib-badges">
                 {library.department?.name && <span className="badge">{library.department.name}</span>}
+                {library.address?.locality && <span className="badge badge-outline">{library.address.locality}</span>}
                 {library.conabipRegistered && <span className="badge badge-conabip">CONABIP</span>}
                 {library.foundedYear && (
                   <span className="lib-badge-plain">
-                    <IconCalendar /> Fundada en {library.foundedYear}
+                    <IconCalendar /> Fundada{' '}
+                    {library.foundedDay && library.foundedMonth
+                      ? `el ${library.foundedDay} de ${['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][library.foundedMonth - 1]} de ${library.foundedYear}`
+                      : `en ${library.foundedYear}`}
                   </span>
                 )}
               </div>

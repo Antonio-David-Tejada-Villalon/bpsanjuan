@@ -4,6 +4,8 @@ import { getLibrary, createLibrary, updateLibrary } from '../../api/libraries';
 import { getDepartments } from '../../api/departments';
 
 const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DESC_MAX = 2000;
 
 const emptyForm = {
   name: '',
@@ -18,6 +20,8 @@ const emptyForm = {
   description: '',
   services: '',
   conabipRegistered: false,
+  foundedDay: '',
+  foundedMonth: '',
   foundedYear: '',
   isActive: true,
 };
@@ -55,7 +59,9 @@ export default function BibliotecaForm() {
             description: lib.description || '',
             services:    (lib.services || []).join(', '),
             conabipRegistered: !!lib.conabipRegistered,
-            foundedYear: lib.foundedYear || '',
+            foundedDay:   lib.foundedDay  || '',
+            foundedMonth: lib.foundedMonth || '',
+            foundedYear:  lib.foundedYear  || '',
             isActive:    lib.isActive ?? true,
           });
         }
@@ -67,6 +73,11 @@ export default function BibliotecaForm() {
     };
     init();
   }, [id]);
+
+  const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
+  const setAddr = (key, val) => setForm(f => ({ ...f, address: { ...f.address, [key]: val } }));
+  const setContact = (key, val) => setForm(f => ({ ...f, contact: { ...f.contact, [key]: val } }));
+  const setSocial = (key, val) => setForm(f => ({ ...f, socialMedia: { ...f.socialMedia, [key]: val } }));
 
   const addScheduleRow = () =>
     setForm(f => ({ ...f, schedule: [...f.schedule, { day: DAYS[0], open: '', close: '' }] }));
@@ -87,7 +98,9 @@ export default function BibliotecaForm() {
     try {
       const payload = {
         ...form,
-        foundedYear: form.foundedYear ? Number(form.foundedYear) : undefined,
+        foundedYear:  form.foundedYear  ? Number(form.foundedYear)  : undefined,
+        foundedMonth: form.foundedMonth ? Number(form.foundedMonth) : undefined,
+        foundedDay:   form.foundedDay   ? Number(form.foundedDay)   : undefined,
         thumbnail: form.thumbnail || null,
         images: form.images ? form.images.split('\n').map(s => s.trim()).filter(Boolean) : [],
         services: form.services ? form.services.split(',').map(s => s.trim()).filter(Boolean) : [],
@@ -119,38 +132,80 @@ export default function BibliotecaForm() {
 
         <fieldset className="form-section">
           <legend>Información general</legend>
+
           <div className="field">
             <label>Nombre *</label>
-            <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
+            <input value={form.name} onChange={e => set('name', e.target.value)} required />
           </div>
+
           <div className="form-grid">
             <div className="field">
               <label>Departamento *</label>
-              <select value={form.department} onChange={e => setForm(f => ({ ...f, department: e.target.value }))} required>
+              <select value={form.department} onChange={e => set('department', e.target.value)} required>
                 <option value="">Seleccionar…</option>
                 {departments.map(d => <option key={d._id} value={d._id}>{d.name}</option>)}
               </select>
             </div>
             <div className="field">
-              <label>Año de fundación</label>
-              <input type="number" value={form.foundedYear} onChange={e => setForm(f => ({ ...f, foundedYear: e.target.value }))} />
+              <label>Localidad</label>
+              <input
+                value={form.address.locality}
+                onChange={e => setAddr('locality', e.target.value)}
+                placeholder="Ej: Caucete, Rivadavia…"
+              />
             </div>
           </div>
+
+          <div className="field">
+            <label>Fecha de fundación</label>
+            <div className="form-grid" style={{ gridTemplateColumns: '80px 1fr 100px', gap: 10 }}>
+              <input
+                type="number"
+                placeholder="Día"
+                min={1} max={31}
+                value={form.foundedDay}
+                onChange={e => set('foundedDay', e.target.value)}
+              />
+              <select value={form.foundedMonth} onChange={e => set('foundedMonth', e.target.value)}>
+                <option value="">Mes…</option>
+                {MONTHS.map((m, i) => <option key={i+1} value={i+1}>{m}</option>)}
+              </select>
+              <input
+                type="number"
+                placeholder="Año"
+                min={1800} max={new Date().getFullYear()}
+                value={form.foundedYear}
+                onChange={e => set('foundedYear', e.target.value)}
+              />
+            </div>
+            <span className="field-hint">El día y el mes son opcionales — podés ingresar solo el año.</span>
+          </div>
+
           <div className="field">
             <label>Descripción</label>
-            <textarea rows={4} maxLength={2000} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
+            <textarea
+              rows={4}
+              maxLength={DESC_MAX}
+              value={form.description}
+              onChange={e => set('description', e.target.value)}
+            />
+            <span className="field-hint" style={{ textAlign: 'right', display: 'block' }}>
+              {form.description.length}/{DESC_MAX} caracteres
+            </span>
           </div>
+
           <div className="field">
             <label>Servicios (separados por coma)</label>
-            <input value={form.services} onChange={e => setForm(f => ({ ...f, services: e.target.value }))} placeholder="Préstamo de libros, Talleres, Sala de lectura" />
+            <input value={form.services} onChange={e => set('services', e.target.value)} placeholder="Préstamo de libros, Talleres, Sala de lectura" />
           </div>
+
           <div className="form-grid">
             <div className="field field-checkbox">
-              <input type="checkbox" checked={form.conabipRegistered} onChange={e => setForm(f => ({ ...f, conabipRegistered: e.target.checked }))} />
+              <input type="checkbox" checked={form.conabipRegistered} onChange={e => set('conabipRegistered', e.target.checked)} />
               <span>Registrada en CONABIP</span>
             </div>
             <div className="field field-checkbox">
-              <input type="checkbox" checked={form.isActive} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))} />
+              <input type="checkbox" checked={form.isActive} onChange={e => set('isActive', e.target.checked)} />
               <span>Biblioteca activa</span>
             </div>
           </div>
@@ -158,19 +213,13 @@ export default function BibliotecaForm() {
 
         <fieldset className="form-section">
           <legend>Dirección</legend>
-          <div className="form-grid">
-            <div className="field">
-              <label>Calle y número</label>
-              <input value={form.address.street} onChange={e => setForm(f => ({ ...f, address: { ...f.address, street: e.target.value } }))} placeholder="Av. San Martín 1234" />
-            </div>
-            <div className="field">
-              <label>Localidad</label>
-              <input value={form.address.locality} onChange={e => setForm(f => ({ ...f, address: { ...f.address, locality: e.target.value } }))} placeholder="Caucete" />
-            </div>
+          <div className="field">
+            <label>Calle y número</label>
+            <input value={form.address.street} onChange={e => setAddr('street', e.target.value)} placeholder="Av. San Martín 1234" />
           </div>
           <div className="field">
             <label>Link de Google Maps <span className="field-hint-inline">(el usuario solo ve la dirección de arriba)</span></label>
-            <input value={form.address.mapsUrl} onChange={e => setForm(f => ({ ...f, address: { ...f.address, mapsUrl: e.target.value } }))} placeholder="https://maps.google.com/..." />
+            <input value={form.address.mapsUrl} onChange={e => setAddr('mapsUrl', e.target.value)} placeholder="https://maps.google.com/..." />
           </div>
         </fieldset>
 
@@ -179,21 +228,21 @@ export default function BibliotecaForm() {
           <div className="form-grid">
             <div className="field">
               <label>Teléfono fijo</label>
-              <input value={form.contact.phone} onChange={e => setForm(f => ({ ...f, contact: { ...f.contact, phone: e.target.value } }))} placeholder="0264-4xxxxxx" />
+              <input value={form.contact.phone} onChange={e => setContact('phone', e.target.value)} placeholder="0264-4xxxxxx" />
             </div>
             <div className="field">
               <label>WhatsApp</label>
-              <input value={form.contact.whatsapp} onChange={e => setForm(f => ({ ...f, contact: { ...f.contact, whatsapp: e.target.value } }))} placeholder="5492644xxxxxx" />
+              <input value={form.contact.whatsapp} onChange={e => setContact('whatsapp', e.target.value)} placeholder="5492644xxxxxx" />
             </div>
           </div>
           <div className="form-grid">
             <div className="field">
               <label>Email</label>
-              <input type="email" value={form.contact.email} onChange={e => setForm(f => ({ ...f, contact: { ...f.contact, email: e.target.value } }))} />
+              <input type="email" value={form.contact.email} onChange={e => setContact('email', e.target.value)} />
             </div>
             <div className="field">
               <label>DigiBepe</label>
-              <input value={form.contact.website} onChange={e => setForm(f => ({ ...f, contact: { ...f.contact, website: e.target.value } }))} placeholder="http://XXXX.bepe.ar/" />
+              <input value={form.contact.website} onChange={e => setContact('website', e.target.value)} placeholder="http://XXXX.bepe.ar/" />
             </div>
           </div>
         </fieldset>
@@ -203,21 +252,21 @@ export default function BibliotecaForm() {
           <div className="form-grid">
             <div className="field">
               <label>Facebook</label>
-              <input value={form.socialMedia.facebook} onChange={e => setForm(f => ({ ...f, socialMedia: { ...f.socialMedia, facebook: e.target.value } }))} placeholder="https://facebook.com/..." />
+              <input value={form.socialMedia.facebook} onChange={e => setSocial('facebook', e.target.value)} placeholder="https://facebook.com/..." />
             </div>
             <div className="field">
               <label>Instagram</label>
-              <input value={form.socialMedia.instagram} onChange={e => setForm(f => ({ ...f, socialMedia: { ...f.socialMedia, instagram: e.target.value } }))} placeholder="https://instagram.com/..." />
+              <input value={form.socialMedia.instagram} onChange={e => setSocial('instagram', e.target.value)} placeholder="https://instagram.com/..." />
             </div>
           </div>
           <div className="form-grid">
             <div className="field">
               <label>YouTube</label>
-              <input value={form.socialMedia.youtube} onChange={e => setForm(f => ({ ...f, socialMedia: { ...f.socialMedia, youtube: e.target.value } }))} placeholder="https://youtube.com/..." />
+              <input value={form.socialMedia.youtube} onChange={e => setSocial('youtube', e.target.value)} placeholder="https://youtube.com/..." />
             </div>
             <div className="field">
               <label>Sitio web</label>
-              <input value={form.digibepe} onChange={e => setForm(f => ({ ...f, digibepe: e.target.value }))} placeholder="https://..." />
+              <input value={form.digibepe} onChange={e => set('digibepe', e.target.value)} placeholder="https://..." />
             </div>
           </div>
         </fieldset>
@@ -229,7 +278,7 @@ export default function BibliotecaForm() {
               <select value={row.day} onChange={e => updateScheduleRow(i, 'day', e.target.value)}>
                 {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
-              <input placeholder="Apertura" value={row.open} onChange={e => updateScheduleRow(i, 'open', e.target.value)} />
+              <input placeholder="Apertura" value={row.open}  onChange={e => updateScheduleRow(i, 'open',  e.target.value)} />
               <input placeholder="Cierre"   value={row.close} onChange={e => updateScheduleRow(i, 'close', e.target.value)} />
               <button type="button" className="btn btn-danger btn-sm" onClick={() => removeScheduleRow(i)}>✕</button>
             </div>
@@ -241,14 +290,14 @@ export default function BibliotecaForm() {
           <legend>Imágenes</legend>
           <div className="field">
             <label>Imagen de portada (URL)</label>
-            <input value={form.thumbnail} onChange={e => setForm(f => ({ ...f, thumbnail: e.target.value }))} placeholder="https://..." />
+            <input value={form.thumbnail} onChange={e => set('thumbnail', e.target.value)} placeholder="https://..." />
             {form.thumbnail && (
               <img src={form.thumbnail} alt="preview" style={{ marginTop: 8, maxHeight: 150, borderRadius: 8, objectFit: 'cover', width: '100%' }} onError={e => { e.target.style.display = 'none'; }} />
             )}
           </div>
           <div className="field">
             <label>Galería adicional (una URL por línea)</label>
-            <textarea rows={3} value={form.images} onChange={e => setForm(f => ({ ...f, images: e.target.value }))} placeholder={'https://...\nhttps://...'} />
+            <textarea rows={3} value={form.images} onChange={e => set('images', e.target.value)} placeholder={'https://...\nhttps://...'} />
           </div>
         </fieldset>
 

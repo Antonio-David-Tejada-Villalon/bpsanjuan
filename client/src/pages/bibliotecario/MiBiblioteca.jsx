@@ -4,9 +4,13 @@ import { getLibrary } from '../../api/libraries';
 import { getMySubmission, createSubmission } from '../../api/librarySubmissions';
 
 const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DESC_MAX = 2000;
 
 const emptyForm = {
   name: '',
+  foundedDay: '',
+  foundedMonth: '',
   foundedYear: '',
   address: { street: '', locality: '', mapsUrl: '' },
   contact: { phone: '', whatsapp: '', email: '', website: '' },
@@ -21,7 +25,9 @@ const emptyForm = {
 
 const toForm = (source) => ({
   name: source.name || '',
-  foundedYear: source.foundedYear || '',
+  foundedDay:   source.foundedDay   || '',
+  foundedMonth: source.foundedMonth || '',
+  foundedYear:  source.foundedYear  || '',
   address: { street: source.address?.street || '', locality: source.address?.locality || '', mapsUrl: source.address?.mapsUrl || '' },
   contact: { phone: source.contact?.phone || '', whatsapp: source.contact?.whatsapp || '', email: source.contact?.email || '', website: source.contact?.website || '' },
   socialMedia: { facebook: source.socialMedia?.facebook || '', instagram: source.socialMedia?.instagram || '', youtube: source.socialMedia?.youtube || '' },
@@ -83,7 +89,9 @@ export default function MiBiblioteca() {
     try {
       const { submission: updated } = await createSubmission({
         name: form.name,
-        foundedYear: form.foundedYear ? Number(form.foundedYear) : undefined,
+        foundedDay:   form.foundedDay   ? Number(form.foundedDay)   : undefined,
+        foundedMonth: form.foundedMonth ? Number(form.foundedMonth) : undefined,
+        foundedYear:  form.foundedYear  ? Number(form.foundedYear)  : undefined,
         address: form.address,
         contact: form.contact,
         socialMedia: form.socialMedia,
@@ -138,29 +146,49 @@ export default function MiBiblioteca() {
           <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
         </div>
 
+        <div className="field">
+          <label>Localidad</label>
+          <input value={form.address.locality} onChange={e => setForm({ ...form, address: { ...form.address, locality: e.target.value } })} placeholder="Ej: Caucete, Rivadavia…" />
+        </div>
+
         <div className="form-grid">
           <div className="field">
             <label>Calle y número</label>
             <input value={form.address.street} onChange={e => setForm({ ...form, address: { ...form.address, street: e.target.value } })} placeholder="Ej: Av. San Martín 1234" />
           </div>
           <div className="field">
-            <label>Localidad</label>
-            <input value={form.address.locality} onChange={e => setForm({ ...form, address: { ...form.address, locality: e.target.value } })} placeholder="Ej: Caucete" />
+            <label>Link de Google Maps <span style={{ fontWeight: 400, fontSize: 12, color: 'var(--text-soft)' }}>(solo lo ve el staff)</span></label>
+            <input value={form.address.mapsUrl} onChange={e => setForm({ ...form, address: { ...form.address, mapsUrl: e.target.value } })} placeholder="https://maps.google.com/..." />
           </div>
-        </div>
-        <div className="field">
-          <label>Link de Google Maps <span style={{ fontWeight: 400, color: 'var(--text-soft)' }}>(el usuario solo ve la dirección de arriba)</span></label>
-          <input value={form.address.mapsUrl} onChange={e => setForm({ ...form, address: { ...form.address, mapsUrl: e.target.value } })} placeholder="https://maps.google.com/..." />
         </div>
 
         <div className="field">
-          <label>Año de fundación</label>
-          <input type="number" value={form.foundedYear} onChange={e => setForm({ ...form, foundedYear: e.target.value })} />
+          <label>Fecha de fundación</label>
+          <div className="form-grid" style={{ gridTemplateColumns: '80px 1fr 100px', gap: 10 }}>
+            <input
+              type="number" placeholder="Día" min={1} max={31}
+              value={form.foundedDay}
+              onChange={e => setForm({ ...form, foundedDay: e.target.value })}
+            />
+            <select value={form.foundedMonth} onChange={e => setForm({ ...form, foundedMonth: e.target.value })}>
+              <option value="">Mes…</option>
+              {MONTHS.map((m, i) => <option key={i+1} value={i+1}>{m}</option>)}
+            </select>
+            <input
+              type="number" placeholder="Año" min={1800} max={new Date().getFullYear()}
+              value={form.foundedYear}
+              onChange={e => setForm({ ...form, foundedYear: e.target.value })}
+            />
+          </div>
+          <span style={{ fontSize: 12, color: 'var(--text-soft)' }}>El día y el mes son opcionales — podés ingresar solo el año.</span>
         </div>
 
         <div className="field">
           <label>Descripción</label>
-          <textarea rows={5} maxLength={2000} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+          <textarea rows={5} maxLength={DESC_MAX} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+          <span style={{ fontSize: 12, color: 'var(--text-soft)', textAlign: 'right', display: 'block' }}>
+            {form.description.length}/{DESC_MAX} caracteres
+          </span>
         </div>
 
         <div className="form-grid">

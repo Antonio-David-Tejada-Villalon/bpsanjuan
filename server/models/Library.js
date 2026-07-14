@@ -86,6 +86,8 @@ const librarySchema = new mongoose.Schema({
     default: false
   },
   foundedYear: Number,
+  foundedMonth: { type: Number, min: 1, max: 12, default: null },
+  foundedDay:   { type: Number, min: 1, max: 31, default: null },
   likes: {
     type: Number,
     default: 0
