@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ScrollToTopBtn from './components/ScrollToTopBtn';
 import ProtectedRoute from './components/ProtectedRoute';
 import { SkeletonPage } from './components/Skeleton';
 import { usePageView } from './hooks/usePageView';
@@ -103,6 +104,7 @@ function App() {
             </Suspense>
           </main>
           <Footer />
+          <ScrollToTopBtn />
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
