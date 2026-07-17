@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getDepartments } from '../api/departments';
 import LibrarySearch from '../components/LibrarySearch';
+import InstagramGallery from '../components/InstagramGallery';
 
 export default function Home() {
   const [departments, setDepartments] = useState([]);
@@ -52,6 +53,8 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      <InstagramGallery />
     </div>
   );
 }

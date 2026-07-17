@@ -1902,3 +1902,79 @@ img { max-width: 100%; display: block; }
 @media (max-width: 480px) {
   .scroll-top-btn { bottom: 18px; right: 18px; width: 40px; height: 40px; }
 }
+
+/* ─── Instagram Gallery ────────────────────────────────────────── */
+.ig-gallery-section { padding-top: 0; }
+.ig-gallery-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.ig-gallery-header .section-title { margin: 0; }
+.ig-gallery-handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.18s;
+}
+.ig-gallery-handle:hover { color: var(--primary-dark); }
+
+.ig-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.ig-item {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--surface);
+}
+.ig-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s var(--ease);
+}
+.ig-item:hover .ig-item-img { transform: scale(1.05); }
+.ig-item-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.ig-item:hover .ig-item-overlay { background: rgba(0,0,0,0.25); }
+.ig-item-play,
+.ig-item-carousel {
+  opacity: 0;
+  transition: opacity 0.2s;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+}
+.ig-item:hover .ig-item-play,
+.ig-item:hover .ig-item-carousel { opacity: 1; }
+
+/* Skeleton loader */
+.ig-item--skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--border) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: ig-shimmer 1.4s infinite;
+}
+@keyframes ig-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (max-width: 600px) {
+  .ig-gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .ig-item { border-radius: 4px; }
+}
