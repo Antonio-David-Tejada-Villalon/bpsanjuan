@@ -459,6 +459,11 @@ img { max-width: 100%; display: block; }
 }
 .footer-inner strong { color: #fff; font-size: 16px; }
 .footer-inner p      { margin-top: 6px; font-size: 14px; max-width: 360px; }
+.footer-org-contact { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; }
+.footer-org-contact-item { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.72); font-size: 13px; transition: color var(--transition); text-decoration: none; }
+.footer-org-contact-item:hover { color: #fff; text-decoration: none; }
+.footer-org-contact-item svg { flex-shrink: 0; color: var(--primary-light, #FB9627); }
+
 .footer-social            { display: flex; align-items: center; gap: 20px; }
 .footer-social-link       { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,0.75); font-size: 14px; transition: color var(--transition), transform var(--transition); }
 .footer-social-link:hover { color: #fff; text-decoration: none; transform: translateY(-2px); }

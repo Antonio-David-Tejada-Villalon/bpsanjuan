@@ -36,6 +36,21 @@ export default function Footer() {
         <div>
           <strong>Dirección de Bibliotecas Populares<br />y Actividades Literarias de San Juan</strong>
           <p>Organismo del Gobierno de la Provincia de San Juan. Red de 56 bibliotecas populares distribuidas en los 19 departamentos.</p>
+          <div className="footer-org-contact">
+            <a href="mailto:direccionbpsj@gmail.com" className="footer-org-contact-item" aria-label="Email de la Dirección">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              <span>direccionbpsj@gmail.com</span>
+            </a>
+            <a href="tel:+542644217365" className="footer-org-contact-item" aria-label="Teléfono de la Dirección">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 13 19.79 19.79 0 0 1 1 4.18 2 2 0 0 1 2.98 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <span>(264) 421-7365</span>
+            </a>
+          </div>
         </div>
 
         <div className="footer-social">
