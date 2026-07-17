@@ -5,6 +5,7 @@ import { getNewsItem, toggleNewsLike, addNewsComment } from '../api/news';
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
 import ShareBtn from '../components/ShareBtn';
+import NewsCarousel from '../components/NewsCarousel';
 import { useTimeAgo } from '../utils/timeAgo';
 
 function TimeAgo({ date }) {
@@ -87,6 +88,10 @@ export default function NoticiaDetalle() {
       {news.thumbnail && <img src={news.thumbnail} alt={news.title} className="detalle-img" />}
 
       <div className="detalle-content" dangerouslySetInnerHTML={{ __html: news.content }} />
+
+      {news.images?.length > 0 && (
+        <NewsCarousel images={news.images} />
+      )}
 
       <div className="detalle-actions">
         <button className="btn btn-outline" onClick={handleLike}>❤ Me gusta ({news.likes ?? 0})</button>

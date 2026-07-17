@@ -1,0 +1,133 @@
+.nc-root {
+  margin: 2rem 0;
+  border: 0;
+  padding: 0;
+}
+
+/* ── Viewport (overflow hidden) ── */
+.nc-viewport {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  aspect-ratio: 16 / 9;
+  background: var(--surface, #f0f0f0);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Track ── */
+.nc-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Slide ── */
+.nc-slide {
+  min-width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.nc-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ── Arrows ── */
+.nc-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.85);
+  color: #1a1a1a;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s, transform 0.2s;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.nc-arrow:hover {
+  background: rgba(255, 255, 255, 0.97);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.nc-arrow-prev { left: 12px; }
+.nc-arrow-next { right: 12px; }
+
+/* ── Counter ── */
+.nc-counter {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 3px 9px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+/* ── Dots ── */
+.nc-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.nc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: var(--border, #ccc);
+  transition: background 0.25s, transform 0.25s, width 0.25s;
+}
+
+.nc-dot-active {
+  background: var(--primary, #FA7506);
+  width: 22px;
+  border-radius: 4px;
+}
+
+/* ── Dark mode ── */
+@media (prefers-color-scheme: dark) {
+  .nc-viewport { background: #1e1e1e; }
+  .nc-arrow { background: rgba(30, 30, 30, 0.85); color: #eee; }
+  .nc-arrow:hover { background: rgba(40, 40, 40, 0.97); }
+  .nc-dot { background: #555; }
+}
+
+[data-theme="dark"] .nc-viewport { background: #1e1e1e; }
+[data-theme="dark"] .nc-arrow { background: rgba(30, 30, 30, 0.85); color: #eee; }
+[data-theme="dark"] .nc-arrow:hover { background: rgba(40, 40, 40, 0.97); }
+[data-theme="dark"] .nc-dot { background: #555; }
+[data-theme="light"] .nc-viewport { background: #f0f0f0; }
+[data-theme="light"] .nc-arrow { background: rgba(255, 255, 255, 0.85); color: #1a1a1a; }
+[data-theme="light"] .nc-dot { background: #ccc; }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .nc-track { transition: none; }
+  .nc-arrow { transition: none; }
+}

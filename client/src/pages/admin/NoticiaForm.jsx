@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { getAllNewsAdmin, createNews, updateNews } from '../../api/news';
 import { getDepartments } from '../../api/departments';
@@ -8,10 +8,15 @@ const emptyForm = {
   title: '',
   summary: '',
   thumbnail: '',
+  images: [],
   content: '',
   tags: '',
   relatedDepartment: '',
   isPublished: false,
+};
+
+const isValidUrl = (url) => {
+  try { return Boolean(new URL(url)); } catch { return false; }
 };
 
 export default function NoticiaForm() {
@@ -25,6 +30,9 @@ export default function NoticiaForm() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [imgInput, setImgInput] = useState('');
+  const [imgError, setImgError] = useState('');
+  const imgInputRef = useRef(null);
 
   useEffect(() => {
     const init = async () => {
@@ -43,6 +51,7 @@ export default function NoticiaForm() {
               title:             item.title || '',
               summary:           item.summary || '',
               thumbnail:         item.thumbnail || '',
+              images:            item.images || [],
               content:           item.content || '',
               tags:              (item.tags || []).join(', '),
               relatedDepartment: item.relatedDepartment?._id || item.relatedDepartment || '',
@@ -59,6 +68,30 @@ export default function NoticiaForm() {
     init();
   }, [id]);
 
+  const addImage = () => {
+    const url = imgInput.trim();
+    if (!url) return;
+    if (!isValidUrl(url)) { setImgError('URL inválida.'); return; }
+    if (form.images.includes(url)) { setImgError('Esta URL ya está en la galería.'); return; }
+    setForm(f => ({ ...f, images: [...f.images, url] }));
+    setImgInput('');
+    setImgError('');
+    imgInputRef.current?.focus();
+  };
+
+  const removeImage = (idx) => {
+    setForm(f => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
+  };
+
+  const moveImage = (from, to) => {
+    setForm(f => {
+      const imgs = [...f.images];
+      const [item] = imgs.splice(from, 1);
+      imgs.splice(to, 0, item);
+      return { ...f, images: imgs };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -68,6 +101,7 @@ export default function NoticiaForm() {
         title:             form.title,
         summary:           form.summary,
         thumbnail:         form.thumbnail || null,
+        images:            form.images,
         content:           form.content,
         tags:              form.tags.split(',').map(t => t.trim()).filter(Boolean),
         relatedDepartment: form.relatedDepartment || null,
@@ -115,6 +149,79 @@ export default function NoticiaForm() {
               <img src={form.thumbnail} alt="preview portada" style={{ marginTop: 8, maxHeight: 150, borderRadius: 8, objectFit: 'cover', width: '100%' }} onError={e => { e.target.style.display = 'none'; }} />
             )}
           </div>
+        </fieldset>
+
+        {/* ── Galería carousel ── */}
+        <fieldset className="form-section">
+          <legend>Galería de fotos <span className="field-hint-inline">(carousel en el artículo)</span></legend>
+
+          <div className="field">
+            <label>Agregar foto (URL)</label>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                ref={imgInputRef}
+                value={imgInput}
+                onChange={e => { setImgInput(e.target.value); setImgError(''); }}
+                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addImage(); } }}
+                placeholder="https://..."
+                style={{ flex: 1 }}
+              />
+              <button type="button" className="btn btn-outline btn-sm" onClick={addImage} style={{ whiteSpace: 'nowrap' }}>
+                + Agregar
+              </button>
+            </div>
+            {imgError && <span className="field-hint" style={{ color: 'var(--error, #c0392b)' }}>{imgError}</span>}
+            <span className="field-hint">Presioná Enter o el botón para añadir. El orden determina cómo aparecen en el carousel.</span>
+          </div>
+
+          {form.images.length > 0 && (
+            <div className="img-gallery-grid">
+              {form.images.map((src, i) => (
+                <div key={src + i} className="img-gallery-item">
+                  <img
+                    src={src}
+                    alt={`Foto ${i + 1}`}
+                    className="img-gallery-thumb"
+                    onError={e => { e.target.style.opacity = '0.3'; }}
+                  />
+                  <div className="img-gallery-controls">
+                    <span className="img-gallery-index">{i + 1}</span>
+                    <div className="img-gallery-actions">
+                      <button
+                        type="button"
+                        className="btn btn-outline btn-xs"
+                        onClick={() => moveImage(i, i - 1)}
+                        disabled={i === 0}
+                        aria-label="Mover hacia atrás"
+                        title="Mover hacia atrás"
+                      >←</button>
+                      <button
+                        type="button"
+                        className="btn btn-outline btn-xs"
+                        onClick={() => moveImage(i, i + 1)}
+                        disabled={i === form.images.length - 1}
+                        aria-label="Mover hacia adelante"
+                        title="Mover hacia adelante"
+                      >→</button>
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-xs"
+                        onClick={() => removeImage(i)}
+                        aria-label="Eliminar foto"
+                        title="Eliminar"
+                      >✕</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {form.images.length === 0 && (
+            <p className="field-hint" style={{ textAlign: 'center', padding: '1rem 0' }}>
+              Sin fotos de galería. Las fotos agregadas aparecerán como carousel al final del artículo.
+            </p>
+          )}
         </fieldset>
 
         <fieldset className="form-section">

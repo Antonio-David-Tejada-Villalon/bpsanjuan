@@ -266,6 +266,7 @@ img { max-width: 100%; display: block; }
 }
 .btn-danger:hover { box-shadow: 0 8px 24px rgba(185, 28, 28, 0.38); }
 .btn-sm { padding: 6px 14px; font-size: 13px; }
+.btn-xs { padding: 3px 8px; font-size: 12px; border-radius: 6px; }
 .btn-block { width: 100%; }
 
 /* ─── Tarjetas ────────────────────────────────────────────────── */
@@ -1724,6 +1725,46 @@ img { max-width: 100%; display: block; }
 [data-theme="dark"] .form-section {
   background: rgba(26, 26, 26, 0.65);
 }
+
+/* ─── Admin image gallery grid (NoticiaForm) ──────────────────── */
+.img-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.img-gallery-item {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+}
+.img-gallery-thumb {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+}
+.img-gallery-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  gap: 4px;
+}
+.img-gallery-index {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 16px;
+}
+.img-gallery-actions {
+  display: flex;
+  gap: 4px;
+}
+
 [data-theme="dark"] .share-trigger {
   background: rgba(26, 26, 26, 0.80);
   border-color: rgba(255, 255, 255, 0.12);
