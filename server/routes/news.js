@@ -133,11 +133,19 @@ router.patch('/:id', protect, async (req, res) => {
       return res.status(403).json({ success: false, message: 'No tienes permisos para editar noticias.' });
     }
 
-    const allowedFields = ['title', 'summary', 'content', 'thumbnail', 'images', 'tags', 'isPublished', 'relatedDepartment'];
+    const allowedFields = ['title', 'summary', 'content', 'thumbnail', 'images', 'tags', 'isPublished', 'relatedDepartment', 'publishedAt'];
     const updates = {};
     allowedFields.forEach(field => {
       if (req.body[field] !== undefined) updates[field] = req.body[field];
     });
+
+    // findByIdAndUpdate bypasses pre('save'), so set publishedAt manually when publishing
+    if (updates.isPublished === true && !updates.publishedAt) {
+      const existing = await News.findById(req.params.id).select('publishedAt');
+      if (existing && !existing.publishedAt) {
+        updates.publishedAt = new Date();
+      }
+    }
 
     const news = await News.findByIdAndUpdate(req.params.id, updates, {
       new: true, runValidators: true

@@ -13,6 +13,7 @@ const emptyForm = {
   tags: '',
   relatedDepartment: '',
   isPublished: false,
+  publishedAt: '',
 };
 
 const isValidUrl = (url) => {
@@ -56,6 +57,7 @@ export default function NoticiaForm() {
               tags:              (item.tags || []).join(', '),
               relatedDepartment: item.relatedDepartment?._id || item.relatedDepartment || '',
               isPublished:       item.isPublished,
+              publishedAt:       item.publishedAt ? new Date(item.publishedAt).toISOString().slice(0, 16) : '',
             });
           }
         }
@@ -106,6 +108,7 @@ export default function NoticiaForm() {
         tags:              form.tags.split(',').map(t => t.trim()).filter(Boolean),
         relatedDepartment: form.relatedDepartment || null,
         isPublished:       form.isPublished,
+        publishedAt:       form.publishedAt ? new Date(form.publishedAt).toISOString() : null,
       };
       if (isEdit) await updateNews(id, payload);
       else await createNews(payload);
@@ -253,6 +256,19 @@ export default function NoticiaForm() {
           <div className="field field-checkbox">
             <input type="checkbox" checked={form.isPublished} onChange={e => setForm(f => ({ ...f, isPublished: e.target.checked }))} />
             <span>Publicar inmediatamente</span>
+          </div>
+          <div className="field">
+            <label>Fecha y hora de publicación</label>
+            <input
+              type="datetime-local"
+              value={form.publishedAt}
+              onChange={e => setForm(f => ({ ...f, publishedAt: e.target.value }))}
+            />
+            <span className="field-hint">
+              {form.publishedAt
+                ? `Se mostrará como: ${new Date(form.publishedAt).toLocaleString('es-AR', { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
+                : 'Si se deja vacío y se publica, se usa la fecha/hora actual.'}
+            </span>
           </div>
         </fieldset>
 
