@@ -34,7 +34,7 @@ router.get('/feed', async (req, res) => {
 
     const fields = 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp';
     const json   = await igFetch(
-      `/me/media?fields=${fields}&limit=9&access_token=${token}`
+      `/me/media?fields=${fields}&limit=7&access_token=${token}`
     );
 
     if (json.error) {
