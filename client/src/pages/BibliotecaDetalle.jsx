@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getLibrary, toggleLibraryLike, addLibraryComment, addReply, reactToComment, reactToReply } from '../api/libraries';
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
@@ -239,6 +240,10 @@ export default function BibliotecaDetalle() {
 
   return (
     <div className="section container">
+      <Helmet>
+        <title>{library.name} | Bibliotecas Populares de San Juan</title>
+        <meta name="description" content={`${library.name}${library.department?.name ? ` — ${library.department.name}` : ''}, San Juan. ${addr.street ? `Dirección: ${addr.street}.` : ''} Biblioteca popular de la Dirección de Bibliotecas Populares y Actividades Literarias.`} />
+      </Helmet>
       {/* Breadcrumb */}
       <Link to={`/departamentos/${library.department?.slug}`} className="lib-breadcrumb">
         ← {library.department?.name}

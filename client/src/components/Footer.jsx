@@ -32,8 +32,8 @@ export default function Footer() {
       <div className="container footer-inner">
 
         <div>
-          <strong>Bibliotecas Populares de San Juan</strong>
-          <p>Red de bibliotecas populares de la provincia de San Juan, Argentina.</p>
+          <strong>Dirección de Bibliotecas Populares<br />y Actividades Literarias de San Juan</strong>
+          <p>Organismo del Gobierno de la Provincia de San Juan. Red de 56 bibliotecas populares distribuidas en los 19 departamentos.</p>
         </div>
 
         <div className="footer-social">
@@ -98,7 +98,7 @@ export default function Footer() {
 
       </div>
       <p className="footer-copy">
-        © {new Date().getFullYear()} Bibliotecas Populares de San Juan
+        © {new Date().getFullYear()} Dirección de Bibliotecas Populares y Actividades Literarias — San Juan
         <span className="footer-copy-sep">·</span>
         Desarrollado por {DEV.name}
       </p>

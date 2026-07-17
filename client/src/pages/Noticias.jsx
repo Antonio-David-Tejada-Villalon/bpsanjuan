@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { getNews } from '../api/news';
 import NewsCard from '../components/NewsCard';
 
@@ -27,6 +28,10 @@ export default function Noticias() {
 
   return (
     <div className="section container">
+      <Helmet>
+        <title>Noticias | Bibliotecas Populares de San Juan</title>
+        <meta name="description" content="Novedades, eventos y actividades de las Bibliotecas Populares de San Juan. Dirección de Bibliotecas Populares y Actividades Literarias." />
+      </Helmet>
       <h1 className="section-title">Noticias</h1>
       <p className="section-subtitle">Novedades y actividades de las Bibliotecas Populares.</p>
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getDepartments } from '../api/departments';
 import LibrarySearch from '../components/LibrarySearch';
 import InstagramGallery from '../components/InstagramGallery';
@@ -18,6 +19,10 @@ export default function Home() {
 
   return (
     <div>
+      <Helmet>
+        <title>Bibliotecas Populares de San Juan | DBP</title>
+        <meta name="description" content="Explorá la red de 56 bibliotecas populares distribuidas en los 19 departamentos de la provincia de San Juan, Argentina. Dirección de Bibliotecas Populares y Actividades Literarias." />
+      </Helmet>
       <section className="hero">
         <div className="container">
           <h1>Bibliotecas Populares de San Juan</h1>

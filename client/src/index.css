@@ -4,6 +4,8 @@
   --primary-dark: #E66900;
   --primary-light: #FB9627;
   --primary-soft: #F19A4F;
+  /* WCAG AA: #B85500 = 4.87:1 sobre blanco — usar en texto y links */
+  --primary-text: #B85500;
   --accent: #CB6B4F;
   --accent-dark: #B7654D;
   --text: #232323;
@@ -58,6 +60,8 @@
   --primary-dark: #FB9627;
   --primary-light: #FFB35C;
   --primary-soft: #F19A4F;
+  /* En dark mode #FA7506 sobre #121212 = 6.94:1 — pasa WCAG AA */
+  --primary-text: #FA7506;
   --accent: #CB6B4F;
   --accent-dark: #B7654D;
   --text: #F8F8F8;
@@ -152,12 +156,12 @@ body {
 
 main { flex: 1; }
 
-a { color: var(--primary); text-decoration: none; }
+a { color: var(--primary-text); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 h1, h2, h3, h4 {
   margin: 0 0 0.5em;
-  color: var(--primary-dark);
+  color: var(--text);
   font-weight: 700;
 }
 
@@ -630,6 +634,16 @@ img { max-width: 100%; display: block; }
 
 /* ─── Nosotros ────────────────────────────────────────────────── */
 .nosotros { max-width: 760px; text-align: left; }
+.nosotros h1 { line-height: 1.25; }
+.nosotros-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary-text);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  margin-bottom: 32px;
+}
 .nosotros h3 { margin-top: 28px; }
 .nosotros p,
 .nosotros li { color: var(--text); line-height: 1.6; }
@@ -2017,4 +2031,13 @@ img { max-width: 100%; display: block; }
   .ig-item--featured { aspect-ratio: 4 / 3; border-radius: 10px; }
   .ig-subgrid { gap: 4px; }
   .ig-item { border-radius: 6px; }
+}
+
+/* ─── Accesibilidad: respeta prefers-reduced-motion (WCAG 2.3.3 + Ley 26.653) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

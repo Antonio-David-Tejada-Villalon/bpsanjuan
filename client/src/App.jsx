@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
@@ -47,6 +48,7 @@ function PageViewTracker() {
 
 function App() {
   return (
+    <HelmetProvider>
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
@@ -108,6 +110,7 @@ function App() {
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

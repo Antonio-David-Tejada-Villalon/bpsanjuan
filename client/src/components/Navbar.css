@@ -18,14 +18,28 @@
 }
 
 .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: #fff;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 17px;
   text-decoration: none;
   letter-spacing: -0.3px;
   transition: opacity 0.2s ease;
 }
 .navbar-brand:hover { text-decoration: none; opacity: 0.88; }
+.navbar-logo {
+  height: 34px;
+  width: 34px;
+  object-fit: contain;
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+.navbar-brand-sj {
+  opacity: 0.80;
+  font-weight: 500;
+}
 
 .navbar-toggle {
   display: none;

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useHeartbeat } from '../hooks/useHeartbeat';
 import { OnlineIndicator } from './OnlineIndicator';
+import logo from '../assets/DBP.png';
 import './Navbar.css';
 
 function IconSun() {
@@ -48,7 +49,8 @@ export default function Navbar() {
     <header className="navbar">
       <div className="container navbar-inner">
         <Link to="/" className="navbar-brand" onClick={() => setOpen(false)}>
-          📚 Bibliotecas Populares de San Juan
+          <img src={logo} alt="" aria-hidden="true" className="navbar-logo" />
+          <span>Bibliotecas Populares <span className="navbar-brand-sj">San Juan</span></span>
         </Link>
 
         <button
@@ -56,7 +58,12 @@ export default function Navbar() {
           aria-label="Abrir menú"
           onClick={() => setOpen(o => !o)}
         >
-          ☰
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <line x1="3" y1="5" x2="17" y2="5"/>
+            <line x1="3" y1="10" x2="17" y2="10"/>
+            <line x1="3" y1="15" x2="17" y2="15"/>
+          </svg>
         </button>
 
         <nav className={`navbar-links ${open ? 'open' : ''}`} onClick={() => setOpen(false)}>

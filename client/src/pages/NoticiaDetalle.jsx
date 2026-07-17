@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getNewsItem, toggleNewsLike, addNewsComment } from '../api/news';
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
@@ -54,6 +55,10 @@ export default function NoticiaDetalle() {
 
   return (
     <div className="section container detalle">
+      <Helmet>
+        <title>{news.title} | Noticias — DBP San Juan</title>
+        <meta name="description" content={news.content ? news.content.replace(/<[^>]+>/g, '').slice(0, 155) : `Noticia de las Bibliotecas Populares de San Juan.`} />
+      </Helmet>
       <Link to="/noticias">← Volver a noticias</Link>
       <h1>{news.title}</h1>
       <p className="detalle-meta">

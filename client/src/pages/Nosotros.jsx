@@ -1,7 +1,14 @@
+import { Helmet } from 'react-helmet-async';
+
 export default function Nosotros() {
   return (
     <div className="section container nosotros">
-      <h1>Institucional</h1>
+      <Helmet>
+        <title>Institucional | Dirección de Bibliotecas Populares — San Juan</title>
+        <meta name="description" content="Misión, visión y objetivos de la Dirección de Bibliotecas Populares y Actividades Literarias de San Juan. 56 bibliotecas populares en 19 departamentos." />
+      </Helmet>
+      <h1>Dirección de Bibliotecas Populares<br />y Actividades Literarias de San Juan</h1>
+      <p className="nosotros-subtitle">Organismo del Gobierno de la Provincia de San Juan</p>
 
       <h3>Misión</h3>
       <p>
