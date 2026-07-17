@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gen-og": "node scripts/gen-og.cjs"
   },
   "dependencies": {
     "@react-oauth/google": "^0.13.5",
@@ -37,6 +38,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "oxlint": "^1.69.0",
+    "sharp": "^0.33.5",
     "vite": "^8.1.0"
   }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://bpsanjuan.vercel.app/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://bpsanjuan.vercel.app/nosotros</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://bpsanjuan.vercel.app/noticias</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Departamentos de San Juan -->
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Capital</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Rawson</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Rivadavia</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Chimbas</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Santa Lucía</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Pocito</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Sarmiento</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Caucete</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/25 de Mayo</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Angaco</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/San Martín</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Albardón</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Ullum</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Zonda</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Calingasta</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Iglesia</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Jáchal</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/Valle Fértil</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bpsanjuan.vercel.app/departamento/9 de Julio</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+</urlset>

@@ -1,0 +1,113 @@
+/* ─── 404 ─────────────────────────────────────────────────────── */
+.nf-page {
+  display: flex;
+  justify-content: center;
+  padding: 72px 20px;
+}
+
+.nf-inner {
+  text-align: center;
+  max-width: 480px;
+  animation: fadeInUp 0.5s var(--ease) both;
+}
+
+/* Gráfico 404 con libro en el cero */
+.nf-graphic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.nf-number {
+  font-size: clamp(72px, 16vw, 120px);
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+/* Libro que reemplaza el 0 */
+.nf-book {
+  position: relative;
+  width: clamp(56px, 12vw, 90px);
+  height: clamp(72px, 16vw, 120px);
+  animation: nfBookFloat 3s ease-in-out infinite;
+}
+
+@keyframes nfBookFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%       { transform: translateY(-10px) rotate(2deg); }
+}
+
+.nf-book-cover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: 4px 10px 10px 4px;
+  box-shadow: 4px 4px 16px rgba(250,117,6,0.35), -2px 0 0 rgba(0,0,0,0.15);
+}
+
+.nf-book-cover::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: rgba(255,255,255,0.30);
+  border-radius: 1px;
+}
+.nf-book-cover::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  right: 10px;
+  height: 4px;
+  background: rgba(255,255,255,0.22);
+  border-radius: 2px;
+  box-shadow: 0 8px 0 rgba(255,255,255,0.15), 0 16px 0 rgba(255,255,255,0.10);
+}
+
+.nf-book-pages {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  right: -5px;
+  width: 7px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #f5f5f0 0px,
+    #f5f5f0 3px,
+    #e0e0da 3px,
+    #e0e0da 4px
+  );
+  border-radius: 0 2px 2px 0;
+}
+
+.nf-title {
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 12px;
+}
+
+.nf-text {
+  font-size: 16px;
+  color: var(--text-soft);
+  line-height: 1.65;
+  margin: 0 0 32px;
+}
+
+.nf-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}

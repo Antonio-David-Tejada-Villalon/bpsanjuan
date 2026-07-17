@@ -30,10 +30,17 @@ export default function Home() {
             Explorá la red de bibliotecas populares distribuidas en los 19 departamentos de la provincia.
           </p>
           <LibrarySearch departments={departments} />
+          <a href="#departamentos" className="hero-cta-scroll">
+            Explorá por departamento
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </a>
         </div>
       </section>
 
-      <section className="section container">
+      <section id="departamentos" className="section container">
         <h2 className="section-title">Departamentos</h2>
         <p className="section-subtitle">Elegí un departamento para ver sus bibliotecas populares.</p>
 

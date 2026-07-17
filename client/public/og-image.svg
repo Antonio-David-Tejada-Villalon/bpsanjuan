@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FB9627"/>
+      <stop offset="55%" stop-color="#FA7506"/>
+      <stop offset="100%" stop-color="#D45E00"/>
+    </linearGradient>
+    <linearGradient id="overlay" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(0,0,0,0.18)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#overlay)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="1060" cy="90"  r="320" fill="rgba(255,255,255,0.07)"/>
+  <circle cx="1120" cy="540" r="200" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="80"   cy="580" r="140" fill="rgba(0,0,0,0.07)"/>
+  <circle cx="980"  cy="420" r="80"  fill="rgba(255,255,255,0.06)"/>
+
+  <!-- Vertical accent bar -->
+  <rect x="80" y="180" width="6" height="220" rx="3" fill="rgba(255,255,255,0.55)"/>
+
+  <!-- Eyebrow -->
+  <text x="104" y="218"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="22" font-weight="600" letter-spacing="5"
+    fill="rgba(255,255,255,0.72)">GOBIERNO DE LA PROVINCIA DE SAN JUAN</text>
+
+  <!-- Main title line 1 -->
+  <text x="104" y="308"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="78" font-weight="900"
+    fill="#ffffff">Bibliotecas Populares</text>
+
+  <!-- Main title line 2 -->
+  <text x="104" y="388"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="78" font-weight="900"
+    fill="rgba(255,255,255,0.92)">de San Juan</text>
+
+  <!-- Stats -->
+  <text x="104" y="462"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="30" font-weight="500"
+    fill="rgba(255,255,255,0.82)">56 bibliotecas populares · 19 departamentos</text>
+
+  <!-- Divider -->
+  <rect x="104" y="490" width="100" height="3" rx="1.5" fill="rgba(255,255,255,0.45)"/>
+
+  <!-- Footer -->
+  <text x="104" y="548"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="21" font-weight="400"
+    fill="rgba(255,255,255,0.65)">Dirección de Bibliotecas Populares y Actividades Literarias</text>
+
+  <text x="104" y="578"
+    font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="21" font-weight="400"
+    fill="rgba(255,255,255,0.50)">bpsanjuan.vercel.app</text>
+</svg>

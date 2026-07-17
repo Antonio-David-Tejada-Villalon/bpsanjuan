@@ -125,22 +125,36 @@
 
 html, body { margin: 0; padding: 0; }
 
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
 /* ─── Body — gradient mesh background ────────────────────────── */
 body {
   font-family: var(--sans);
   color: var(--text);
   background-color: #FFF8F2;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fixed background via ::before — avoids background-attachment:fixed
+   which breaks on iOS Safari (repaint glitch on scroll). */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image:
     radial-gradient(ellipse 80% 60% at 5%  5%,  rgba(251, 150, 39,  0.12) 0%, transparent 55%),
     radial-gradient(ellipse 55% 55% at 92%  8%,  rgba(250, 117, 6,   0.08) 0%, transparent 50%),
     radial-gradient(ellipse 65% 65% at 50% 95%,  rgba(241, 154, 79,  0.10) 0%, transparent 60%),
     radial-gradient(ellipse 45% 45% at 78% 58%,  rgba(255, 220, 170, 0.15) 0%, transparent 55%);
-  background-attachment: fixed;
-  background-size: cover;
-  -webkit-font-smoothing: antialiased;
 }
 [data-theme="dark"] body {
   background-color: #121212;
+}
+[data-theme="dark"] body::before {
   background-image:
     radial-gradient(ellipse 80% 60% at 5%  5%,  rgba(250, 117, 6,  0.08) 0%, transparent 55%),
     radial-gradient(ellipse 55% 55% at 92%  8%,  rgba(250, 117, 6,  0.04) 0%, transparent 50%),
@@ -268,7 +282,7 @@ img { max-width: 100%; display: block; }
 }
 .card-hover:hover {
   box-shadow: 0 20px 56px rgba(0, 0, 0, 0.14), 0 1px 0 rgba(255,255,255,0.7) inset;
-  transform: translateY(-6px) scale(1.012);
+  transform: translateY(-4px);
 }
 .card-body { padding: 18px; }
 
@@ -475,6 +489,21 @@ img { max-width: 100%; display: block; }
 }
 .footer-copy-sep { margin: 0 8px; opacity: .4; }
 
+.footer-legal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px;
+}
+.footer-legal-link {
+  color: rgba(255,255,255,0.45);
+  transition: color var(--transition);
+}
+.footer-legal-link:hover { color: rgba(255,255,255,0.85); text-decoration: none; }
+
 /* ─── Library / News cards ────────────────────────────────────── */
 .library-card,
 .news-card { display: block; color: inherit; }
@@ -518,6 +547,38 @@ img { max-width: 100%; display: block; }
 }
 .hero h1           { color: #fff; margin-bottom: 14px; text-shadow: 0 2px 12px rgba(0,0,0,0.18); }
 .hero-subtitle     { font-size: 17px; opacity: 0.90; max-width: 640px; margin: 0 auto; }
+
+/* ─── Hero CTA secundario ─────────────────────────────────────── */
+.hero-cta-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 20px;
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,0.55);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+.hero-cta-scroll:hover {
+  background: rgba(255,255,255,0.28);
+  border-color: rgba(255,255,255,0.80);
+  text-decoration: none;
+  transform: translateY(-1px);
+  color: #fff;
+}
+.hero-cta-scroll svg {
+  transition: transform var(--transition);
+}
+.hero-cta-scroll:hover svg {
+  transform: translateY(3px);
+}
 
 /* ─── Library Search Autocomplete ─────────────────────────────── */
 .lib-search {

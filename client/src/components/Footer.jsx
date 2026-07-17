@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const SOCIALS = [
   {
     label: 'YouTube',
@@ -96,6 +98,11 @@ export default function Footer() {
           </div>
         </div>
 
+      </div>
+      <div className="footer-legal">
+        <Link to="/privacidad" className="footer-legal-link">Privacidad</Link>
+        <span className="footer-copy-sep" aria-hidden="true">·</span>
+        <Link to="/accesibilidad" className="footer-legal-link">Accesibilidad</Link>
       </div>
       <p className="footer-copy">
         © {new Date().getFullYear()} Dirección de Bibliotecas Populares y Actividades Literarias — San Juan

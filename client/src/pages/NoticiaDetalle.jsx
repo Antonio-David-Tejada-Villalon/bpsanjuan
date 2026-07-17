@@ -58,6 +58,23 @@ export default function NoticiaDetalle() {
       <Helmet>
         <title>{news.title} | Noticias — DBP San Juan</title>
         <meta name="description" content={news.content ? news.content.replace(/<[^>]+>/g, '').slice(0, 155) : `Noticia de las Bibliotecas Populares de San Juan.`} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "NewsArticle",
+          "headline": news.title,
+          "url": `https://bpsanjuan.vercel.app/noticias/${id}`,
+          ...(news.publishedAt && { "datePublished": news.publishedAt }),
+          ...(news.thumbnail && { "image": news.thumbnail }),
+          "publisher": {
+            "@type": "GovernmentOrganization",
+            "name": "Dirección de Bibliotecas Populares y Actividades Literarias de San Juan",
+            "url": "https://bpsanjuan.vercel.app",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://bpsanjuan.vercel.app/favicon.png"
+            }
+          }
+        })}</script>
       </Helmet>
       <Link to="/noticias">← Volver a noticias</Link>
       <h1>{news.title}</h1>

@@ -243,6 +243,28 @@ export default function BibliotecaDetalle() {
       <Helmet>
         <title>{library.name} | Bibliotecas Populares de San Juan</title>
         <meta name="description" content={`${library.name}${library.department?.name ? ` — ${library.department.name}` : ''}, San Juan. ${addr.street ? `Dirección: ${addr.street}.` : ''} Biblioteca popular de la Dirección de Bibliotecas Populares y Actividades Literarias.`} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Library",
+          "name": library.name,
+          "url": `https://bpsanjuan.vercel.app/bibliotecas/${id}`,
+          ...(library.description && { "description": library.description }),
+          "address": {
+            "@type": "PostalAddress",
+            ...(addr.street && { "streetAddress": addr.street }),
+            "addressLocality": addr.locality || library.department?.name || "San Juan",
+            "addressRegion": "San Juan",
+            "addressCountry": "AR"
+          },
+          ...(contact.phone && { "telephone": contact.phone }),
+          ...(contact.email && { "email": contact.email }),
+          ...(allImages[0] && { "image": allImages[0] }),
+          "parentOrganization": {
+            "@type": "GovernmentOrganization",
+            "name": "Dirección de Bibliotecas Populares y Actividades Literarias de San Juan",
+            "url": "https://bpsanjuan.vercel.app"
+          }
+        })}</script>
       </Helmet>
       {/* Breadcrumb */}
       <Link to={`/departamentos/${library.department?.slug}`} className="lib-breadcrumb">
