@@ -35,4 +35,13 @@ const createAccountLimiter = rateLimit({
   }
 });
 
-module.exports = { apiLimiter, loginLimiter, createAccountLimiter };
+// Límite estricto para el endpoint público de tracking de analytics
+const trackLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Demasiadas peticiones.' }
+});
+
+module.exports = { apiLimiter, loginLimiter, createAccountLimiter, trackLimiter };

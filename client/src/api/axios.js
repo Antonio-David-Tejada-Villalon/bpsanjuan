@@ -6,11 +6,12 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' }
 });
 
-// Interceptor: adjunta el token JWT si existe
+// Interceptor: adjunta el token de usuario público si existe.
+// El token de staff viaja automáticamente vía httpOnly cookie (no se almacena en localStorage).
 api.interceptors.request.use(config => {
-  const token = localStorage.getItem('token') || localStorage.getItem('publicToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const publicToken = localStorage.getItem('publicToken');
+  if (publicToken) {
+    config.headers.Authorization = `Bearer ${publicToken}`;
   }
   return config;
 });
@@ -20,11 +21,8 @@ api.interceptors.response.use(
   response => response,
   error => {
     if (error.response?.status === 401) {
-      // Si el token expiró, limpiar storage
       const currentPath = window.location.pathname;
       if (currentPath.startsWith('/admin') || currentPath.startsWith('/panel')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
         window.location.href = '/login';
       }
     }

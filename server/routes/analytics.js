@@ -3,6 +3,7 @@ const PageView = require('../models/PageView');
 const Library = require('../models/Library');
 const News = require('../models/News');
 const { protect, restrictTo } = require('../middleware/authMiddleware');
+const { trackLimiter } = require('../middleware/rateLimiter');
 const XLSX = require('xlsx');
 const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, HeadingLevel, WidthType } = require('docx');
 
@@ -86,11 +87,12 @@ function isPrivateIp(ip) {
 }
 
 // POST /api/analytics/track — completamente público, fallo silencioso
-router.post('/track', async (req, res) => {
+router.post('/track', trackLimiter, async (req, res) => {
   res.status(204).end();
   try {
     const { path, type = 'view', resourceId, resourceName, resourceType: clientType, userType = 'anon' } = req.body;
-    if (!path) return;
+    if (!path || typeof path !== 'string' || path.length > 500) return;
+    if (!['view', 'share'].includes(type)) return;
 
     const ip = getClientIp(req);
     let country = null, countryCode = null, city = null, lat = null, lon = null;

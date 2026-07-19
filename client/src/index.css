@@ -125,6 +125,28 @@
 
 html, body { margin: 0; padding: 0; }
 
+/* ─── Skip-to-content (accesibilidad) ────────────────────────── */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.6rem 1.2rem;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 0 0 var(--radius) var(--radius);
+  text-decoration: none;
+  transition: top 0.18s ease;
+  box-shadow: var(--shadow);
+}
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
 }
@@ -133,7 +155,7 @@ html, body { margin: 0; padding: 0; }
 body {
   font-family: var(--sans);
   color: var(--text);
-  background-color: #FFF8F2;
+  background-color: var(--bg);
   -webkit-font-smoothing: antialiased;
 }
 

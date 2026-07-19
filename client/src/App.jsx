@@ -57,7 +57,7 @@ function App() {
         <AuthProvider>
           <PageViewTracker />
           <Navbar />
-          <main>
+          <main id="main-content">
             <Suspense fallback={<SkeletonPage />}>
               <Routes>
                 <Route path="/" element={<Home />} />

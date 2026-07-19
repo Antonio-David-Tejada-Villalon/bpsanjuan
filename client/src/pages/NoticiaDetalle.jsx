@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import DOMPurify from 'dompurify';
 import { getNewsItem, toggleNewsLike, addNewsComment } from '../api/news';
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
@@ -87,7 +88,7 @@ export default function NoticiaDetalle() {
 
       {news.thumbnail && <img src={news.thumbnail} alt={news.title} className="detalle-img" />}
 
-      <div className="detalle-content" dangerouslySetInnerHTML={{ __html: news.content }} />
+      <div className="detalle-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(news.content) }} />
 
       {news.images?.length > 0 && (
         <NewsCarousel images={news.images} />

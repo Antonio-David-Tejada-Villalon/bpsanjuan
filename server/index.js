@@ -42,8 +42,8 @@ app.use(cors({
 }));
 
 // ─── Body parsers ─────────────────────────────────────────────────────────
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 app.use(cookieParser());
 app.use(sanitizeInput);
 
@@ -77,7 +77,6 @@ app.get('/api/health', (req, res) => {
   res.json({
     success: true,
     message: 'API de Bibliotecas Populares de San Juan funcionando correctamente.',
-    environment: process.env.NODE_ENV,
     timestamp: new Date().toISOString()
   });
 });

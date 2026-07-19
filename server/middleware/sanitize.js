@@ -1,6 +1,11 @@
 // Elimina claves que empiecen con "$" o contengan "." de body/query/params,
 // para evitar inyección de operadores de MongoDB (ej. ?department[$ne]=x).
+// Maneja arrays recursivamente para cubrir payloads como [{ "$gt": "" }].
 const stripMongoOperators = (obj) => {
+  if (Array.isArray(obj)) {
+    obj.forEach(item => stripMongoOperators(item));
+    return;
+  }
   if (!obj || typeof obj !== 'object') return;
 
   for (const key of Object.keys(obj)) {

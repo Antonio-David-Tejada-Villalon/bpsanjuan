@@ -46,6 +46,8 @@ export default function Navbar() {
   };
 
   return (
+    <>
+    <a href="#main-content" className="skip-link">Ir al contenido principal</a>
     <header className="navbar">
       <div className="container navbar-inner">
         <Link to="/" className="navbar-brand" onClick={() => setOpen(false)}>
@@ -55,7 +57,9 @@ export default function Navbar() {
 
         <button
           className="navbar-toggle"
-          aria-label="Abrir menú"
+          aria-label="Menú principal"
+          aria-expanded={open}
+          aria-controls="nav-links"
           onClick={() => setOpen(o => !o)}
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor"
@@ -66,7 +70,7 @@ export default function Navbar() {
           </svg>
         </button>
 
-        <nav className={`navbar-links ${open ? 'open' : ''}`} onClick={() => setOpen(false)}>
+        <nav id="nav-links" className={`navbar-links ${open ? 'open' : ''}`} onClick={() => setOpen(false)}>
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/nosotros">Sobre Nosotros</NavLink>
           <NavLink to="/noticias">Noticias</NavLink>
@@ -80,7 +84,7 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <NavLink to="/login" className="navbar-staff-link">Staff</NavLink>
+            <NavLink to="/login" className="navbar-staff-link">Acceso personal</NavLink>
           )}
 
           {publicUser && (
@@ -98,12 +102,14 @@ export default function Navbar() {
           <button
             className="navbar-theme-toggle"
             onClick={e => { e.stopPropagation(); toggleTheme(); }}
-            title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            aria-pressed={theme === 'dark'}
           >
             {theme === 'dark' ? <IconSun /> : <IconMoon />}
           </button>
         </nav>
       </div>
     </header>
+    </>
   );
 }

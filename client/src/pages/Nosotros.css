@@ -8,6 +8,9 @@
   position: relative;
   overflow: hidden;
 }
+@media (prefers-reduced-motion: reduce) {
+  .nos-hero { animation: none; }
+}
 .nos-hero::before {
   content: '';
   position: absolute;

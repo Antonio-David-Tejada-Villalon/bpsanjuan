@@ -9,15 +9,12 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   const loadSession = useCallback(async () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const { user } = await authApi.getMe();
-        setUser(user);
-      } catch {
-        localStorage.removeItem('token');
-        setUser(null);
-      }
+    // La sesión de staff se valida vía httpOnly cookie (sin localStorage)
+    try {
+      const { user } = await authApi.getMe();
+      setUser(user);
+    } catch {
+      setUser(null);
     }
 
     const publicRaw = localStorage.getItem('publicUser');
@@ -38,8 +35,8 @@ export function AuthProvider({ children }) {
   }, [loadSession]);
 
   const login = async (email, password) => {
-    const { token, user } = await authApi.login(email, password);
-    localStorage.setItem('token', token);
+    const { user } = await authApi.login(email, password);
+    // El token JWT se almacena solo en el cookie httpOnly del servidor
     setUser(user);
     return user;
   };
@@ -50,7 +47,7 @@ export function AuthProvider({ children }) {
     } catch {
       // ignore network errors on logout
     }
-    localStorage.removeItem('token');
+    // El servidor limpia el cookie jwt en su ruta de logout
     setUser(null);
   };
 
