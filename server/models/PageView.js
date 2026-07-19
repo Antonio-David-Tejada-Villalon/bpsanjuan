@@ -14,6 +14,7 @@ const pageViewSchema = new mongoose.Schema({
   ip:           { type: String, default: null },
   country:      { type: String, default: null },
   countryCode:  { type: String, default: null },
+  region:       { type: String, default: null },
   city:         { type: String, default: null },
   lat:          { type: Number, default: null },
   lon:          { type: Number, default: null },

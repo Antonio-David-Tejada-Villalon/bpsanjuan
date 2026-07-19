@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import { getOverview, getGeo, getPopular, getInteractions, exportAnalytics } from '../../api/analyticsApi';
 
@@ -29,6 +29,39 @@ const A2N = {
 };
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+// Numeric → alpha-2 (reverse of A2N)
+const N2A = Object.fromEntries(Object.entries(A2N).map(([a2, num]) => [num, a2]));
+
+const AR_PROVINCES = {
+  'A':'Salta','B':'Buenos Aires (Prov.)','C':'Ciudad Autónoma de Bs. As.',
+  'D':'San Luis','E':'Entre Ríos','F':'La Rioja','G':'Santiago del Estero',
+  'H':'Chaco','J':'San Juan','K':'Catamarca','L':'La Pampa','M':'Mendoza',
+  'N':'Misiones','P':'Formosa','Q':'Neuquén','R':'Río Negro','S':'Santa Fe',
+  'T':'Tucumán','U':'Chubut','V':'Tierra del Fuego','W':'Corrientes',
+  'X':'Córdoba','Y':'Jujuy','Z':'Santa Cruz'
+};
+
+const US_STATES = {
+  'AL':'Alabama','AK':'Alaska','AZ':'Arizona','AR':'Arkansas','CA':'California',
+  'CO':'Colorado','CT':'Connecticut','DE':'Delaware','FL':'Florida','GA':'Georgia',
+  'HI':'Hawái','ID':'Idaho','IL':'Illinois','IN':'Indiana','IA':'Iowa',
+  'KS':'Kansas','KY':'Kentucky','LA':'Luisiana','ME':'Maine','MD':'Maryland',
+  'MA':'Massachusetts','MI':'Michigan','MN':'Minnesota','MS':'Mississippi',
+  'MO':'Misuri','MT':'Montana','NE':'Nebraska','NV':'Nevada','NH':'New Hampshire',
+  'NJ':'New Jersey','NM':'Nuevo México','NY':'Nueva York','NC':'Carolina del Norte',
+  'ND':'Dakota del Norte','OH':'Ohio','OK':'Oklahoma','OR':'Oregón','PA':'Pensilvania',
+  'RI':'Rhode Island','SC':'Carolina del Sur','SD':'Dakota del Sur','TN':'Tennessee',
+  'TX':'Texas','UT':'Utah','VT':'Vermont','VA':'Virginia','WA':'Washington',
+  'WV':'Virginia Occidental','WI':'Wisconsin','WY':'Wyoming','DC':'Washington D.C.'
+};
+
+function getRegionName(countryCode, regionCode) {
+  if (!regionCode) return null;
+  if (countryCode === 'AR') return AR_PROVINCES[regionCode] || regionCode;
+  if (countryCode === 'US') return US_STATES[regionCode] || regionCode;
+  return regionCode;
+}
 
 function flag(code) {
   if (!code || code.length !== 2) return '🌐';
@@ -88,6 +121,10 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(null);
   const [error, setError] = useState('');
+  const [cities, setCities] = useState([]);
+  const [tooltipPos, setTooltipPos] = useState(null);
+  const [tooltipLabel, setTooltipLabel] = useState(null);
+  const mapContainerRef = useRef(null);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
@@ -101,6 +138,7 @@ export default function Analytics() {
       ]);
       setOverview(ov);
       setGeo(g.countries || []);
+      setCities(g.cities || []);
       setPopular(pop.pages || []);
       setInteractions(inter);
     } catch {
@@ -123,12 +161,14 @@ export default function Analytics() {
     }
   };
 
-  // Build numeric → count map for choropleth
+  // Build numeric → count map for choropleth + alpha2 → geo info for tooltip
   const maxCount = geo.length > 0 ? Math.max(...geo.map(c => c.count)) : 1;
   const countByNumeric = {};
+  const geoByCode = {};
   geo.forEach(c => {
     const num = A2N[c.countryCode];
     if (num) countByNumeric[num] = c.count;
+    if (c.countryCode) geoByCode[c.countryCode] = c;
   });
 
   const periodLabels = { week: 'Última semana', month: 'Último mes', year: 'Último año' };
@@ -213,64 +253,118 @@ export default function Analytics() {
                 Sin datos geográficos para este período. Las visitas locales (localhost) no se geolocalzan.
               </p>
             ) : (
-              <div style={{ background: 'var(--card-bg, #f8fafc)', borderRadius: 8, overflow: 'hidden' }}>
-                <ComposableMap
-                  width={800}
-                  height={380}
-                  projectionConfig={{ scale: 130, center: [10, 15] }}
-                  style={{ width: '100%', height: 'auto' }}
-                >
-                  <Geographies geography={GEO_URL}>
-                    {({ geographies }) =>
-                      geographies.map(geo => {
-                        const geoId = typeof geo.id === 'string' ? parseInt(geo.id, 10) : geo.id;
-                        const count = countByNumeric[geoId] || 0;
-                        const fill = count > 0 ? getMapColor(count, maxCount) : 'var(--border-color, #e5e7eb)';
-                        return (
-                          <Geography
-                            key={geo.rsmKey}
-                            geography={geo}
-                            fill={fill || '#e5e7eb'}
-                            stroke="#fff"
-                            strokeWidth={0.5}
-                            style={{
-                              default: { outline: 'none' },
-                              hover: { outline: 'none', fill: '#fbbf24', opacity: 0.9 },
-                              pressed: { outline: 'none' }
-                            }}
-                          />
-                        );
-                      })
-                    }
-                  </Geographies>
-                </ComposableMap>
+              <div
+                ref={mapContainerRef}
+                style={{ position: 'relative', background: 'var(--card-bg, #f8fafc)', borderRadius: 8 }}
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+                }}
+                onMouseLeave={() => { setTooltipPos(null); setTooltipLabel(null); }}
+              >
+                {tooltipPos && tooltipLabel && (
+                  <div style={{
+                    position: 'absolute',
+                    left: tooltipPos.x + 14,
+                    top: Math.max(4, tooltipPos.y - 40),
+                    transform: tooltipPos.x > 580 ? 'translateX(calc(-100% - 28px))' : 'none',
+                    background: 'rgba(15,15,15,0.88)',
+                    color: '#fff',
+                    padding: '5px 12px',
+                    borderRadius: 6,
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                    whiteSpace: 'nowrap',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
+                    backdropFilter: 'blur(4px)'
+                  }}>
+                    {tooltipLabel}
+                  </div>
+                )}
+                <div style={{ overflow: 'hidden', borderRadius: 8 }}>
+                  <ComposableMap
+                    width={800}
+                    height={380}
+                    projectionConfig={{ scale: 130, center: [10, 15] }}
+                    style={{ width: '100%', height: 'auto' }}
+                  >
+                    <Geographies geography={GEO_URL}>
+                      {({ geographies }) =>
+                        geographies.map(geo => {
+                          const geoId = typeof geo.id === 'string' ? parseInt(geo.id, 10) : geo.id;
+                          const count = countByNumeric[geoId] || 0;
+                          const fill = count > 0 ? getMapColor(count, maxCount) : 'var(--border-color, #e5e7eb)';
+                          const a2 = N2A[geoId];
+                          const countryName = a2 ? (geoByCode[a2]?.country || a2) : null;
+                          return (
+                            <Geography
+                              key={geo.rsmKey}
+                              geography={geo}
+                              fill={fill || '#e5e7eb'}
+                              stroke="#fff"
+                              strokeWidth={0.5}
+                              onMouseEnter={() => {
+                                if (countryName) {
+                                  setTooltipLabel(
+                                    count > 0
+                                      ? `${countryName} — ${count} visita${count !== 1 ? 's' : ''}`
+                                      : countryName
+                                  );
+                                }
+                              }}
+                              onMouseLeave={() => setTooltipLabel(null)}
+                              style={{
+                                default: { outline: 'none' },
+                                hover: { outline: 'none', fill: count > 0 ? '#fbbf24' : '#d1d5db', opacity: 0.9 },
+                                pressed: { outline: 'none' }
+                              }}
+                            />
+                          );
+                        })
+                      }
+                    </Geographies>
+                  </ComposableMap>
+                </div>
               </div>
             )}
 
             {/* Country list */}
             {geo.length > 0 && (
-              <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.5rem' }}>
-                {geo.slice(0, 20).map((c, i) => (
-                  <div key={c.countryCode} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '1.1rem', minWidth: 24 }}>{flag(c.countryCode)}</span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {i + 1}. {c.country || c.countryCode}
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <div style={{
-                          height: 4,
-                          background: 'var(--primary)',
-                          borderRadius: 2,
-                          width: `${Math.max(8, (c.count / geo[0].count) * 100)}%`,
-                          opacity: 0.8,
-                          transition: 'width 0.3s'
-                        }} />
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{c.count}</span>
+              <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: '0.5rem' }}>
+                {geo.slice(0, 20).map((c, i) => {
+                  const topCity = cities.find(x => x.countryCode === c.countryCode);
+                  const regionLabel = topCity ? getRegionName(c.countryCode, topCity.region) : null;
+                  const cityLabel = topCity?.city;
+                  const hint = [regionLabel, cityLabel].filter(Boolean).join(' · ');
+                  return (
+                    <div key={c.countryCode} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '1.1rem', minWidth: 24, paddingTop: 2 }}>{flag(c.countryCode)}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {i + 1}. {c.country || c.countryCode}
+                        </div>
+                        {hint && (
+                          <div style={{ fontSize: '0.72rem', color: 'var(--primary)', marginBottom: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {hint}
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <div style={{
+                            height: 4,
+                            background: 'var(--primary)',
+                            borderRadius: 2,
+                            width: `${Math.max(8, (c.count / geo[0].count) * 100)}%`,
+                            opacity: 0.8,
+                            transition: 'width 0.3s'
+                          }} />
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{c.count}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
@@ -280,6 +374,60 @@ export default function Analytics() {
               </p>
             )}
           </div>
+
+          {/* Ciudades y Provincias */}
+          {cities.length > 0 && (
+            <div style={{
+              background: 'var(--surface)',
+              border: '1px solid var(--border-color)',
+              borderRadius: 12,
+              padding: '1.25rem',
+              marginBottom: '1.5rem'
+            }}>
+              <h3 style={{ margin: '0 0 0.25rem', fontSize: '1rem' }}>Desglose por Ciudad y Provincia</h3>
+              <p style={{ margin: '0 0 1rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                Visitas agrupadas por país, provincia/estado y ciudad (top 50).
+              </p>
+              <div style={{ overflowX: 'auto' }}>
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>País</th>
+                      <th>Provincia / Estado</th>
+                      <th>Ciudad</th>
+                      <th style={{ textAlign: 'right' }}>Visitas</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cities.slice(0, 50).map((c, i) => {
+                      const regionName = getRegionName(c.countryCode, c.region);
+                      return (
+                        <tr key={i}>
+                          <td style={{ whiteSpace: 'nowrap' }}>
+                            <span style={{ marginRight: 6 }}>{flag(c.countryCode)}</span>
+                            <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>{c.country || c.countryCode}</span>
+                          </td>
+                          <td style={{ fontSize: '0.875rem' }}>
+                            {regionName
+                              ? <><span style={{ fontWeight: 600 }}>{regionName}</span>{c.region && regionName !== c.region && <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}> ({c.region})</span>}</>
+                              : <span style={{ color: 'var(--text-muted)' }}>—</span>
+                            }
+                          </td>
+                          <td style={{ fontSize: '0.875rem' }}>{c.city || <span style={{ color: 'var(--text-muted)' }}>—</span>}</td>
+                          <td style={{ textAlign: 'right', fontWeight: 700, color: 'var(--primary)' }}>{c.count}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {cities.length > 50 && (
+                <p style={{ margin: '0.75rem 0 0', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                  + {cities.length - 50} registros más. Descargá el reporte para el listado completo.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Popular pages */}
           <div style={{

@@ -95,10 +95,12 @@ router.post('/track', async (req, res) => {
     const ip = getClientIp(req);
     let country = null, countryCode = null, city = null, lat = null, lon = null;
 
+    let region = null;
     if (geoip && !isPrivateIp(ip)) {
       const geo = geoip.lookup(ip);
       if (geo) {
         countryCode = geo.country;
+        region = geo.region || null;
         city = geo.city || null;
         if (geo.ll) { lat = geo.ll[0]; lon = geo.ll[1]; }
         country = COUNTRY_NAMES[geo.country] || geo.country;
@@ -117,6 +119,7 @@ router.post('/track', async (req, res) => {
       ip,
       country,
       countryCode,
+      region,
       city,
       lat,
       lon
@@ -159,21 +162,42 @@ router.get('/geo', async (req, res) => {
   try {
     const since = getDateRange(req.query.period || 'week');
 
-    const data = await PageView.aggregate([
-      { $match: { type: 'view', createdAt: { $gte: since }, countryCode: { $ne: null } } },
-      { $group: {
-        _id: '$countryCode',
-        country: { $first: '$country' },
-        countryCode: { $first: '$countryCode' },
-        count: { $sum: 1 },
-        lat: { $first: '$lat' },
-        lon: { $first: '$lon' }
-      }},
-      { $sort: { count: -1 } },
-      { $limit: 100 }
+    const [countryData, cityData] = await Promise.all([
+      PageView.aggregate([
+        { $match: { type: 'view', createdAt: { $gte: since }, countryCode: { $ne: null } } },
+        { $group: {
+          _id: '$countryCode',
+          country: { $first: '$country' },
+          countryCode: { $first: '$countryCode' },
+          count: { $sum: 1 },
+          lat: { $first: '$lat' },
+          lon: { $first: '$lon' }
+        }},
+        { $sort: { count: -1 } },
+        { $limit: 100 }
+      ]),
+      PageView.aggregate([
+        { $match: { type: 'view', createdAt: { $gte: since }, countryCode: { $ne: null } } },
+        { $group: {
+          _id: { countryCode: '$countryCode', region: '$region', city: '$city' },
+          country: { $first: '$country' },
+          count: { $sum: 1 }
+        }},
+        { $sort: { count: -1 } },
+        { $limit: 200 }
+      ])
     ]);
 
-    res.json({ countries: data });
+    res.json({
+      countries: countryData,
+      cities: cityData.map(c => ({
+        countryCode: c._id.countryCode,
+        country:     c.country,
+        region:      c._id.region || null,
+        city:        c._id.city   || null,
+        count:       c.count
+      }))
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
