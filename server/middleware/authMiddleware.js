@@ -96,14 +96,13 @@ const signToken = (id) => {
 // ─── Helper: enviar respuesta con token ──────────────────────────────────────
 const sendTokenResponse = (user, statusCode, res) => {
   const token = signToken(user._id);
+  const isProd = process.env.NODE_ENV === 'production';
   const cookieOptions = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     httpOnly: true,
-    sameSite: 'lax'
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd
   };
-  if (process.env.NODE_ENV === 'production') {
-    cookieOptions.secure = true;
-  }
 
   res.cookie('jwt', token, cookieOptions);
 

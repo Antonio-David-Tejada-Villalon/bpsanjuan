@@ -58,9 +58,12 @@ router.post('/login', loginLimiter, loginValidations, async (req, res) => {
 
 // ─── POST /api/auth/logout — Logout (invalida cookie) ─────────────────────
 router.post('/logout', (req, res) => {
+  const isProd = process.env.NODE_ENV === 'production';
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 5 * 1000),
-    httpOnly: true
+    httpOnly: true,
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd
   });
   res.status(200).json({ success: true, message: 'Sesión cerrada correctamente.' });
 });
