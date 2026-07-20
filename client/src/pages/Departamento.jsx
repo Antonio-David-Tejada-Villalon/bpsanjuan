@@ -13,15 +13,17 @@ export default function Departamento() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const controller = new AbortController();
     setLoading(true);
-    getDepartment(slug)
+    getDepartment(slug, controller.signal)
       .then(data => {
         setDepartment(data.department);
-        return getLibraries({ department: data.department._id, limit: 50 });
+        return getLibraries({ department: data.department._id, limit: 50 }, controller.signal);
       })
       .then(data => setLibraries(data.libraries))
-      .catch(() => setError('No se pudo cargar el departamento.'))
+      .catch(err => { if (err.name !== 'CanceledError') setError('No se pudo cargar el departamento.'); })
       .finally(() => setLoading(false));
+    return () => controller.abort();
   }, [slug]);
 
   if (loading) return <div className="page-loading"><div className="spinner" /></div>;

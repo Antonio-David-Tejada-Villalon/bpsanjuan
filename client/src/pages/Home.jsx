@@ -28,13 +28,15 @@ export default function Home() {
   const [latestNews, setLatestNews] = useState([]);
 
   useEffect(() => {
-    getDepartments()
+    const controller = new AbortController();
+    getDepartments(controller.signal)
       .then(data => setDepartments(data.departments))
-      .catch(() => setError('No se pudieron cargar los departamentos.'))
+      .catch(err => { if (err.name !== 'CanceledError') setError('No se pudieron cargar los departamentos.'); })
       .finally(() => setLoading(false));
-    getNews({ limit: 3 })
+    getNews({ limit: 3 }, controller.signal)
       .then(data => setLatestNews(data.news || []))
       .catch(() => {});
+    return () => controller.abort();
   }, []);
 
   return (

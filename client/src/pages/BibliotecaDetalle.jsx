@@ -158,10 +158,12 @@ export default function BibliotecaDetalle() {
   const canComment = !!(publicUser || user);
 
   useEffect(() => {
-    getLibrary(id)
+    const controller = new AbortController();
+    getLibrary(id, controller.signal)
       .then(data => setLibrary(data.library))
-      .catch(() => setError('No se pudo cargar la biblioteca.'))
+      .catch(err => { if (err.name !== 'CanceledError') setError('No se pudo cargar la biblioteca.'); })
       .finally(() => setLoading(false));
+    return () => controller.abort();
   }, [id]);
 
   const handleLike = async () => {

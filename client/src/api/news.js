@@ -1,10 +1,10 @@
 import api from './axios';
 
-export const getNews = (params = {}) =>
-  api.get('/news', { params }).then(res => res.data);
+export const getNews = (params = {}, signal) =>
+  api.get('/news', { params, signal }).then(res => res.data);
 
-export const getNewsItem = (id) =>
-  api.get(`/news/${id}`).then(res => res.data);
+export const getNewsItem = (id, signal) =>
+  api.get(`/news/${id}`, { signal }).then(res => res.data);
 
 export const getAllNewsAdmin = () =>
   api.get('/news/admin/all').then(res => res.data);

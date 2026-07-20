@@ -11,13 +11,16 @@ export default function Noticias() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
     setLoading(true);
-    getNews({ page, limit: 6, search: search || undefined })
+    getNews({ page, limit: 6, search: search || undefined }, controller.signal)
       .then(data => {
         setNews(data.news);
         setTotalPages(data.totalPages || 1);
       })
+      .catch(() => {})
       .finally(() => setLoading(false));
+    return () => controller.abort();
   }, [page, search]);
 
   const handleSearch = (e) => {

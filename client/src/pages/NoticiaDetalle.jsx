@@ -24,10 +24,12 @@ export default function NoticiaDetalle() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getNewsItem(id)
+    const controller = new AbortController();
+    getNewsItem(id, controller.signal)
       .then(data => setNews(data.news))
-      .catch(() => setError('No se pudo cargar la noticia.'))
+      .catch(err => { if (err.name !== 'CanceledError') setError('No se pudo cargar la noticia.'); })
       .finally(() => setLoading(false));
+    return () => controller.abort();
   }, [id]);
 
   const handleLike = async () => {
