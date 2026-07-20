@@ -2094,6 +2094,28 @@ img { max-width: 100%; display: block; }
   .scroll-top-btn { bottom: 18px; right: 18px; width: 40px; height: 40px; }
 }
 
+/* ─── Cookie consent bar ──────────────────────────────────────── */
+.cookie-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+.cookie-bar-text { font-size: 13px; color: var(--text-soft); margin: 0; flex: 1; min-width: 200px; }
+.cookie-bar-link { color: var(--primary-text); text-decoration: underline; }
+.cookie-bar-link:hover { color: var(--primary); }
+.cookie-bar-btn { flex-shrink: 0; white-space: nowrap; }
+
 /* ─── Instagram Gallery ────────────────────────────────────────── */
 .ig-gallery-section { padding-top: 0; }
 

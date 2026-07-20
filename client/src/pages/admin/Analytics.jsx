@@ -130,19 +130,19 @@ export default function Analytics() {
     setLoading(true);
     setError('');
     try {
-      const [ov, g, pop, inter] = await Promise.all([
+      const [ovRes, gRes, popRes, interRes] = await Promise.allSettled([
         getOverview(period),
         getGeo(period),
         getPopular(period),
         getInteractions(period)
       ]);
-      setOverview(ov);
-      setGeo(g.countries || []);
-      setCities(g.cities || []);
-      setPopular(pop.pages || []);
-      setInteractions(inter);
-    } catch {
-      setError('Error al cargar los datos de analíticas.');
+      if (ovRes.status === 'fulfilled') setOverview(ovRes.value);
+      if (gRes.status === 'fulfilled') { setGeo(gRes.value.countries || []); setCities(gRes.value.cities || []); }
+      if (popRes.status === 'fulfilled') setPopular(popRes.value.pages || []);
+      if (interRes.status === 'fulfilled') setInteractions(interRes.value);
+      if ([ovRes, gRes, popRes, interRes].some(r => r.status === 'rejected')) {
+        setError('Algunos datos no pudieron cargarse.');
+      }
     } finally {
       setLoading(false);
     }
