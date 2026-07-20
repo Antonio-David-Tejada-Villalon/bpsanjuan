@@ -23,3 +23,9 @@ export const toggleNewsLike = (id) =>
 
 export const addNewsComment = (id, text) =>
   api.post(`/news/${id}/comments`, { text }).then(res => res.data);
+
+export const hideNewsComment = (newsId, commentId, reason) =>
+  api.patch(`/news/${newsId}/comments/${commentId}/hide`, { reason }).then(res => res.data);
+
+export const unhideNewsComment = (newsId, commentId) =>
+  api.patch(`/news/${newsId}/comments/${commentId}/unhide`).then(res => res.data);

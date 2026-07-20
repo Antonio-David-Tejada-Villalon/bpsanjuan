@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import DOMPurify from 'dompurify';
-import { getNewsItem, toggleNewsLike, addNewsComment } from '../api/news';
+import { getNewsItem, toggleNewsLike, addNewsComment, hideNewsComment, unhideNewsComment } from '../api/news';
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
 import ShareBtn from '../components/ShareBtn';
@@ -16,7 +16,8 @@ function TimeAgo({ date }) {
 
 export default function NoticiaDetalle() {
   const { id } = useParams();
-  const { publicUser } = useAuth();
+  const { publicUser, user } = useAuth();
+  const canModerate = user?.role === 'admin' || user?.role === 'supervisor';
   const [news, setNews] = useState(null);
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
@@ -102,7 +103,7 @@ export default function NoticiaDetalle() {
 
       {error && <p className="alert alert-error">{error}</p>}
 
-      <h3>Comentarios ({news.comments?.length ?? 0})</h3>
+      <h3>Comentarios ({news.comments?.filter(c => !c.hidden).length ?? 0})</h3>
       <form onSubmit={handleComment} className="comment-form">
         <label htmlFor="noticia-comment" className="visually-hidden">Tu comentario</label>
         <textarea
@@ -117,9 +118,37 @@ export default function NoticiaDetalle() {
 
       <ul className="comment-list">
         {news.comments?.map(c => (
-          <li key={c._id}>
-            <strong>{c.publicUser?.name || 'Usuario'}</strong>
-            <p>{c.text}</p>
+          <li key={c._id} style={c.hidden ? { opacity: 0.5, background: 'var(--bg-soft, #f5f5f5)' } : {}}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+              <div>
+                <strong>{c.publicUser?.name || 'Usuario'}</strong>
+                {c.hidden && (
+                  <span style={{ marginLeft: 8, fontSize: 11, color: 'var(--danger, #D64545)', fontStyle: 'italic' }}>
+                    Oculto por {c.hiddenBy?.name || 'moderación'}
+                  </span>
+                )}
+                <p>{c.text}</p>
+              </div>
+              {canModerate && (
+                <button
+                  className="btn btn-outline btn-sm"
+                  style={{ fontSize: 11, padding: '2px 8px', flexShrink: 0 }}
+                  onClick={async () => {
+                    try {
+                      if (c.hidden) {
+                        await unhideNewsComment(id, c._id);
+                      } else {
+                        await hideNewsComment(id, c._id);
+                      }
+                      const data = await getNewsItem(id);
+                      setNews(data.news);
+                    } catch { /* silencioso */ }
+                  }}
+                >
+                  {c.hidden ? 'Restaurar' : 'Ocultar'}
+                </button>
+              )}
+            </div>
           </li>
         ))}
       </ul>

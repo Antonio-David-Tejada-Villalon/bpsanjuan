@@ -502,11 +502,16 @@ img { max-width: 100%; display: block; }
 .footer-social-link:hover { color: #fff; text-decoration: none; transform: translateY(-2px); }
 .footer-social-link svg   { flex-shrink: 0; }
 
-.footer-dev { display: flex; flex-direction: column; gap: 3px; }
-.footer-dev-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,0.45); }
-.footer-dev-name  { color: #fff; font-size: 14px; font-weight: 600; }
-.footer-dev-title { font-size: 12px; color: rgba(255,255,255,0.55); }
-.footer-dev-contact { display: flex; gap: 8px; margin-top: 6px; }
+.footer-address { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 6px; }
+
+.footer-links-col { display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+.footer-inst-link {
+  font-size: 13px; color: rgba(255,255,255,0.60);
+  text-decoration: none; transition: color var(--transition);
+}
+.footer-inst-link:hover { color: var(--primary-light, #FB9627); text-decoration: none; }
+
+/* legacy: retained for any remaining usage */
 .footer-dev-icon {
   display: flex; align-items: center; justify-content: center;
   width: 30px; height: 30px; border-radius: 50%;

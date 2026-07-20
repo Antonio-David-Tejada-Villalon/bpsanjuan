@@ -14,8 +14,12 @@ const commentSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
-});
+  },
+  hidden:       { type: Boolean, default: false },
+  hiddenBy:     { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+  hiddenReason: { type: String, default: null },
+  hiddenAt:     { type: Date, default: null }
+}, { _id: true });
 
 const newsSchema = new mongoose.Schema({
   title: {

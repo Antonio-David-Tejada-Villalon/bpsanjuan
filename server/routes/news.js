@@ -7,6 +7,24 @@ const { protect } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
+// Helper: detecta si la request viene de un staff (admin/supervisor/bibliotecario)
+// Los tokens de staff no tienen campo `type`; los tokens de usuario público tienen `type: 'public'`
+const isStaffRequest = (req) => {
+  try {
+    let token;
+    if (req.headers.authorization?.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies?.jwt && req.cookies.jwt !== 'loggedout') {
+      token = req.cookies.jwt;
+    }
+    if (!token) return false;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return !decoded.type; // staff tokens no tienen campo type
+  } catch {
+    return false;
+  }
+};
+
 // Helper: detectar usuario público
 const getPublicUser = async (req) => {
   try {
@@ -56,19 +74,25 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ─── GET /api/news/:id — Ver noticia completa (público) ───────────────────
+// ─── GET /api/news/:id — Ver noticia completa (público; staff ve también ocultos)
 router.get('/:id', async (req, res) => {
   try {
     const news = await News.findOne({ _id: req.params.id, isPublished: true })
       .populate('author', 'name')
       .populate('relatedDepartment', 'name slug')
-      .populate('comments.publicUser', 'name picture');
+      .populate('comments.publicUser', 'name picture')
+      .populate('comments.hiddenBy', 'name');
 
     if (!news) {
       return res.status(404).json({ success: false, message: 'Noticia no encontrada.' });
     }
 
-    res.status(200).json({ success: true, news });
+    const newsObj = news.toObject();
+    if (!isStaffRequest(req)) {
+      newsObj.comments = newsObj.comments.filter(c => !c.hidden);
+    }
+
+    res.status(200).json({ success: true, news: newsObj });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error al obtener la noticia.' });
   }
@@ -229,9 +253,61 @@ router.post('/:id/comments', [
     await news.save();
 
     const updated = await News.findById(req.params.id).populate('comments.publicUser', 'name picture');
-    res.status(201).json({ success: true, comments: updated.comments });
+    res.status(201).json({ success: true, comments: updated.comments.filter(c => !c.hidden) });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error al guardar el comentario.' });
+  }
+});
+
+// ─── PATCH /api/news/:id/comments/:commentId/hide — Ocultar comentario ────
+router.patch('/:id/comments/:commentId/hide', protect, async (req, res) => {
+  try {
+    const canModerate = req.user.role === 'admin' || req.user.role === 'supervisor';
+    if (!canModerate) {
+      return res.status(403).json({ success: false, message: 'Sin permisos para moderar comentarios.' });
+    }
+
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ success: false, message: 'Noticia no encontrada.' });
+
+    const comment = news.comments.id(req.params.commentId);
+    if (!comment) return res.status(404).json({ success: false, message: 'Comentario no encontrado.' });
+
+    comment.hidden      = true;
+    comment.hiddenBy    = req.user._id;
+    comment.hiddenReason = req.body.reason || null;
+    comment.hiddenAt    = new Date();
+    await news.save();
+
+    res.status(200).json({ success: true, message: 'Comentario ocultado.' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al ocultar el comentario.' });
+  }
+});
+
+// ─── PATCH /api/news/:id/comments/:commentId/unhide — Restaurar comentario ─
+router.patch('/:id/comments/:commentId/unhide', protect, async (req, res) => {
+  try {
+    const canModerate = req.user.role === 'admin' || req.user.role === 'supervisor';
+    if (!canModerate) {
+      return res.status(403).json({ success: false, message: 'Sin permisos para moderar comentarios.' });
+    }
+
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).json({ success: false, message: 'Noticia no encontrada.' });
+
+    const comment = news.comments.id(req.params.commentId);
+    if (!comment) return res.status(404).json({ success: false, message: 'Comentario no encontrado.' });
+
+    comment.hidden       = false;
+    comment.hiddenBy     = null;
+    comment.hiddenReason = null;
+    comment.hiddenAt     = null;
+    await news.save();
+
+    res.status(200).json({ success: true, message: 'Comentario restaurado.' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al restaurar el comentario.' });
   }
 });
 
