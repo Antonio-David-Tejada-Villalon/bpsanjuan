@@ -231,6 +231,15 @@ img { max-width: 100%; display: block; }
   margin-bottom: 32px;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+.section-header .section-title  { text-align: left; margin-bottom: 4px; }
+.section-header .section-subtitle { text-align: left; margin-bottom: 0; }
+
 /* ─── Botones ─────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;

@@ -2,8 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getDepartments } from '../api/departments';
+import { getNews } from '../api/news';
 import LibrarySearch from '../components/LibrarySearch';
 import InstagramGallery from '../components/InstagramGallery';
+
+const newsFallback = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="170" viewBox="0 0 400 170"><rect width="400" height="170" fill="#FA7506"/><text x="200" y="95" text-anchor="middle" dominant-baseline="middle" font-family="system-ui,sans-serif" font-size="64" font-weight="700" fill="rgba(255,255,255,0.15)">DBP</text></svg>'
+)}`;
 
 function deptPlaceholder(name) {
   const initials = name
@@ -20,12 +25,16 @@ export default function Home() {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [latestNews, setLatestNews] = useState([]);
 
   useEffect(() => {
     getDepartments()
       .then(data => setDepartments(data.departments))
       .catch(() => setError('No se pudieron cargar los departamentos.'))
       .finally(() => setLoading(false));
+    getNews({ limit: 3 })
+      .then(data => setLatestNews(data.news || []))
+      .catch(() => {});
   }, []);
 
   return (
@@ -77,6 +86,43 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {latestNews.length > 0 && (
+        <section className="section container">
+          <div className="section-header">
+            <div>
+              <h2 className="section-title">Últimas Noticias</h2>
+              <p className="section-subtitle">Lo más reciente de la red de bibliotecas.</p>
+            </div>
+            <Link to="/noticias" className="btn btn-outline btn-sm">Ver todas →</Link>
+          </div>
+          <div className="grid grid-3">
+            {latestNews.map(item => (
+              <Link to={`/noticias/${item._id}`} key={item._id} className="card card-hover news-card">
+                <img
+                  src={item.thumbnail || newsFallback}
+                  alt={item.title}
+                  className="news-card-img"
+                  onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = newsFallback; }}
+                />
+                <div className="card-body">
+                  {(item.tags?.[0] || item.relatedDepartment?.name) && (
+                    <p style={{ fontSize: 12, color: 'var(--primary-text)', fontWeight: 600, marginBottom: 4 }}>
+                      {item.tags?.[0] || item.relatedDepartment.name}
+                    </p>
+                  )}
+                  <h3 className="news-card-title">{item.title}</h3>
+                  {item.publishedAt && (
+                    <p className="news-card-date">
+                      {new Date(item.publishedAt).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <InstagramGallery />
     </div>
