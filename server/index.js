@@ -25,6 +25,7 @@ const presenceRoutes = require('./routes/presence');
 const activityLogRoutes = require('./routes/activityLogs');
 const analyticsRoutes = require('./routes/analytics');
 const instagramRoutes = require('./routes/instagram');
+const { scheduleAutoRefresh } = require('./helpers/instagramToken');
 
 const app = express();
 
@@ -130,6 +131,8 @@ const startServer = async () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
       console.log(`📖 Entorno: ${process.env.NODE_ENV}`);
     });
+
+    scheduleAutoRefresh();
   } catch (error) {
     console.error('❌ Error al conectar a MongoDB:', error.message);
     process.exit(1);

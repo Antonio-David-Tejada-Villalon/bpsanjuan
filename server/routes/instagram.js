@@ -1,5 +1,8 @@
-const express = require('express');
-const https   = require('https');
+const express  = require('express');
+const https    = require('https');
+const { protect, restrictTo } = require('../middleware/authMiddleware');
+const { getToken, refreshToken } = require('../helpers/instagramToken');
+const Config   = require('../models/Config');
 
 const router = express.Router();
 
@@ -10,7 +13,7 @@ function igFetch(path) {
   return new Promise((resolve, reject) => {
     https.get(`https://graph.instagram.com${path}`, res => {
       let raw = '';
-      res.on('data', c => raw += c);
+      res.on('data', c => (raw += c));
       res.on('end', () => {
         try { resolve(JSON.parse(raw)); }
         catch (e) { reject(e); }
@@ -19,14 +22,14 @@ function igFetch(path) {
   });
 }
 
-// GET /api/instagram/feed
+// GET /api/instagram/feed ─────────────────────────────────────────────────────
 router.get('/feed', async (req, res) => {
   try {
     if (cache.data && Date.now() - cache.ts < CACHE_TTL) {
       return res.json(cache.data);
     }
 
-    const token  = process.env.INSTAGRAM_ACCESS_TOKEN;
+    const token  = await getToken();
     const userId = process.env.INSTAGRAM_USER_ID;
     if (!token || !userId) {
       return res.status(503).json({ error: 'Instagram no configurado' });
@@ -59,6 +62,43 @@ router.get('/feed', async (req, res) => {
     res.json(payload);
   } catch (err) {
     res.status(500).json({ error: 'Error al obtener el feed de Instagram' });
+  }
+});
+
+// POST /api/instagram/refresh — Renovación manual (solo admin) ────────────────
+router.post('/refresh', protect, restrictTo('admin'), async (req, res) => {
+  try {
+    const result = await refreshToken();
+    res.json({
+      success: true,
+      message: 'Token de Instagram renovado correctamente.',
+      expiresAt: result?.expiresAt
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: `Error al renovar: ${err.message}` });
+  }
+});
+
+// GET /api/instagram/token-status — Estado del token (solo admin) ─────────────
+router.get('/token-status', protect, restrictTo('admin'), async (req, res) => {
+  try {
+    const expiryRecord = await Config.findOne({ key: 'instagram_token_expires_at' });
+    const storedToken  = await Config.findOne({ key: 'instagram_access_token' });
+
+    const expiresAt = expiryRecord?.value ? new Date(expiryRecord.value) : null;
+    const daysLeft  = expiresAt
+      ? Math.ceil((expiresAt - Date.now()) / (1000 * 60 * 60 * 24))
+      : null;
+
+    res.json({
+      success: true,
+      source: storedToken?.value ? 'mongodb' : 'env',
+      expiresAt: expiresAt?.toISOString() ?? null,
+      daysLeft,
+      updatedAt: expiryRecord?.updatedAt ?? null
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
