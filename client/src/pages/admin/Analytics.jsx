@@ -28,7 +28,7 @@ const A2N = {
   TW:158,HK:344,PS:275,MO:446,GL:304
 };
 
-const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+const GEO_URL = '/countries-110m.json';
 
 // Numeric → alpha-2 (reverse of A2N)
 const N2A = Object.fromEntries(Object.entries(A2N).map(([a2, num]) => [num, a2]));
