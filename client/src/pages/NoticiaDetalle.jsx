@@ -63,6 +63,15 @@ export default function NoticiaDetalle() {
         <meta name="description" content={news.content ? news.content.replace(/<[^>]+>/g, '').slice(0, 155) : `Noticia de las Bibliotecas Populares de San Juan.`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://bpsanjuan.vercel.app" },
+            { "@type": "ListItem", "position": 2, "name": "Noticias", "item": "https://bpsanjuan.vercel.app/noticias" },
+            { "@type": "ListItem", "position": 3, "name": news.title, "item": `https://bpsanjuan.vercel.app/noticias/${id}` }
+          ]
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
           "@type": "NewsArticle",
           "headline": news.title,
           "url": `https://bpsanjuan.vercel.app/noticias/${id}`,
@@ -79,7 +88,13 @@ export default function NoticiaDetalle() {
           }
         })}</script>
       </Helmet>
-      <Link to="/noticias">← Volver a noticias</Link>
+      <nav aria-label="Ruta de navegación" className="breadcrumb">
+        <ol className="breadcrumb-list">
+          <li><Link to="/">Inicio</Link></li>
+          <li><Link to="/noticias">Noticias</Link></li>
+          <li aria-current="page">{news.title}</li>
+        </ol>
+      </nav>
       <h1>{news.title}</h1>
       <p className="detalle-meta">
         {news.publishedAt && <TimeAgo date={news.publishedAt} />}

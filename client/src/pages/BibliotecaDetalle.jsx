@@ -245,6 +245,16 @@ export default function BibliotecaDetalle() {
         <meta name="description" content={`${library.name}${library.department?.name ? ` — ${library.department.name}` : ''}, San Juan. ${addr.street ? `Dirección: ${addr.street}.` : ''} Biblioteca popular de la Dirección de Bibliotecas Populares y Actividades Literarias.`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://bpsanjuan.vercel.app" },
+            { "@type": "ListItem", "position": 2, "name": "Departamentos", "item": "https://bpsanjuan.vercel.app/departamentos" },
+            ...(library.department ? [{ "@type": "ListItem", "position": 3, "name": library.department.name, "item": `https://bpsanjuan.vercel.app/departamentos/${library.department.slug}` }] : []),
+            { "@type": "ListItem", "position": library.department ? 4 : 3, "name": library.name, "item": `https://bpsanjuan.vercel.app/bibliotecas/${id}` }
+          ]
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
           "@type": "Library",
           "name": library.name,
           "url": `https://bpsanjuan.vercel.app/bibliotecas/${id}`,
@@ -266,10 +276,16 @@ export default function BibliotecaDetalle() {
           }
         })}</script>
       </Helmet>
-      {/* Breadcrumb */}
-      <Link to={`/departamentos/${library.department?.slug}`} className="lib-breadcrumb">
-        ← {library.department?.name}
-      </Link>
+      <nav aria-label="Ruta de navegación" className="breadcrumb">
+        <ol className="breadcrumb-list">
+          <li><Link to="/">Inicio</Link></li>
+          <li><Link to="/departamentos">Departamentos</Link></li>
+          {library.department && (
+            <li><Link to={`/departamentos/${library.department.slug}`}>{library.department.name}</Link></li>
+          )}
+          <li aria-current="page">{library.name}</li>
+        </ol>
+      </nav>
 
       {/* ── Hero image ── */}
       {allImages.length > 0 && (
