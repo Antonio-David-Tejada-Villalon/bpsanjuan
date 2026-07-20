@@ -495,7 +495,9 @@ export default function BibliotecaDetalle() {
 
           {/* Formulario nuevo comentario */}
           <form onSubmit={handleComment} className="comment-form">
+            <label htmlFor="biblio-comment" className="visually-hidden">Tu comentario</label>
             <textarea
+              id="biblio-comment"
               rows={3}
               placeholder={canComment ? 'Escribí un comentario...' : 'Iniciá sesión con Google para comentar'}
               value={comment}
@@ -588,7 +590,9 @@ export default function BibliotecaDetalle() {
                       {/* Formulario de respuesta inline */}
                       {replyingTo === c._id && (
                         <form className="reply-form" onSubmit={e => handleReply(e, c._id)}>
+                          <label htmlFor={`reply-${c._id}`} className="visually-hidden">Tu respuesta</label>
                           <textarea
+                            id={`reply-${c._id}`}
                             rows={2}
                             placeholder="Escribí tu respuesta..."
                             value={replyText}

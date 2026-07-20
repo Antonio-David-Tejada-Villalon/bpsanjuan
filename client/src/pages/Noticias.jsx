@@ -36,7 +36,8 @@ export default function Noticias() {
       <p className="section-subtitle">Novedades y actividades de las Bibliotecas Populares.</p>
 
       <form className="news-search" onSubmit={handleSearch}>
-        <input name="q" type="text" placeholder="Buscar noticias..." defaultValue={search} />
+        <label htmlFor="news-search" className="visually-hidden">Buscar noticias</label>
+        <input id="news-search" name="q" type="text" placeholder="Buscar noticias..." defaultValue={search} />
         <button type="submit" className="btn btn-primary">Buscar</button>
       </form>
 

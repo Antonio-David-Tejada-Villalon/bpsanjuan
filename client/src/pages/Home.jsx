@@ -5,6 +5,17 @@ import { getDepartments } from '../api/departments';
 import LibrarySearch from '../components/LibrarySearch';
 import InstagramGallery from '../components/InstagramGallery';
 
+function deptPlaceholder(name) {
+  const initials = name
+    .split(' ')
+    .filter(w => w.length > 2)
+    .slice(0, 2)
+    .map(w => w[0].toUpperCase())
+    .join('') || name.slice(0, 2).toUpperCase();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="180" viewBox="0 0 300 180"><rect width="300" height="180" fill="#FA7506"/><text x="150" y="95" text-anchor="middle" dominant-baseline="middle" font-family="system-ui,sans-serif" font-size="54" font-weight="700" fill="rgba(255,255,255,0.9)">${initials}</text></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
 export default function Home() {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,9 +63,10 @@ export default function Home() {
             {departments.map(dept => (
               <Link to={`/departamentos/${dept.slug}`} key={dept._id} className="card card-hover dept-card">
                 <img
-                  src={dept.thumbnail || 'https://placehold.co/300x180?text=' + dept.name}
+                  src={dept.thumbnail || deptPlaceholder(dept.name)}
                   alt={dept.name}
                   className="dept-card-img"
+                  onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = deptPlaceholder(dept.name); }}
                 />
                 <div className="card-body">
                   <h3 className="dept-card-title">{dept.name}</h3>

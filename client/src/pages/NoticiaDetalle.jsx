@@ -104,7 +104,9 @@ export default function NoticiaDetalle() {
 
       <h3>Comentarios ({news.comments?.length ?? 0})</h3>
       <form onSubmit={handleComment} className="comment-form">
+        <label htmlFor="noticia-comment" className="visually-hidden">Tu comentario</label>
         <textarea
+          id="noticia-comment"
           rows={3}
           placeholder={publicUser ? 'Escribí un comentario...' : 'Iniciá sesión con Google para comentar'}
           value={comment}
