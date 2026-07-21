@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import { getOverview, getGeo, getPopular, getInteractions, exportAnalytics } from '../../api/analyticsApi';
+import './Analytics.css';
 
 // ISO alpha-2 → ISO numeric (para world-atlas topojson)
 const A2N = {
@@ -30,7 +31,6 @@ const A2N = {
 
 const GEO_URL = '/countries-110m.json';
 
-// Numeric → alpha-2 (reverse of A2N)
 const N2A = Object.fromEntries(Object.entries(A2N).map(([a2, num]) => [num, a2]));
 
 const AR_PROVINCES = {
@@ -78,31 +78,22 @@ function getMapColor(count, max) {
 
 function StatCard({ label, value, icon }) {
   return (
-    <div style={{
-      background: 'var(--card-bg, var(--surface))',
-      border: '1px solid var(--border-color)',
-      borderRadius: 12,
-      padding: '1.25rem 1.5rem',
-      flex: 1,
-      minWidth: 140
-    }}>
-      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-        {icon} {label}
-      </div>
-      <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)' }}>{value ?? '—'}</div>
+    <div className="stat-card">
+      <div className="stat-card__label">{icon} {label}</div>
+      <div className="stat-card__value">{value ?? '—'}</div>
     </div>
   );
 }
 
 function TypeBadge({ type }) {
   const cfg = {
-    biblioteca: { bg: 'rgba(249,115,22,0.12)', color: '#ea580c', label: 'Biblioteca' },
-    noticia:    { bg: 'rgba(59,130,246,0.12)',  color: '#2563eb', label: 'Noticia' },
-    home:       { bg: 'rgba(34,197,94,0.12)',  color: '#16a34a', label: 'Inicio' },
-    nosotros:   { bg: 'rgba(168,85,247,0.12)', color: '#9333ea', label: 'Nosotros' },
-    noticias:   { bg: 'rgba(59,130,246,0.12)',  color: '#2563eb', label: 'Noticias' },
-    departamento:{ bg:'rgba(20,184,166,0.12)', color: '#0d9488', label: 'Departamento' },
-    otro:       { bg: 'rgba(107,114,128,0.12)', color: '#6b7280', label: 'Otro' }
+    biblioteca:   { bg: 'rgba(249,115,22,0.12)', color: '#ea580c', label: 'Biblioteca' },
+    noticia:      { bg: 'rgba(59,130,246,0.12)',  color: '#2563eb', label: 'Noticia' },
+    home:         { bg: 'rgba(34,197,94,0.12)',   color: '#16a34a', label: 'Inicio' },
+    nosotros:     { bg: 'rgba(168,85,247,0.12)',  color: '#9333ea', label: 'Nosotros' },
+    noticias:     { bg: 'rgba(59,130,246,0.12)',  color: '#2563eb', label: 'Noticias' },
+    departamento: { bg: 'rgba(20,184,166,0.12)',  color: '#0d9488', label: 'Departamento' },
+    otro:         { bg: 'rgba(107,114,128,0.12)', color: '#6b7280', label: 'Otro' }
   };
   const c = cfg[type] || cfg.otro;
   return (
@@ -161,7 +152,6 @@ export default function Analytics() {
     }
   };
 
-  // Build numeric → count map for choropleth + alpha2 → geo info for tooltip
   const maxCount = geo.length > 0 ? Math.max(...geo.map(c => c.count)) : 1;
   const countByNumeric = {};
   const geoByCode = {};
@@ -176,16 +166,12 @@ export default function Analytics() {
   return (
     <div>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="analytics-header">
         <div>
-          <h2 style={{ margin: 0 }}>Analíticas del Sitio</h2>
-          <p style={{ margin: '0.25rem 0 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Visitas, geografía, contenido popular e interacciones
-          </p>
+          <h2>Analíticas del Sitio</h2>
+          <p className="analytics-header-sub">Visitas, geografía, contenido popular e interacciones</p>
         </div>
-
-        {/* Export buttons */}
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <div className="analytics-export-btns">
           {['xlsx', 'docx', 'txt'].map(fmt => (
             <button
               key={fmt}
@@ -201,22 +187,12 @@ export default function Analytics() {
       </div>
 
       {/* Period tabs */}
-      <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '1.5rem' }}>
+      <div className="analytics-period-tabs">
         {Object.entries(periodLabels).map(([key, label]) => (
           <button
             key={key}
+            className={`analytics-period-btn${period === key ? ' active' : ''}`}
             onClick={() => setPeriod(key)}
-            style={{
-              padding: '0.4rem 1rem',
-              borderRadius: 20,
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: period === key ? 700 : 400,
-              fontSize: '0.875rem',
-              background: period === key ? 'var(--primary)' : 'var(--surface)',
-              color: period === key ? '#fff' : 'var(--text-muted)',
-              transition: 'all 0.15s'
-            }}
           >
             {label}
           </button>
@@ -226,36 +202,28 @@ export default function Analytics() {
       {error && <div className="alert alert-error" style={{ marginBottom: '1rem' }}>{error}</div>}
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
-          Cargando analíticas…
-        </div>
+        <div className="analytics-loading">Cargando analíticas…</div>
       ) : (
         <>
           {/* Overview cards */}
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-            <StatCard label="Total visitas" value={overview?.totalViews?.toLocaleString('es-AR')} icon="👁" />
+          <div className="analytics-stats-row">
+            <StatCard label="Total visitas"     value={overview?.totalViews?.toLocaleString('es-AR')}    icon="👁" />
             <StatCard label="Visitantes únicos" value={overview?.uniqueVisitors?.toLocaleString('es-AR')} icon="👤" />
-            <StatCard label="Países" value={overview?.countries} icon="🌍" />
-            <StatCard label="Compartidos" value={overview?.totalShares?.toLocaleString('es-AR')} icon="🔗" />
+            <StatCard label="Países"            value={overview?.countries}                               icon="🌍" />
+            <StatCard label="Compartidos"       value={overview?.totalShares?.toLocaleString('es-AR')}   icon="🔗" />
           </div>
 
           {/* World Map */}
-          <div style={{
-            background: 'var(--surface)',
-            border: '1px solid var(--border-color)',
-            borderRadius: 12,
-            padding: '1.25rem',
-            marginBottom: '1.5rem'
-          }}>
-            <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>Mapa de Visitas</h3>
+          <div className="analytics-card">
+            <h3>Mapa de Visitas</h3>
             {geo.length === 0 ? (
-              <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem' }}>
+              <p className="analytics-empty" style={{ padding: '2rem' }}>
                 Sin datos geográficos para este período. Las visitas locales (localhost) no se geolocalzan.
               </p>
             ) : (
               <div
                 ref={mapContainerRef}
-                style={{ position: 'relative', background: 'var(--card-bg, #f8fafc)', borderRadius: 8 }}
+                className="analytics-map-container"
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
@@ -263,27 +231,18 @@ export default function Analytics() {
                 onMouseLeave={() => { setTooltipPos(null); setTooltipLabel(null); }}
               >
                 {tooltipPos && tooltipLabel && (
-                  <div style={{
-                    position: 'absolute',
-                    left: tooltipPos.x + 14,
-                    top: Math.max(4, tooltipPos.y - 40),
-                    transform: tooltipPos.x > 580 ? 'translateX(calc(-100% - 28px))' : 'none',
-                    background: 'rgba(15,15,15,0.88)',
-                    color: '#fff',
-                    padding: '5px 12px',
-                    borderRadius: 6,
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    pointerEvents: 'none',
-                    zIndex: 10,
-                    whiteSpace: 'nowrap',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.35)',
-                    backdropFilter: 'blur(4px)'
-                  }}>
+                  <div
+                    className="analytics-map-tooltip"
+                    style={{
+                      left: tooltipPos.x + 14,
+                      top: Math.max(4, tooltipPos.y - 40),
+                      transform: tooltipPos.x > 580 ? 'translateX(calc(-100% - 28px))' : 'none',
+                    }}
+                  >
                     {tooltipLabel}
                   </div>
                 )}
-                <div style={{ overflow: 'hidden', borderRadius: 8 }}>
+                <div className="analytics-map-overflow">
                   <ComposableMap
                     width={800}
                     height={380}
@@ -317,7 +276,7 @@ export default function Analytics() {
                               onMouseLeave={() => setTooltipLabel(null)}
                               style={{
                                 default: { outline: 'none' },
-                                hover: { outline: 'none', fill: count > 0 ? '#fbbf24' : '#d1d5db', opacity: 0.9 },
+                                hover:   { outline: 'none', fill: count > 0 ? '#fbbf24' : '#d1d5db', opacity: 0.9 },
                                 pressed: { outline: 'none' }
                               }}
                             />
@@ -332,34 +291,24 @@ export default function Analytics() {
 
             {/* Country list */}
             {geo.length > 0 && (
-              <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: '0.5rem' }}>
+              <div className="analytics-country-grid">
                 {geo.slice(0, 20).map((c, i) => {
-                  const topCity = cities.find(x => x.countryCode === c.countryCode);
+                  const topCity   = cities.find(x => x.countryCode === c.countryCode);
                   const regionLabel = topCity ? getRegionName(c.countryCode, topCity.region) : null;
-                  const cityLabel = topCity?.city;
+                  const cityLabel   = topCity?.city;
                   const hint = [regionLabel, cityLabel].filter(Boolean).join(' · ');
                   return (
-                    <div key={c.countryCode} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                      <span style={{ fontSize: '1.1rem', minWidth: 24, paddingTop: 2 }}>{flag(c.countryCode)}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.82rem', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {i + 1}. {c.country || c.countryCode}
-                        </div>
-                        {hint && (
-                          <div style={{ fontSize: '0.72rem', color: 'var(--primary)', marginBottom: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {hint}
-                          </div>
-                        )}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                          <div style={{
-                            height: 4,
-                            background: 'var(--primary)',
-                            borderRadius: 2,
-                            width: `${Math.max(8, (c.count / geo[0].count) * 100)}%`,
-                            opacity: 0.8,
-                            transition: 'width 0.3s'
-                          }} />
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{c.count}</span>
+                    <div key={c.countryCode} className="analytics-country-row">
+                      <span className="analytics-country-flag">{flag(c.countryCode)}</span>
+                      <div className="analytics-country-info">
+                        <div className="analytics-country-name">{i + 1}. {c.country || c.countryCode}</div>
+                        {hint && <div className="analytics-country-hint">{hint}</div>}
+                        <div className="analytics-country-bar-row">
+                          <div
+                            className="analytics-bar"
+                            style={{ width: `${Math.max(8, (c.count / geo[0].count) * 100)}%` }}
+                          />
+                          <span className="analytics-bar-count">{c.count}</span>
                         </div>
                       </div>
                     </div>
@@ -369,7 +318,7 @@ export default function Analytics() {
             )}
 
             {geo.length > 20 && (
-              <p style={{ margin: '0.75rem 0 0', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              <p className="analytics-more-hint">
                 + {geo.length - 20} países más. Descargá el reporte para ver el listado completo.
               </p>
             )}
@@ -377,18 +326,12 @@ export default function Analytics() {
 
           {/* Ciudades y Provincias */}
           {cities.length > 0 && (
-            <div style={{
-              background: 'var(--surface)',
-              border: '1px solid var(--border-color)',
-              borderRadius: 12,
-              padding: '1.25rem',
-              marginBottom: '1.5rem'
-            }}>
-              <h3 style={{ margin: '0 0 0.25rem', fontSize: '1rem' }}>Desglose por Ciudad y Provincia</h3>
-              <p style={{ margin: '0 0 1rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            <div className="analytics-card">
+              <h3 style={{ marginBottom: '0.25rem' }}>Desglose por Ciudad y Provincia</h3>
+              <p className="analytics-section-hint">
                 Visitas agrupadas por país, provincia/estado y ciudad (top 50).
               </p>
-              <div style={{ overflowX: 'auto' }}>
+              <div className="analytics-overflow-table">
                 <table className="admin-table">
                   <thead>
                     <tr>
@@ -422,7 +365,7 @@ export default function Analytics() {
                 </table>
               </div>
               {cities.length > 50 && (
-                <p style={{ margin: '0.75rem 0 0', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                <p className="analytics-more-hint">
                   + {cities.length - 50} registros más. Descargá el reporte para el listado completo.
                 </p>
               )}
@@ -430,18 +373,12 @@ export default function Analytics() {
           )}
 
           {/* Popular pages */}
-          <div style={{
-            background: 'var(--surface)',
-            border: '1px solid var(--border-color)',
-            borderRadius: 12,
-            padding: '1.25rem',
-            marginBottom: '1.5rem'
-          }}>
-            <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>Páginas Más Visitadas</h3>
+          <div className="analytics-card">
+            <h3>Páginas Más Visitadas</h3>
             {popular.length === 0 ? (
-              <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '1.5rem' }}>Sin visitas en este período.</p>
+              <p className="analytics-empty" style={{ padding: '1.5rem' }}>Sin visitas en este período.</p>
             ) : (
-              <div style={{ overflowX: 'auto' }}>
+              <div className="analytics-overflow-table">
                 <table className="admin-table">
                   <thead>
                     <tr>
@@ -456,9 +393,7 @@ export default function Analytics() {
                       <tr key={p._id}>
                         <td style={{ color: 'var(--text-muted)', width: 36 }}>{i + 1}</td>
                         <td>
-                          <div style={{ fontWeight: 500, fontSize: '0.875rem' }}>
-                            {p.resourceName || p._id}
-                          </div>
+                          <div style={{ fontWeight: 500, fontSize: '0.875rem' }}>{p.resourceName || p._id}</div>
                           {p.resourceName && (
                             <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{p._id}</div>
                           )}
@@ -488,21 +423,15 @@ export default function Analytics() {
           {interactions && (
             <>
               {/* Content likes/dislikes */}
-              <div style={{
-                background: 'var(--surface)',
-                border: '1px solid var(--border-color)',
-                borderRadius: 12,
-                padding: '1.25rem',
-                marginBottom: '1.5rem'
-              }}>
-                <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>Me Gusta y Reacciones por Contenido</h3>
-                <p style={{ margin: '-0.5rem 0 1rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              <div className="analytics-card">
+                <h3>Me Gusta y Reacciones por Contenido</h3>
+                <p className="analytics-section-hint">
                   Los Me gusta de bibliotecas y noticias son acumulados históricos, no sólo del período seleccionado.
                 </p>
                 {interactions.content?.length === 0 ? (
-                  <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '1.5rem' }}>Sin datos de reacciones.</p>
+                  <p className="analytics-empty" style={{ padding: '1.5rem' }}>Sin datos de reacciones.</p>
                 ) : (
-                  <div style={{ overflowX: 'auto' }}>
+                  <div className="analytics-overflow-table">
                     <table className="admin-table">
                       <thead>
                         <tr>
@@ -539,15 +468,9 @@ export default function Analytics() {
 
               {/* Shares */}
               {interactions.shares?.length > 0 && (
-                <div style={{
-                  background: 'var(--surface)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: 12,
-                  padding: '1.25rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>Compartidos en el Período</h3>
-                  <div style={{ overflowX: 'auto' }}>
+                <div className="analytics-card">
+                  <h3>Compartidos en el Período</h3>
+                  <div className="analytics-overflow-table">
                     <table className="admin-table">
                       <thead>
                         <tr>

@@ -1,0 +1,211 @@
+/* ── Analytics admin page ─────────────────────────────── */
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.analytics-header h2 { margin: 0; }
+
+.analytics-header-sub {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.analytics-export-btns {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── Period tabs ── */
+.analytics-period-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.analytics-period-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  background: var(--surface);
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+  font-weight: 400;
+}
+
+.analytics-period-btn.active {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── Stat cards row ── */
+.analytics-stats-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: var(--card-bg, var(--surface));
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  flex: 1;
+  min-width: 140px;
+}
+
+.stat-card__label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-card__value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ── Generic section card ── */
+.analytics-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.analytics-card h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+}
+
+.analytics-section-hint {
+  margin: -0.5rem 0 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.analytics-empty {
+  color: var(--text-muted);
+  text-align: center;
+  margin: 0;
+}
+
+.analytics-loading {
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-muted);
+}
+
+/* ── Map ── */
+.analytics-map-container {
+  position: relative;
+  background: var(--card-bg, #f8fafc);
+  border-radius: 8px;
+}
+
+.analytics-map-overflow {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.analytics-map-tooltip {
+  position: absolute;
+  background: rgba(15,15,15,0.88);
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+  backdrop-filter: blur(4px);
+}
+
+/* ── Country list ── */
+.analytics-country-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.5rem;
+}
+
+.analytics-country-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.analytics-country-flag {
+  font-size: 1.1rem;
+  min-width: 24px;
+  padding-top: 2px;
+}
+
+.analytics-country-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.analytics-country-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.analytics-country-hint {
+  font-size: 0.72rem;
+  color: var(--primary);
+  margin-bottom: 0.15rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.analytics-country-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.analytics-bar {
+  height: 4px;
+  background: var(--primary);
+  border-radius: 2px;
+  opacity: 0.8;
+  transition: width 0.3s;
+}
+
+.analytics-bar-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.analytics-more-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.analytics-overflow-table {
+  overflow-x: auto;
+}

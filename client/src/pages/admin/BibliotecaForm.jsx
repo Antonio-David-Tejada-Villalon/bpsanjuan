@@ -31,6 +31,7 @@ const emptyForm = {
   images: '',
   schedule: [],
   description: '',
+  historyNotes: '',
   services: [],
   conabipRegistered: false,
   conabipNumber: '',
@@ -70,8 +71,9 @@ export default function BibliotecaForm() {
             thumbnail:   lib.thumbnail || '',
             images:      (lib.images || []).join('\n'),
             schedule:    lib.schedule || [],
-            description: lib.description || '',
-            services:    lib.services || [],
+            description:  lib.description  || '',
+            historyNotes: lib.historyNotes || '',
+            services:     lib.services     || [],
             conabipRegistered: !!lib.conabipRegistered,
             conabipNumber: lib.conabipNumber || '',
             foundedDay:   lib.foundedDay  || '',
@@ -108,6 +110,12 @@ export default function BibliotecaForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const hasLat = form.address.lat !== '';
+    const hasLng = form.address.lng !== '';
+    if (hasLat !== hasLng) {
+      setError('Las coordenadas deben ingresarse juntas: latitud y longitud, o ninguna.');
+      return;
+    }
     setSaving(true);
     setError('');
     try {
@@ -216,6 +224,20 @@ export default function BibliotecaForm() {
           </div>
 
           <div className="field">
+            <label>Notas históricas <span className="field-hint-inline">(visible solo en el panel — información archivística ampliada)</span></label>
+            <textarea
+              rows={5}
+              maxLength={5000}
+              value={form.historyNotes}
+              onChange={e => set('historyNotes', e.target.value)}
+              placeholder="Historia de la biblioteca, colecciones especiales, hitos relevantes…"
+            />
+            <span className="field-hint" style={{ textAlign: 'right', display: 'block' }}>
+              {form.historyNotes.length}/5000 caracteres
+            </span>
+          </div>
+
+          <div className="field">
             <label>Servicios ofrecidos</label>
             <div className="services-grid">
               {SERVICES.map(svc => (
@@ -270,7 +292,7 @@ export default function BibliotecaForm() {
           </div>
           <div className="form-grid">
             <div className="field">
-              <label>Latitud</label>
+              <label>Latitud <span className="field-hint-inline">(opcional)</span></label>
               <input
                 type="number"
                 step="any"
@@ -280,7 +302,7 @@ export default function BibliotecaForm() {
               />
             </div>
             <div className="field">
-              <label>Longitud</label>
+              <label>Longitud <span className="field-hint-inline">(opcional)</span></label>
               <input
                 type="number"
                 step="any"
@@ -291,7 +313,8 @@ export default function BibliotecaForm() {
             </div>
           </div>
           <span className="field-hint">
-            Para obtener las coordenadas: abrí Google Maps, buscá la biblioteca, hacé clic derecho sobre el pin y seleccioná <strong>"Copiar coordenadas"</strong>. El primer número es la latitud y el segundo la longitud.
+            Activan el marcador en el mapa. Deben ingresarse <strong>las dos juntas o dejarse vacías</strong>.
+            Para obtenerlas: abrí Google Maps, buscá la biblioteca, hacé clic derecho sobre el pin y seleccioná <strong>"Copiar coordenadas"</strong>. El primer número es la latitud y el segundo la longitud.
           </span>
         </fieldset>
 
