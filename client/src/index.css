@@ -2185,6 +2185,58 @@ img { max-width: 100%; display: block; }
 .cookie-bar-link:hover { color: var(--primary); }
 .cookie-bar-btn { flex-shrink: 0; white-space: nowrap; }
 
+/* ─── Newsletter ───────────────────────────────────────────────── */
+.newsletter-section {
+  background: linear-gradient(135deg, #FA7506 0%, #FB9627 55%, #FCD5A4 100%);
+  padding: 56px 0;
+}
+.newsletter-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.newsletter-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 8px;
+}
+.newsletter-title {
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.newsletter-sub { font-size: 15px; color: rgba(255,255,255,0.88); line-height: 1.6; }
+.newsletter-form { display: flex; gap: 10px; flex-wrap: wrap; }
+.newsletter-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 11px 16px;
+  border-radius: 8px;
+  border: 2px solid rgba(255,255,255,0.50);
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: border-color var(--transition), background var(--transition);
+}
+.newsletter-input::placeholder { color: rgba(255,255,255,0.65); }
+.newsletter-input:focus { border-color: rgba(255,255,255,0.90); background: rgba(255,255,255,0.28); }
+.newsletter-btn { white-space: nowrap; background: #fff; color: #B85500; border-color: transparent; }
+.newsletter-btn:hover { background: rgba(255,255,255,0.88); border-color: transparent; }
+.newsletter-error { font-size: 13px; color: rgba(255,255,255,0.95); width: 100%; margin-top: 6px; background: rgba(0,0,0,0.15); border-radius: 6px; padding: 6px 12px; }
+.newsletter-success { font-size: 15px; color: #fff; font-weight: 600; padding: 14px 20px; background: rgba(255,255,255,0.18); border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.40); }
+.newsletter-legal { font-size: 11px; color: rgba(255,255,255,0.60); margin-top: 12px; line-height: 1.5; }
+@media (max-width: 760px) {
+  .newsletter-inner { grid-template-columns: 1fr; gap: 24px; }
+}
+
 /* ─── Instagram Gallery ────────────────────────────────────────── */
 .ig-gallery-section { padding-top: 0; }
 

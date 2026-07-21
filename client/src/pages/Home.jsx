@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getDepartments } from '../api/departments';
 import { getNews } from '../api/news';
+import { subscribeNewsletter } from '../api/newsletter';
 import LibrarySearch from '../components/LibrarySearch';
 import InstagramGallery from '../components/InstagramGallery';
 
@@ -26,6 +27,10 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [latestNews, setLatestNews] = useState([]);
+  const [nlEmail, setNlEmail] = useState('');
+  const [nlStatus, setNlStatus] = useState(null); // null | 'ok' | 'error'
+  const [nlMsg, setNlMsg] = useState('');
+  const [nlLoading, setNlLoading] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -38,6 +43,23 @@ export default function Home() {
       .catch(() => {});
     return () => controller.abort();
   }, []);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!nlEmail.trim()) return;
+    setNlLoading(true);
+    try {
+      const res = await subscribeNewsletter(nlEmail.trim());
+      setNlStatus('ok');
+      setNlMsg(res.message);
+      setNlEmail('');
+    } catch (err) {
+      setNlStatus('error');
+      setNlMsg(err?.response?.data?.message || 'Error al suscribirse. Intentá de nuevo.');
+    } finally {
+      setNlLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -132,6 +154,44 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* ── Newsletter ── */}
+      <section className="newsletter-section">
+        <div className="container newsletter-inner">
+          <div className="newsletter-copy">
+            <p className="newsletter-eyebrow">Novedades culturales</p>
+            <h2 className="newsletter-title">Recibí noticias de las bibliotecas</h2>
+            <p className="newsletter-sub">Enterate de actividades, ferias, talleres y eventos de la red de bibliotecas populares de San Juan.</p>
+          </div>
+          <div className="newsletter-form-wrap">
+            {nlStatus === 'ok' ? (
+              <p className="newsletter-success">{nlMsg}</p>
+            ) : (
+              <form onSubmit={handleSubscribe} className="newsletter-form" noValidate>
+                <label htmlFor="nl-email" className="visually-hidden">Tu dirección de email</label>
+                <input
+                  id="nl-email"
+                  type="email"
+                  className="newsletter-input"
+                  placeholder="tu@email.com"
+                  value={nlEmail}
+                  onChange={e => setNlEmail(e.target.value)}
+                  required
+                  disabled={nlLoading}
+                />
+                <button type="submit" className="btn btn-primary newsletter-btn" disabled={nlLoading}>
+                  {nlLoading ? 'Enviando…' : 'Suscribirme'}
+                </button>
+                {nlStatus === 'error' && <p className="newsletter-error">{nlMsg}</p>}
+              </form>
+            )}
+            <p className="newsletter-legal">
+              Tus datos se guardan de forma segura. Podés darte de baja escribiéndonos.
+              Ley 25.326 de Protección de Datos Personales.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <InstagramGallery />
     </div>
