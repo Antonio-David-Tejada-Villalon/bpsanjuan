@@ -633,6 +633,42 @@ img { max-width: 100%; display: block; }
   transform: translateY(3px);
 }
 
+/* ─── Hero split layout ───────────────────────────────────────── */
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.hero-text {
+  text-align: left;
+}
+.hero-text .hero-subtitle {
+  margin-left: 0;
+}
+.hero-text .lib-search {
+  margin-left: 0;
+  max-width: 100%;
+}
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-visual img {
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  filter: drop-shadow(0 8px 28px rgba(0,0,0,0.14));
+}
+@media (max-width: 860px) {
+  .hero-layout { grid-template-columns: 1fr; }
+  .hero-text { text-align: center; }
+  .hero-text .hero-subtitle { margin-left: auto; }
+  .hero-text .lib-search { margin-left: auto; max-width: 560px; }
+  .hero-visual { display: none; }
+}
+
 /* ─── Library Search Autocomplete ─────────────────────────────── */
 .lib-search {
   position: relative;
