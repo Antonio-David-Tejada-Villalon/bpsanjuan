@@ -2,7 +2,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const Subscriber = require('../models/Subscriber');
-const { protect } = require('../middleware/auth');
+const { protect } = require('../middleware/authMiddleware');
 
 // 5 suscripciones por IP cada 15 min para frenar bots
 const subscribeLimiter = rateLimit({
