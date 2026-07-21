@@ -104,6 +104,16 @@ export default function NoticiaDetalle() {
         {news.relatedDepartment && <> · {news.relatedDepartment.name}</>}
       </p>
 
+      {news.tags?.length > 0 && (
+        <div className="news-tags" style={{ marginBottom: 16 }}>
+          {news.tags.map(tag => (
+            <Link key={tag} to={`/noticias/tag/${encodeURIComponent(tag)}`} className="news-tag news-tag--clickable">
+              {tag}
+            </Link>
+          ))}
+        </div>
+      )}
+
       {news.thumbnail && <img src={news.thumbnail} alt={news.title} className="detalle-img" />}
 
       <div className="detalle-content" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(news.content) }} />

@@ -21,6 +21,7 @@ const BibliotecaDetalle = lazy(() => import('./pages/BibliotecaDetalle'));
 const Login             = lazy(() => import('./pages/Login'));
 const GoogleCallback    = lazy(() => import('./pages/GoogleCallback'));
 const MiPerfil          = lazy(() => import('./pages/MiPerfil'));
+const NoticiasPorTag    = lazy(() => import('./pages/NoticiasPorTag'));
 const Privacidad        = lazy(() => import('./pages/Privacidad'));
 const Accesibilidad     = lazy(() => import('./pages/Accesibilidad'));
 const NotFound          = lazy(() => import('./pages/NotFound'));
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/nosotros" element={<Nosotros />} />
                 <Route path="/noticias" element={<Noticias />} />
+                <Route path="/noticias/tag/:tag" element={<NoticiasPorTag />} />
                 <Route path="/noticias/:id" element={<NoticiaDetalle />} />
                 <Route path="/departamentos/:slug" element={<Departamento />} />
                 <Route path="/bibliotecas/:id" element={<BibliotecaDetalle />} />
