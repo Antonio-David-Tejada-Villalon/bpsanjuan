@@ -74,6 +74,62 @@ router.get('/', async (req, res) => {
   }
 });
 
+// ─── GET /api/news/rss — Feed RSS 2.0 (público) ──────────────────────────────
+router.get('/rss', async (req, res) => {
+  try {
+    const news = await News.find({ isPublished: true })
+      .select('title summary thumbnail publishedAt createdAt _id')
+      .sort({ publishedAt: -1 })
+      .limit(20);
+
+    const escapeXml = (s) => String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+
+    const BASE = 'https://bpsanjuan.vercel.app';
+    const SELF = 'https://bpsanjuan.onrender.com/api/news/rss';
+
+    const items = news.map(n => {
+      const url = `${BASE}/noticias/${n._id}`;
+      const pubDate = new Date(n.publishedAt || n.createdAt).toUTCString();
+      const enclosure = n.thumbnail
+        ? `\n      <enclosure url="${escapeXml(n.thumbnail)}" type="image/jpeg" length="0"/>` : '';
+      return `    <item>
+      <title>${escapeXml(n.title)}</title>
+      <link>${url}</link>
+      <description>${escapeXml(n.summary)}</description>
+      <pubDate>${pubDate}</pubDate>
+      <guid isPermaLink="true">${url}</guid>${enclosure}
+    </item>`;
+    }).join('\n');
+
+    const lastBuild = news.length > 0
+      ? new Date(news[0].publishedAt || news[0].createdAt).toUTCString()
+      : new Date().toUTCString();
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Noticias — Dirección de Bibliotecas Populares de San Juan</title>
+    <link>${BASE}</link>
+    <description>Noticias y actividades culturales de la red de bibliotecas populares de San Juan, Argentina.</description>
+    <language>es-AR</language>
+    <lastBuildDate>${lastBuild}</lastBuildDate>
+    <atom:link href="${SELF}" rel="self" type="application/rss+xml"/>
+${items}
+  </channel>
+</rss>`;
+
+    res.set('Content-Type', 'application/rss+xml; charset=utf-8');
+    res.set('Cache-Control', 'public, max-age=900');
+    res.send(xml);
+  } catch {
+    res.status(500).type('text/plain').send('Error al generar el feed RSS.');
+  }
+});
+
 // ─── GET /api/news/:id — Ver noticia completa (público; staff ve también ocultos)
 router.get('/:id', async (req, res) => {
   try {
