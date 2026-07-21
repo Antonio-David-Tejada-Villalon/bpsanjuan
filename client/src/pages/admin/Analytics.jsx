@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 import { getOverview, getGeo, getPopular, getInteractions, exportAnalytics } from '../../api/analyticsApi';
 import './Analytics.css';
 
@@ -69,11 +69,20 @@ function flag(code) {
          String.fromCodePoint(127397 + code.charCodeAt(1));
 }
 
+const ORANGE_SCALE = ['#fff7ed','#ffedd5','#fed7aa','#fdba74','#fb923c','#f97316','#ea580c','#c2410c'];
+
+function lerpColor(a, b, t) {
+  const p = h => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+  const [r1,g1,b1] = p(a), [r2,g2,b2] = p(b);
+  return `rgb(${Math.round(r1+(r2-r1)*t)},${Math.round(g1+(g2-g1)*t)},${Math.round(b1+(b2-b1)*t)})`;
+}
+
 function getMapColor(count, max) {
-  if (!count) return null;
-  const intensity = Math.log(count + 1) / Math.log(max + 1);
-  const alpha = Math.round((0.2 + intensity * 0.8) * 255).toString(16).padStart(2, '0');
-  return `#f97316${alpha}`;
+  if (!count || !max) return null;
+  const t = Math.log(count + 1) / Math.log(max + 1);
+  const pos = t * (ORANGE_SCALE.length - 1);
+  const lo = Math.min(Math.floor(pos), ORANGE_SCALE.length - 2);
+  return lerpColor(ORANGE_SCALE[lo], ORANGE_SCALE[lo + 1], pos - lo);
 }
 
 function StatCard({ label, value, icon }) {
@@ -115,6 +124,9 @@ export default function Analytics() {
   const [cities, setCities] = useState([]);
   const [tooltipPos, setTooltipPos] = useState(null);
   const [tooltipLabel, setTooltipLabel] = useState(null);
+  const [zoom, setZoom] = useState(1);
+  const [center, setCenter] = useState([10, 15]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
   const mapContainerRef = useRef(null);
 
   const loadAll = useCallback(async () => {
@@ -153,6 +165,7 @@ export default function Analytics() {
   };
 
   const maxCount = geo.length > 0 ? Math.max(...geo.map(c => c.count)) : 1;
+  const totalGeoVisits = geo.reduce((s, c) => s + c.count, 0);
   const countByNumeric = {};
   const geoByCode = {};
   geo.forEach(c => {
@@ -230,6 +243,14 @@ export default function Analytics() {
                 }}
                 onMouseLeave={() => { setTooltipPos(null); setTooltipLabel(null); }}
               >
+                {/* Zoom controls */}
+                <div className="analytics-map-controls">
+                  <button className="analytics-zoom-btn" onClick={() => setZoom(z => Math.min(+(z * 1.6).toFixed(2), 12))} title="Acercar">+</button>
+                  <button className="analytics-zoom-btn" onClick={() => setZoom(z => Math.max(+(z / 1.6).toFixed(2), 1))} title="Alejar">−</button>
+                  <button className="analytics-zoom-btn" onClick={() => { setZoom(1); setCenter([10, 15]); setSelectedCountry(null); }} title="Restablecer vista">⟳</button>
+                </div>
+
+                {/* Tooltip */}
                 {tooltipPos && tooltipLabel && (
                   <div
                     className="analytics-map-tooltip"
@@ -242,49 +263,93 @@ export default function Analytics() {
                     {tooltipLabel}
                   </div>
                 )}
+
                 <div className="analytics-map-overflow">
                   <ComposableMap
                     width={800}
                     height={380}
-                    projectionConfig={{ scale: 130, center: [10, 15] }}
+                    projectionConfig={{ scale: 130 }}
                     style={{ width: '100%', height: 'auto' }}
                   >
-                    <Geographies geography={GEO_URL}>
-                      {({ geographies }) =>
-                        geographies.map(geo => {
-                          const geoId = typeof geo.id === 'string' ? parseInt(geo.id, 10) : geo.id;
-                          const count = countByNumeric[geoId] || 0;
-                          const fill = count > 0 ? getMapColor(count, maxCount) : 'var(--border-color, #e5e7eb)';
-                          const a2 = N2A[geoId];
-                          const countryName = a2 ? (geoByCode[a2]?.country || a2) : null;
-                          return (
-                            <Geography
-                              key={geo.rsmKey}
-                              geography={geo}
-                              fill={fill || '#e5e7eb'}
-                              stroke="#fff"
-                              strokeWidth={0.5}
-                              onMouseEnter={() => {
-                                if (countryName) {
-                                  setTooltipLabel(
-                                    count > 0
-                                      ? `${countryName} — ${count} visita${count !== 1 ? 's' : ''}`
-                                      : countryName
-                                  );
-                                }
-                              }}
-                              onMouseLeave={() => setTooltipLabel(null)}
-                              style={{
-                                default: { outline: 'none' },
-                                hover:   { outline: 'none', fill: count > 0 ? '#fbbf24' : '#d1d5db', opacity: 0.9 },
-                                pressed: { outline: 'none' }
-                              }}
-                            />
-                          );
-                        })
-                      }
-                    </Geographies>
+                    <ZoomableGroup
+                      zoom={zoom}
+                      center={center}
+                      onMoveEnd={({ zoom: z, coordinates }) => { setZoom(+(z).toFixed(2)); setCenter(coordinates); }}
+                    >
+                      <Geographies geography={GEO_URL}>
+                        {({ geographies }) =>
+                          geographies.map(geo => {
+                            const geoId = typeof geo.id === 'string' ? parseInt(geo.id, 10) : geo.id;
+                            const count = countByNumeric[geoId] || 0;
+                            const fill = count > 0 ? getMapColor(count, maxCount) : null;
+                            const a2 = N2A[geoId];
+                            const countryData = a2 ? geoByCode[a2] : null;
+                            const countryName = countryData?.country || a2;
+                            const isSelected = selectedCountry?.countryCode === a2;
+                            const pct = count > 0 && totalGeoVisits > 0
+                              ? ` (${((count / totalGeoVisits) * 100).toFixed(1)}%)`
+                              : '';
+                            return (
+                              <Geography
+                                key={geo.rsmKey}
+                                geography={geo}
+                                fill={isSelected ? '#fbbf24' : (fill || '#e2e8f0')}
+                                stroke={isSelected ? '#d97706' : '#fff'}
+                                strokeWidth={isSelected ? 1.5 / zoom : 0.4 / zoom}
+                                onClick={() => {
+                                  if (countryData) setSelectedCountry(countryData);
+                                  else setSelectedCountry(null);
+                                }}
+                                onMouseEnter={() => {
+                                  if (countryName) {
+                                    setTooltipLabel(
+                                      count > 0
+                                        ? `${flag(a2)} ${countryName} — ${count.toLocaleString('es-AR')} visita${count !== 1 ? 's' : ''}${pct}`
+                                        : countryName
+                                    );
+                                  }
+                                }}
+                                onMouseLeave={() => setTooltipLabel(null)}
+                                style={{
+                                  default: { outline: 'none', cursor: count > 0 ? 'pointer' : 'default' },
+                                  hover:   { outline: 'none', fill: isSelected ? '#fbbf24' : (count > 0 ? '#fbbf24' : '#cbd5e1'), opacity: 0.92, cursor: count > 0 ? 'pointer' : 'grab' },
+                                  pressed: { outline: 'none', fill: isSelected ? '#f59e0b' : (fill || '#e2e8f0') }
+                                }}
+                              />
+                            );
+                          })
+                        }
+                      </Geographies>
+                    </ZoomableGroup>
                   </ComposableMap>
+                </div>
+
+                {/* Selected country detail */}
+                {selectedCountry && (
+                  <div className="analytics-country-detail">
+                    <span className="analytics-country-detail-flag">{flag(selectedCountry.countryCode)}</span>
+                    <div className="analytics-country-detail-info">
+                      <div className="analytics-country-detail-name">{selectedCountry.country || selectedCountry.countryCode}</div>
+                      <div className="analytics-country-detail-stats">
+                        {selectedCountry.count.toLocaleString('es-AR')} visita{selectedCountry.count !== 1 ? 's' : ''}
+                        {totalGeoVisits > 0 && (
+                          <span className="analytics-country-detail-pct">
+                            {' '}· {((selectedCountry.count / totalGeoVisits) * 100).toFixed(1)}% del total
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button className="analytics-country-detail-close" onClick={() => setSelectedCountry(null)} title="Cerrar">✕</button>
+                  </div>
+                )}
+
+                {/* Color legend */}
+                <div className="analytics-map-legend">
+                  <span className="analytics-map-legend-label">Menos</span>
+                  <div className="analytics-map-legend-scale">
+                    {ORANGE_SCALE.map(c => <div key={c} style={{ flex: 1, height: '100%', background: c }} />)}
+                  </div>
+                  <span className="analytics-map-legend-label">Más</span>
                 </div>
               </div>
             )}
