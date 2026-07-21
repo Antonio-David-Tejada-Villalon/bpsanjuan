@@ -29,6 +29,13 @@ export default function GestionUsuarios() {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
+  const closeModal = () => {
+    setModal(null);
+    setEditingUser(null);
+    setShowPassword(false);
+    setShowNewPassword(false);
+  };
+
   const createModalRef = useModalFocus(modal === 'create', closeModal);
   const editModalRef   = useModalFocus(modal === 'edit',   closeModal);
   const resetModalRef  = useModalFocus(modal === 'reset',  closeModal);
@@ -82,13 +89,6 @@ export default function GestionUsuarios() {
     setNewPassword('');
     setFormError('');
     setModal('reset');
-  };
-
-  const closeModal = () => {
-    setModal(null);
-    setEditingUser(null);
-    setShowPassword(false);
-    setShowNewPassword(false);
   };
 
   const handleCreate = async (e) => {
