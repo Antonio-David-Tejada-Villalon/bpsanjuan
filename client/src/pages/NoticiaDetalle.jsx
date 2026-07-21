@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import DOMPurify from 'dompurify';
-import { getNewsItem, toggleNewsLike, addNewsComment, hideNewsComment, unhideNewsComment } from '../api/news';
+import { getNews, getNewsItem, toggleNewsLike, addNewsComment, hideNewsComment, unhideNewsComment } from '../api/news';
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
 import ShareBtn from '../components/ShareBtn';
 import NewsCarousel from '../components/NewsCarousel';
+import NewsCard from '../components/NewsCard';
 import { useTimeAgo } from '../utils/timeAgo';
 
 function TimeAgo({ date }) {
@@ -19,6 +20,7 @@ export default function NoticiaDetalle() {
   const { publicUser, user } = useAuth();
   const canModerate = user?.role === 'admin' || user?.role === 'supervisor';
   const [news, setNews] = useState(null);
+  const [relatedNews, setRelatedNews] = useState([]);
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -26,7 +28,16 @@ export default function NoticiaDetalle() {
   useEffect(() => {
     const controller = new AbortController();
     getNewsItem(id, controller.signal)
-      .then(data => setNews(data.news))
+      .then(data => {
+        setNews(data.news);
+        // Buscar relacionadas por primer tag
+        const n = data.news;
+        if (n.tags?.length > 0) {
+          getNews({ tag: n.tags[0], limit: 4 }, controller.signal)
+            .then(r => setRelatedNews((r.news || []).filter(a => a._id !== id).slice(0, 3)))
+            .catch(() => {});
+        }
+      })
       .catch(err => { if (err.name !== 'CanceledError') setError('No se pudo cargar la noticia.'); })
       .finally(() => setLoading(false));
     return () => controller.abort();
@@ -179,6 +190,18 @@ export default function NoticiaDetalle() {
           </li>
         ))}
       </ul>
+
+      {/* ── Artículos relacionados ── */}
+      {relatedNews.length > 0 && (
+        <div className="related-news">
+          <h3 className="related-news-title">También te puede interesar</h3>
+          <div className="grid grid-3">
+            {relatedNews.map(item => (
+              <NewsCard key={item._id} news={item} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
