@@ -2353,6 +2353,144 @@ img { max-width: 100%; display: block; }
   .ig-item { border-radius: 6px; }
 }
 
+/* ─── Feria del Libro ──────────────────────────────────────────── */
+/* Hero */
+.feria-hero {
+  background: linear-gradient(135deg, #C85E00 0%, #FA7506 50%, #FB9627 100%);
+  padding: 64px 0 72px;
+  position: relative;
+  overflow: hidden;
+}
+.feria-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 55% 70% at 90% 40%, rgba(255,220,160,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 50% at 5% 90%, rgba(150,50,0,0.30) 0%, transparent 65%);
+  pointer-events: none;
+}
+.feria-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 48px;
+  align-items: center;
+  position: relative;
+}
+.feria-breadcrumb .breadcrumb-list li { color: rgba(255,255,255,0.70); }
+.feria-breadcrumb .breadcrumb-list a { color: rgba(255,255,255,0.80); }
+.feria-breadcrumb .breadcrumb-list a:hover { color: #fff; }
+.feria-breadcrumb .breadcrumb-list li:not(:last-child)::after { color: rgba(255,255,255,0.45); }
+.feria-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.72); margin-bottom: 12px;
+}
+.feria-hero-title {
+  font-size: clamp(32px, 5.5vw, 52px); font-weight: 800; color: #fff;
+  line-height: 1.05; margin-bottom: 16px; text-wrap: balance;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.18);
+}
+.feria-hero-sub {
+  font-size: 17px; color: rgba(255,255,255,0.88); max-width: 520px;
+  line-height: 1.65; margin-bottom: 28px;
+}
+.feria-hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.feria-btn-main { background: #fff; color: #C85E00; border-color: transparent; font-weight: 700; }
+.feria-btn-main:hover { background: rgba(255,255,255,0.90); border-color: transparent; }
+.feria-link-noticias { color: rgba(255,255,255,0.88); font-size: 15px; font-weight: 600; text-decoration: none; }
+.feria-link-noticias:hover { color: #fff; text-decoration: underline; }
+/* Badge decoration */
+.feria-hero-badge-wrap { position: relative; width: 160px; height: 160px; flex-shrink: 0; }
+.feria-badge {
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(255,255,255,0.14); backdrop-filter: blur(12px);
+  border: 2px solid rgba(255,255,255,0.35);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  position: relative; z-index: 1;
+}
+.feria-badge-label { font-size: 10px; font-weight: 700; letter-spacing: .10em; text-transform: uppercase; color: rgba(255,255,255,0.68); }
+.feria-badge-num { font-size: 42px; font-weight: 800; color: #fff; line-height: 1; }
+.feria-badge-sub { font-size: 10px; color: rgba(255,255,255,0.60); letter-spacing: .05em; }
+.feria-deco-ring {
+  position: absolute; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.feria-deco-ring-1 { width: 200px; height: 200px; }
+.feria-deco-ring-2 { width: 248px; height: 248px; border-color: rgba(255,255,255,0.10); }
+
+/* About */
+.feria-about-grid { display: grid; grid-template-columns: 1fr 280px; gap: 56px; align-items: start; }
+.feria-about-text { font-size: 16px; color: var(--text-soft); line-height: 1.75; }
+.feria-stats-col { display: flex; flex-direction: column; gap: 20px; padding: 28px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+.feria-stat { display: flex; flex-direction: column; gap: 2px; }
+.feria-stat-num { font-size: 30px; font-weight: 800; color: var(--primary); line-height: 1; }
+.feria-stat-label { font-size: 13px; color: var(--text-soft); }
+
+/* Actividades */
+.feria-actividades-section {
+  background: linear-gradient(135deg, #C85E00 0%, #FA7506 60%, #FB9627 100%);
+  padding: 64px 0;
+}
+.feria-act-grid { gap: 16px; }
+.feria-act-card {
+  background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  border-radius: 14px; padding: 24px 20px;
+  transition: background var(--transition), transform var(--transition);
+}
+.feria-act-card:hover { background: rgba(255,255,255,0.20); transform: translateY(-3px); }
+.feria-act-icon { color: #fff; margin-bottom: 14px; }
+.feria-act-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.feria-act-desc { font-size: 14px; color: rgba(255,255,255,0.82); line-height: 1.6; }
+
+/* Horarios */
+.feria-schedule { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 24px 0 12px; }
+.feria-schedule-row {
+  display: grid; grid-template-columns: 200px 1fr 1fr;
+  gap: 16px; padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+.feria-schedule-row:last-child { border-bottom: none; }
+.feria-schedule-row:nth-child(even) { background: var(--bg-soft, rgba(250,117,6,0.04)); }
+.feria-schedule-dia { font-weight: 700; font-size: 14px; color: var(--text); }
+.feria-schedule-hora { font-family: var(--font-mono, monospace); font-size: 13px; color: var(--primary-text); font-weight: 600; }
+.feria-schedule-nota { font-size: 13px; color: var(--text-soft); }
+.feria-schedule-disclaimer { font-size: 12px; color: var(--text-soft); }
+.feria-inline-link { color: var(--primary-text); text-decoration: underline; }
+.feria-inline-link:hover { color: var(--primary); }
+
+/* Lugar */
+.feria-lugar-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 56px 0; }
+.feria-lugar-inner { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
+.feria-lugar-text { font-size: 16px; color: var(--text-soft); line-height: 1.7; margin-bottom: 20px; }
+.feria-lugar-datos { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.feria-lugar-datos li { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-soft); }
+.feria-lugar-datos li svg { flex-shrink: 0; color: var(--primary); }
+.feria-lugar-map-placeholder { flex-shrink: 0; opacity: 0.85; }
+
+/* CTA */
+.feria-cta-section { text-align: center; }
+.feria-cta-inner { max-width: 560px; margin: 0 auto; }
+.feria-cta-title { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+.feria-cta-sub { color: var(--text-soft); font-size: 15px; line-height: 1.65; margin-bottom: 24px; }
+.feria-cta-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .feria-hero-inner { grid-template-columns: 1fr; }
+  .feria-hero-badge-wrap { display: none; }
+  .feria-about-grid { grid-template-columns: 1fr; }
+  .feria-lugar-inner { grid-template-columns: 1fr; }
+  .feria-lugar-map-placeholder { display: none; }
+}
+@media (max-width: 680px) {
+  .feria-schedule-row { grid-template-columns: 1fr; gap: 4px; }
+  .feria-schedule-hora, .feria-schedule-nota { font-size: 13px; }
+}
+
 /* ─── Accesibilidad: respeta prefers-reduced-motion (WCAG 2.3.3 + Ley 26.653) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

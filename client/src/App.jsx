@@ -22,6 +22,7 @@ const Login             = lazy(() => import('./pages/Login'));
 const GoogleCallback    = lazy(() => import('./pages/GoogleCallback'));
 const MiPerfil          = lazy(() => import('./pages/MiPerfil'));
 const NoticiasPorTag    = lazy(() => import('./pages/NoticiasPorTag'));
+const FeriaDelLibro     = lazy(() => import('./pages/FeriaDelLibro'));
 const Privacidad        = lazy(() => import('./pages/Privacidad'));
 const Accesibilidad     = lazy(() => import('./pages/Accesibilidad'));
 const NotFound          = lazy(() => import('./pages/NotFound'));
@@ -72,6 +73,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/auth/google-callback" element={<GoogleCallback />} />
                 <Route path="/perfil" element={<MiPerfil />} />
+                <Route path="/feria-del-libro" element={<FeriaDelLibro />} />
                 <Route path="/privacidad" element={<Privacidad />} />
                 <Route path="/accesibilidad" element={<Accesibilidad />} />
                 <Route path="*" element={<NotFound />} />
