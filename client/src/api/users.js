@@ -17,3 +17,6 @@ export const resetUserPassword = (id, newPassword) =>
 
 export const deleteUser = (id) =>
   api.delete(`/users/${id}`).then(res => res.data);
+
+export const getPublicProfile = (id, signal) =>
+  api.get(`/equipo/${id}`, { signal }).then(res => res.data);

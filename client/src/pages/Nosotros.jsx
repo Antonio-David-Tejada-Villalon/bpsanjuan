@@ -138,6 +138,40 @@ export default function Nosotros() {
                 <span className="nos-contact-value">(264) 421-7365</span>
               </div>
             </a>
+
+            <a
+              href="https://maps.google.com/?q=Av+Las+Heras+y+Av+25+de+Mayo+Parque+Belgrano+San+Juan+Argentina"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nos-contact-item"
+              aria-label="Ver ubicación en Google Maps"
+            >
+              <div className="nos-contact-icon" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div>
+                <span className="nos-contact-label">Dirección</span>
+                <span className="nos-contact-value">Av. Las Heras y Av. 25 de Mayo</span>
+                <span className="nos-contact-label" style={{ textTransform: 'none', marginTop: 2 }}>Parque Belgrano, San Juan</span>
+              </div>
+            </a>
+
+            <div className="nos-contact-item" style={{ cursor: 'default' }}>
+              <div className="nos-contact-icon" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <div>
+                <span className="nos-contact-label">Horario de atención</span>
+                <span className="nos-contact-value">Lun–Vie 8:00–20:00 h</span>
+                <span className="nos-contact-label" style={{ textTransform: 'none', marginTop: 2 }}>Sábados 8:00–13:00 h</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

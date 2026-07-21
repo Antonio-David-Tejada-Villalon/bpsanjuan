@@ -883,6 +883,8 @@ img { max-width: 100%; display: block; }
 }
 .detalle-actions { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
 .detalle-meta-full { color: var(--text-soft); font-size: 0.9em; }
+.detalle-author-link { color: var(--primary); font-weight: 600; text-decoration: none; }
+.detalle-author-link:hover { text-decoration: underline; }
 
 .library-schedule { list-style: none; padding: 0; margin: 16px 0; }
 .library-schedule li { padding: 4px 0; color: var(--text); }

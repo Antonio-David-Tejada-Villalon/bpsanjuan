@@ -124,6 +124,9 @@ export default function NoticiaDetalle() {
       <p className="detalle-meta">
         {news.publishedAt && <TimeAgo date={news.publishedAt} />}
         {news.publishedAt && <span className="detalle-meta-full"> · {new Date(news.publishedAt).toLocaleDateString('es-AR', { day:'2-digit', month:'long', year:'numeric' })}</span>}
+        {news.author?.name && (
+          <> · Por <Link to={`/equipo/${news.author._id}`} className="detalle-author-link">{news.author.name}</Link></>
+        )}
         {news.relatedDepartment && <> · {news.relatedDepartment.name}</>}
         {news.content && (() => {
           const words = news.content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
