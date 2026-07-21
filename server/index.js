@@ -49,9 +49,37 @@ app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 app.use(cookieParser());
 app.use(sanitizeInput);
 
-// ─── Logger (solo en desarrollo) ─────────────────────────────────────────
+// ─── Logger ──────────────────────────────────────────────────────────────────
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
+} else {
+  // Structured JSON access log — excluye health check para reducir ruido
+  app.use(morgan((tokens, req, res) => JSON.stringify({
+    ts:     new Date().toISOString(),
+    method: tokens.method(req, res),
+    url:    tokens.url(req, res),
+    status: Number(tokens.status(req, res)),
+    ms:     Number(tokens['response-time'](req, res)),
+    ip:     req.ip,
+  }), { skip: (req) => req.url === '/api/health' }));
+
+  // Audit log para rutas protegidas (auth + admin)
+  app.use((req, _res, next) => {
+    const isAuditRoute = req.url.startsWith('/api/auth') ||
+      req.url.startsWith('/api/users') ||
+      req.url.startsWith('/api/libraries') ||
+      req.url.startsWith('/api/news');
+    if (isAuditRoute && req.method !== 'GET') {
+      console.log(JSON.stringify({
+        audit: true,
+        ts:  new Date().toISOString(),
+        method: req.method,
+        url: req.originalUrl,
+        ip:  req.ip,
+      }));
+    }
+    next();
+  });
 }
 
 // ─── Passport (OAuth) ─────────────────────────────────────────────────────

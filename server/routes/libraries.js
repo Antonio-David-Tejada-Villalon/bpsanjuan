@@ -5,9 +5,8 @@ const EditHistory = require('../models/EditHistory');
 const User = require('../models/User');
 const LibrarySubmission = require('../models/LibrarySubmission');
 const Message = require('../models/Message');
-const jwt = require('jsonwebtoken');
-const PublicUser = require('../models/PublicUser');
 const { protect } = require('../middleware/authMiddleware');
+const { getPublicUser, getAnyUser } = require('../middleware/publicAuth');
 
 const router = express.Router();
 
@@ -20,41 +19,6 @@ const urlValidators = [
   body('socialMedia.instagram').optional({ checkFalsy: true }).isURL({ protocols: ['http', 'https'], require_protocol: true }).withMessage('El link de Instagram debe ser una URL válida (https://instagram.com/...)'),
   body('socialMedia.youtube').optional({ checkFalsy: true }).isURL({ protocols: ['http', 'https'], require_protocol: true }).withMessage('El link de YouTube debe ser una URL válida (https://youtube.com/...)')
 ];
-
-// Helper: detectar usuario público por token (para /like legacy)
-const getPublicUser = async (req) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer')) return null;
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.type !== 'public') return null;
-    return await PublicUser.findById(decoded.id);
-  } catch {
-    return null;
-  }
-};
-
-// Helper: detecta cualquier usuario autenticado (público o staff)
-const getAnyUser = async (req) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.type === 'public') {
-      const pub = await PublicUser.findById(decoded.id);
-      if (!pub) return null;
-      return { id: pub._id, authorType: 'public', publicUser: pub._id, staffUser: null };
-    } else {
-      const staff = await User.findById(decoded.id);
-      if (!staff || !staff.isActive) return null;
-      return { id: staff._id, authorType: 'staff', publicUser: null, staffUser: staff._id };
-    }
-  } catch {
-    return null;
-  }
-};
 
 // Helper: toggle like/dislike en un subdoc (comment o reply)
 const toggleReaction = (subdoc, userId, type) => {
@@ -101,6 +65,16 @@ router.get('/', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error al obtener bibliotecas.' });
+  }
+});
+
+// ─── GET /api/libraries/count — Total de bibliotecas activas (público) ──────
+router.get('/count', async (req, res) => {
+  try {
+    const total = await Library.countDocuments({ isActive: true });
+    res.json({ success: true, total });
+  } catch {
+    res.status(500).json({ success: false, message: 'Error al contar bibliotecas.' });
   }
 });
 

@@ -1,43 +1,10 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const News = require('../models/News');
-const jwt = require('jsonwebtoken');
-const PublicUser = require('../models/PublicUser');
 const { protect } = require('../middleware/authMiddleware');
+const { getPublicUser, isStaffRequest } = require('../middleware/publicAuth');
 
 const router = express.Router();
-
-// Helper: detecta si la request viene de un staff (admin/supervisor/bibliotecario)
-// Los tokens de staff no tienen campo `type`; los tokens de usuario público tienen `type: 'public'`
-const isStaffRequest = (req) => {
-  try {
-    let token;
-    if (req.headers.authorization?.startsWith('Bearer ')) {
-      token = req.headers.authorization.split(' ')[1];
-    } else if (req.cookies?.jwt && req.cookies.jwt !== 'loggedout') {
-      token = req.cookies.jwt;
-    }
-    if (!token) return false;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return !decoded.type; // staff tokens no tienen campo type
-  } catch {
-    return false;
-  }
-};
-
-// Helper: detectar usuario público
-const getPublicUser = async (req) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer')) return null;
-    const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.type !== 'public') return null;
-    return await PublicUser.findById(decoded.id);
-  } catch {
-    return null;
-  }
-};
 
 // ─── GET /api/news — Listar noticias publicadas (público) ─────────────────
 router.get('/', async (req, res) => {

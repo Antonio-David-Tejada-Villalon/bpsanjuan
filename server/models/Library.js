@@ -88,9 +88,19 @@ const librarySchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  foundedYear: Number,
+  foundedYear: { type: Number, min: 1800, max: new Date().getFullYear() },
   foundedMonth: { type: Number, min: 1, max: 12, default: null },
-  foundedDay:   { type: Number, min: 1, max: 31, default: null },
+  foundedDay: {
+    type: Number, min: 1, max: 31, default: null,
+    validate: {
+      validator: function (day) {
+        if (!day || !this.foundedMonth || !this.foundedYear) return true;
+        const daysInMonth = new Date(this.foundedYear, this.foundedMonth, 0).getDate();
+        return day <= daysInMonth;
+      },
+      message: 'El día indicado no existe para ese mes y año de fundación.',
+    },
+  },
   likes: {
     type: Number,
     default: 0
