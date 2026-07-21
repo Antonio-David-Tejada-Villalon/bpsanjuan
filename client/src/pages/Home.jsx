@@ -156,7 +156,7 @@ export default function Home() {
       )}
 
       {/* ── Newsletter ── */}
-      <section className="newsletter-section">
+      <section id="newsletter" className="newsletter-section">
         <div className="container newsletter-inner">
           <div className="newsletter-copy">
             <p className="newsletter-eyebrow">Novedades culturales</p>
