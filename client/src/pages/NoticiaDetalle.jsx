@@ -125,6 +125,11 @@ export default function NoticiaDetalle() {
         {news.publishedAt && <TimeAgo date={news.publishedAt} />}
         {news.publishedAt && <span className="detalle-meta-full"> · {new Date(news.publishedAt).toLocaleDateString('es-AR', { day:'2-digit', month:'long', year:'numeric' })}</span>}
         {news.relatedDepartment && <> · {news.relatedDepartment.name}</>}
+        {news.content && (() => {
+          const words = news.content.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length;
+          const mins = Math.max(1, Math.ceil(words / 200));
+          return <span className="reading-time"> · {mins} min de lectura</span>;
+        })()}
       </p>
 
       {news.tags?.length > 0 && (

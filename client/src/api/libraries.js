@@ -3,6 +3,9 @@ import api from './axios';
 export const getLibraries = (params = {}, signal) =>
   api.get('/libraries', { params, signal }).then(res => res.data);
 
+export const getLibraryCount = (signal) =>
+  api.get('/libraries/count', { signal }).then(res => res.data);
+
 export const searchLibraries = (q) =>
   api.get('/libraries/suggest', { params: { q } }).then(res => res.data);
 

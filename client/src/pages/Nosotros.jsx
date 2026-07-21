@@ -1,11 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { getLibraries } from '../api/libraries';
 import './Nosotros.css';
-
-const STATS = [
-  { value: '56', label: 'Bibliotecas Populares' },
-  { value: '19', label: 'Departamentos de San Juan' },
-  { value: '1967', label: 'Año de fundación de la red' },
-];
 
 const OBJECTIVES = [
   'Proteger y fomentar a las Bibliotecas Populares de toda la provincia, existentes y a crearse.',
@@ -17,6 +13,20 @@ const OBJECTIVES = [
 ];
 
 export default function Nosotros() {
+  const [libCount, setLibCount] = useState(null);
+
+  useEffect(() => {
+    getLibraries({ limit: 1 })
+      .then(data => { if (data.total) setLibCount(data.total); })
+      .catch(() => {});
+  }, []);
+
+  const STATS = [
+    { value: libCount ?? '56', label: 'Bibliotecas Populares' },
+    { value: '19', label: 'Departamentos de San Juan' },
+    { value: '1967', label: 'Movimiento de Bibl. Populares' },
+  ];
+
   return (
     <>
       <Helmet>
@@ -147,11 +157,12 @@ export default function Nosotros() {
         <div className="nos-value-card">
           <h2 className="nos-mv-heading">Marco Legal</h2>
           <p className="nos-mv-text">
-            La Dirección fue creada por la{' '}
-            <strong>Ley Provincial N.º 336-F</strong> de la Cámara de Diputados
-            de San Juan, que establece sus funciones, crea un fondo especial
-            de fomento y otorga a las bibliotecas adheridas exenciones de
-            impuestos provinciales y de tarifas de servicios públicos (OSSE y SES).
+            La <strong>Dirección fue creada en 2012</strong> por la{' '}
+            <strong>Ley Provincial N.º 336-F</strong>, que establece sus funciones,
+            crea un fondo especial de fomento y otorga a las bibliotecas adheridas
+            exenciones de impuestos provinciales y de tarifas de servicios públicos
+            (OSSE y SES). El <strong>movimiento de bibliotecas populares en San Juan
+            data de 1967</strong>, varios décadas antes de la creación del organismo.
             A nivel nacional, las bibliotecas se rigen por la{' '}
             <strong>Ley Nacional N.º 23.351</strong> y trabajan con la{' '}
             <a href="https://www.conabip.gob.ar/" target="_blank" rel="noopener noreferrer">
