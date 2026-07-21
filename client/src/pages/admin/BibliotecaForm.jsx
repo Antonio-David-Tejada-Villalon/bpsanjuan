@@ -7,6 +7,19 @@ const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', '
 const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const DESC_MAX = 2000;
 
+const SERVICES = [
+  'Préstamo domiciliario',
+  'Sala de lectura',
+  'Servicio de referencia',
+  'Wi-Fi gratuito',
+  'Talleres y actividades culturales',
+  'Club de lectura',
+  'Catálogo digital DigiBepe',
+  'Material audiovisual',
+  'Atención a personas con discapacidad',
+  'Colección especial / local',
+];
+
 const emptyForm = {
   name: '',
   department: '',
@@ -18,8 +31,9 @@ const emptyForm = {
   images: '',
   schedule: [],
   description: '',
-  services: '',
+  services: [],
   conabipRegistered: false,
+  conabipNumber: '',
   foundedDay: '',
   foundedMonth: '',
   foundedYear: '',
@@ -57,8 +71,9 @@ export default function BibliotecaForm() {
             images:      (lib.images || []).join('\n'),
             schedule:    lib.schedule || [],
             description: lib.description || '',
-            services:    (lib.services || []).join(', '),
+            services:    lib.services || [],
             conabipRegistered: !!lib.conabipRegistered,
+            conabipNumber: lib.conabipNumber || '',
             foundedDay:   lib.foundedDay  || '',
             foundedMonth: lib.foundedMonth || '',
             foundedYear:  lib.foundedYear  || '',
@@ -108,7 +123,8 @@ export default function BibliotecaForm() {
         foundedDay:   form.foundedDay   ? Number(form.foundedDay)   : undefined,
         thumbnail: form.thumbnail || null,
         images: form.images ? form.images.split('\n').map(s => s.trim()).filter(Boolean) : [],
-        services: form.services ? form.services.split(',').map(s => s.trim()).filter(Boolean) : [],
+        services: form.services,
+        conabipNumber: form.conabipNumber.trim() || null,
       };
       if (isEdit) await updateLibrary(id, payload);
       else await createLibrary(payload);
@@ -200,8 +216,22 @@ export default function BibliotecaForm() {
           </div>
 
           <div className="field">
-            <label>Servicios (separados por coma)</label>
-            <input value={form.services} onChange={e => set('services', e.target.value)} placeholder="Préstamo de libros, Talleres, Sala de lectura" />
+            <label>Servicios ofrecidos</label>
+            <div className="services-grid">
+              {SERVICES.map(svc => (
+                <label key={svc} className="field-checkbox services-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={form.services.includes(svc)}
+                    onChange={e => set('services', e.target.checked
+                      ? [...form.services, svc]
+                      : form.services.filter(s => s !== svc)
+                    )}
+                  />
+                  <span>{svc}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
           <div className="form-grid">
@@ -214,6 +244,18 @@ export default function BibliotecaForm() {
               <span>Biblioteca activa</span>
             </div>
           </div>
+
+          {form.conabipRegistered && (
+            <div className="field">
+              <label>Número de registro CONABIP</label>
+              <input
+                value={form.conabipNumber}
+                onChange={e => set('conabipNumber', e.target.value)}
+                placeholder="Ej: 4521"
+                style={{ maxWidth: 200 }}
+              />
+            </div>
+          )}
         </fieldset>
 
         <fieldset className="form-section">

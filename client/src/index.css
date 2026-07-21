@@ -1018,6 +1018,8 @@ img { max-width: 100%; display: block; }
 .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
 .field-checkbox { display: flex; align-items: center; gap: 8px; }
 .field-checkbox input { width: auto; }
+.services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px 16px; margin-top: 6px; }
+.services-checkbox { font-size: 14px; }
 
 .tag-input-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 

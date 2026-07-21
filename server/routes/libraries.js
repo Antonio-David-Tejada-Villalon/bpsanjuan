@@ -192,7 +192,7 @@ router.patch('/:id', protect, urlValidators, async (req, res) => {
     const allowedFields = [
       'name', 'department', 'address', 'contact', 'socialMedia', 'schedule',
       'description', 'services', 'images', 'thumbnail',
-      'assignedUser', 'conabipRegistered', 'foundedYear', 'isActive', 'digibepe'
+      'assignedUser', 'conabipRegistered', 'conabipNumber', 'foundedYear', 'foundedMonth', 'foundedDay', 'isActive', 'digibepe'
     ];
 
     const updates = {};

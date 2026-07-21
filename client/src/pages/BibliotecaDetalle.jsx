@@ -306,7 +306,11 @@ export default function BibliotecaDetalle() {
               <div className="lib-badges">
                 {library.department?.name && <span className="badge">{library.department.name}</span>}
                 {library.address?.locality && <span className="badge badge-outline">{library.address.locality}</span>}
-                {library.conabipRegistered && <span className="badge badge-conabip">CONABIP</span>}
+                {library.conabipRegistered && (
+                  <span className="badge badge-conabip">
+                    CONABIP{library.conabipNumber ? ` #${library.conabipNumber}` : ''}
+                  </span>
+                )}
                 {library.foundedYear && (
                   <span className="lib-badge-plain">
                     <IconCalendar /> Fundada{' '}

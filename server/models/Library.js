@@ -73,7 +73,8 @@ const librarySchema = new mongoose.Schema({
     type: String,
     maxlength: [2000, 'La descripción no puede superar 2000 caracteres']
   },
-  services: [String],         // ["Préstamo de libros", "Talleres", ...]
+  services: [String],         // vocabulario controlado — ver SERVICES en BibliotecaForm
+  conabipNumber: { type: String, trim: true, default: null },
   images: [String],            // URLs de imágenes
   thumbnail: {
     type: String,
