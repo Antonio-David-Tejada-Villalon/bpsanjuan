@@ -5,6 +5,8 @@ import { getLibrary, toggleLibraryLike, addLibraryComment, addReply, reactToComm
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
 import ShareBtn from '../components/ShareBtn';
+import Toast from '../components/Toast';
+import { timeAgo } from '../utils/timeAgo';
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 const getAddressLink = (addr) => {
@@ -94,15 +96,6 @@ function ContactLink({ href, icon, label, badge, colorClass, isPlain, external }
 }
 
 /* ── Helpers de comentarios ──────────────────────────────────── */
-const timeAgo = (date) => {
-  const secs = Math.floor((Date.now() - new Date(date)) / 1000);
-  if (secs < 60) return 'ahora';
-  if (secs < 3600) return `hace ${Math.floor(secs / 60)} min`;
-  if (secs < 86400) return `hace ${Math.floor(secs / 3600)} h`;
-  if (secs < 2592000) return `hace ${Math.floor(secs / 86400)} d`;
-  return new Date(date).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
-};
-
 const roleLabel = { admin: 'Admin', supervisor: 'Supervisor', bibliotecario: 'Bibliotecario' };
 
 function CommentAvatar({ name, picture }) {
@@ -151,8 +144,11 @@ export default function BibliotecaDetalle() {
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState('');
   const [error, setError] = useState('');
+  const [toast, setToast] = useState({ message: '', type: 'success' });
   const [loading, setLoading] = useState(true);
   const [lightbox, setLightbox] = useState(null);
+
+  const showToast = (message, type = 'success') => setToast({ message, type });
 
   const currentUserId = publicUser?._id || user?._id;
   const canComment = !!(publicUser || user);
@@ -193,6 +189,7 @@ export default function BibliotecaDetalle() {
       const { likes } = await toggleLibraryLike(id);
       setLibrary(l => ({ ...l, likes }));
       setError('');
+      showToast('¡Like registrado!');
     } catch {
       setError('Error al procesar el like. Intentá de nuevo.');
     }
@@ -206,6 +203,7 @@ export default function BibliotecaDetalle() {
       setLibrary(l => ({ ...l, comments }));
       setComment('');
       setError('');
+      showToast('¡Comentario publicado!');
     } catch {
       setError('Iniciá sesión para comentar.');
     }
@@ -227,14 +225,7 @@ export default function BibliotecaDetalle() {
   const handleReactComment = async (commentId, type) => {
     if (!canComment) { setError('Iniciá sesión para reaccionar.'); return; }
     try {
-      const { likes, dislikes } = await reactToComment(id, commentId, type);
-      setLibrary(l => ({
-        ...l,
-        comments: l.comments.map(c =>
-          c._id === commentId ? { ...c, likes: Array(likes).fill(null).map((_, i) => i === 0 ? currentUserId : `x${i}`), dislikes: Array(dislikes).fill(null).map((_, i) => i === 0 && type === 'dislike' ? currentUserId : `x${i}`) } : c
-        )
-      }));
-      // Recargo desde servidor para tener IDs correctos
+      await reactToComment(id, commentId, type);
       const fresh = await getLibrary(id);
       setLibrary(fresh.library);
     } catch { /* ignore */ }
@@ -251,6 +242,8 @@ export default function BibliotecaDetalle() {
 
   if (loading) return <div className="page-loading"><div className="spinner" /></div>;
   if (!library) return <p className="empty-state">{error || 'Biblioteca no encontrada.'}</p>;
+
+  const dismissToast = () => setToast(t => ({ ...t, message: '' }));
 
   const addr    = library.address || {};
   const contact = library.contact || {};
@@ -730,6 +723,7 @@ export default function BibliotecaDetalle() {
           </ul>
         </div>
       </div>
+      <Toast message={toast.message} type={toast.type} onDismiss={dismissToast} />
     </div>
   );
 }

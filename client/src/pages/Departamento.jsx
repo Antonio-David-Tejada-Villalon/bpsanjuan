@@ -11,10 +11,12 @@ export default function Departamento() {
   const [libraries, setLibraries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
+    setError('');
     getDepartment(slug, controller.signal)
       .then(data => {
         setDepartment(data.department);
@@ -24,10 +26,15 @@ export default function Departamento() {
       .catch(err => { if (err.name !== 'CanceledError') setError('No se pudo cargar el departamento.'); })
       .finally(() => setLoading(false));
     return () => controller.abort();
-  }, [slug]);
+  }, [slug, retryKey]);
 
   if (loading) return <div className="page-loading"><div className="spinner" /></div>;
-  if (error || !department) return <p className="empty-state">{error || 'Departamento no encontrado.'}</p>;
+  if (error || !department) return (
+    <div className="empty-state">
+      <p>{error || 'Departamento no encontrado.'}</p>
+      {error && <button className="btn btn-outline btn-sm" style={{ marginTop: 12 }} onClick={() => setRetryKey(k => k + 1)}>Reintentar</button>}
+    </div>
+  );
 
   return (
     <div className="section container">

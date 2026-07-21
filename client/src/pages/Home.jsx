@@ -26,6 +26,7 @@ export default function Home() {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [retryKey, setRetryKey] = useState(0);
   const [latestNews, setLatestNews] = useState([]);
   const [nlEmail, setNlEmail] = useState('');
   const [nlStatus, setNlStatus] = useState(null); // null | 'ok' | 'error'
@@ -34,6 +35,8 @@ export default function Home() {
 
   useEffect(() => {
     const controller = new AbortController();
+    setLoading(true);
+    setError('');
     getDepartments(controller.signal)
       .then(data => setDepartments(data.departments))
       .catch(err => { if (err.name !== 'CanceledError') setError('No se pudieron cargar los departamentos.'); })
@@ -42,7 +45,7 @@ export default function Home() {
       .then(data => setLatestNews(data.news || []))
       .catch(() => {});
     return () => controller.abort();
-  }, []);
+  }, [retryKey]);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -96,7 +99,12 @@ export default function Home() {
         <p className="section-subtitle">Elegí un departamento para ver sus bibliotecas populares.</p>
 
         {loading && <div className="page-loading"><div className="spinner" /></div>}
-        {error && <p className="alert alert-error">{error}</p>}
+        {error && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <p className="alert alert-error" style={{ margin: 0 }}>{error}</p>
+            <button className="btn btn-outline btn-sm" onClick={() => setRetryKey(k => k + 1)}>Reintentar</button>
+          </div>
+        )}
 
         {!loading && !error && (
           <div className="grid grid-4">

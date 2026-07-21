@@ -6,6 +6,7 @@ import { getNews, getNewsItem, toggleNewsLike, addNewsComment, hideNewsComment, 
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
 import ShareBtn from '../components/ShareBtn';
+import Toast from '../components/Toast';
 import NewsCarousel from '../components/NewsCarousel';
 import NewsCard from '../components/NewsCard';
 import { useTimeAgo } from '../utils/timeAgo';
@@ -23,7 +24,10 @@ export default function NoticiaDetalle() {
   const [relatedNews, setRelatedNews] = useState([]);
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
+  const [toast, setToast] = useState({ message: '', type: 'success' });
   const [loading, setLoading] = useState(true);
+
+  const showToast = (message, type = 'success') => setToast({ message, type });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -54,6 +58,7 @@ export default function NoticiaDetalle() {
       const { liked, likes } = await toggleNewsLike(id);
       setNews(n => ({ ...n, likes }));
       setError('');
+      showToast('¡Like registrado!');
     } catch {
       setError('Error al procesar el like. Intentá de nuevo.');
     }
@@ -67,6 +72,7 @@ export default function NoticiaDetalle() {
       setNews(n => ({ ...n, comments }));
       setComment('');
       setError('');
+      showToast('¡Comentario publicado!');
     } catch {
       setError('Iniciá sesión con Google para comentar.');
     }
@@ -226,6 +232,7 @@ export default function NoticiaDetalle() {
           </div>
         </div>
       )}
+      <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(t => ({ ...t, message: '' }))} />
     </div>
   );
 }
