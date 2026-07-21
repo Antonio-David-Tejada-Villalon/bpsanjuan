@@ -2491,6 +2491,9 @@ img { max-width: 100%; display: block; }
   .feria-schedule-hora, .feria-schedule-nota { font-size: 13px; }
 }
 
+/* ─── Crossfade suave al cambiar de tema */
+body { transition: background-color 0.25s ease, color 0.25s ease; }
+
 /* ─── Accesibilidad: respeta prefers-reduced-motion (WCAG 2.3.3 + Ley 26.653) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

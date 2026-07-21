@@ -183,12 +183,18 @@ export default function BibliotecaDetalle() {
   }, [id]);
 
   const handleLike = async () => {
+    if (!publicUser) {
+      setError(user
+        ? 'El like es solo para usuarios con cuenta pública (Google).'
+        : 'Iniciá sesión con Google para dar like.');
+      return;
+    }
     try {
       const { likes } = await toggleLibraryLike(id);
       setLibrary(l => ({ ...l, likes }));
       setError('');
     } catch {
-      setError('Iniciá sesión con Google para dar like.');
+      setError('Error al procesar el like. Intentá de nuevo.');
     }
   };
 
@@ -339,9 +345,13 @@ export default function BibliotecaDetalle() {
             </div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <ShareBtn title={library.name} />
-              <button className="btn-like" onClick={handleLike} title="Me gusta">
-                <IconHeart />
-                <span>{library.likes ?? 0}</span>
+              <button
+                className="btn-like"
+                onClick={handleLike}
+                aria-label={`Me gusta, ${library.likes ?? 0} likes`}
+              >
+                <span aria-hidden="true"><IconHeart /></span>
+                <span aria-hidden="true">{library.likes ?? 0}</span>
               </button>
             </div>
           </div>
@@ -522,7 +532,12 @@ export default function BibliotecaDetalle() {
         </div>
       )}
 
-      {error && <p className="alert alert-error" style={{ marginTop: 12 }}>{error}</p>}
+      {error && (
+        <div style={{ marginTop: 12, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <p className="alert alert-error" style={{ margin: 0 }}>{error}</p>
+          {!publicUser && !user && <GoogleLoginBtn className="btn btn-sm btn-primary" />}
+        </div>
+      )}
 
       {/* ── Historial de ediciones (admin/supervisor) ── */}
       {canViewHistory && (
@@ -591,12 +606,19 @@ export default function BibliotecaDetalle() {
               value={comment}
               onChange={e => setComment(e.target.value)}
               disabled={!canComment}
+              maxLength={500}
             />
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-              <button type="submit" className="btn btn-primary btn-sm" disabled={!canComment}>
-                Comentar
-              </button>
-              {!canComment && <GoogleLoginBtn className="btn btn-sm btn-outline" />}
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <button type="submit" className="btn btn-primary btn-sm" disabled={!canComment}>
+                  Comentar
+                </button>
+                {!canComment && <GoogleLoginBtn className="btn btn-sm btn-outline" />}
+              </div>
+              <span style={{ fontSize: 12, color: comment.length > 450 ? 'var(--primary)' : 'var(--text-soft)' }}
+                    aria-live="polite" aria-atomic="true">
+                {comment.length}/500
+              </span>
             </div>
           </form>
 

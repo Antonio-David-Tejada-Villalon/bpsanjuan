@@ -166,6 +166,9 @@
 @media (max-width: 800px) {
   .navbar-toggle { display: block; }
   .navbar-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     position: absolute;
     top: 100%;
     left: 0;
@@ -174,14 +177,18 @@
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
     border-bottom: 1px solid rgba(255, 200, 100, 0.14);
-    flex-direction: column;
-    align-items: flex-start;
     padding: 16px 20px;
     gap: 14px;
-    display: none;
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s linear 0.28s;
   }
   .navbar-links.open {
-    display: flex;
-    animation: slideDown 0.22s cubic-bezier(0.4,0,0.2,1) both;
+    max-height: 500px;
+    visibility: visible;
+    transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s linear 0s;
   }
 }

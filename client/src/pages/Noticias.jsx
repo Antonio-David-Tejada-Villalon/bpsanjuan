@@ -62,14 +62,16 @@ export default function Noticias() {
                 className="btn btn-outline btn-sm"
                 disabled={page <= 1}
                 onClick={() => setPage(p => p - 1)}
+                aria-label="Ir a la página anterior"
               >
                 Anterior
               </button>
-              <span>Página {page} de {totalPages}</span>
+              <span aria-live="polite">Página {page} de {totalPages}</span>
               <button
                 className="btn btn-outline btn-sm"
                 disabled={page >= totalPages}
                 onClick={() => setPage(p => p + 1)}
+                aria-label="Ir a la página siguiente"
               >
                 Siguiente
               </button>

@@ -44,12 +44,18 @@ export default function NoticiaDetalle() {
   }, [id]);
 
   const handleLike = async () => {
+    if (!publicUser) {
+      setError(user
+        ? 'El like es solo para usuarios con cuenta pública (Google).'
+        : 'Iniciá sesión con Google para dar like.');
+      return;
+    }
     try {
       const { liked, likes } = await toggleNewsLike(id);
       setNews(n => ({ ...n, likes }));
       setError('');
     } catch {
-      setError('Iniciá sesión con Google para dar like.');
+      setError('Error al procesar el like. Intentá de nuevo.');
     }
   };
 
@@ -134,12 +140,23 @@ export default function NoticiaDetalle() {
       )}
 
       <div className="detalle-actions">
-        <button className="btn btn-outline" onClick={handleLike}>❤ Me gusta ({news.likes ?? 0})</button>
+        <button
+          className="btn btn-outline"
+          onClick={handleLike}
+          aria-label={`Me gusta, ${news.likes ?? 0} likes`}
+        >
+          <span aria-hidden="true">❤</span> Me gusta (<span aria-hidden="true">{news.likes ?? 0}</span>)
+        </button>
         <ShareBtn title={news.title} />
-        {!publicUser && <GoogleLoginBtn />}
+        {!publicUser && !user && <GoogleLoginBtn />}
       </div>
 
-      {error && <p className="alert alert-error">{error}</p>}
+      {error && (
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <p className="alert alert-error" style={{ margin: 0 }}>{error}</p>
+          {!publicUser && !user && <GoogleLoginBtn className="btn btn-sm btn-primary" />}
+        </div>
+      )}
 
       <h3>Comentarios ({news.comments?.filter(c => !c.hidden).length ?? 0})</h3>
       <form onSubmit={handleComment} className="comment-form">
@@ -150,8 +167,15 @@ export default function NoticiaDetalle() {
           placeholder={publicUser ? 'Escribí un comentario...' : 'Iniciá sesión con Google para comentar'}
           value={comment}
           onChange={e => setComment(e.target.value)}
+          maxLength={500}
         />
-        <button type="submit" className="btn btn-primary btn-sm">Comentar</button>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'space-between' }}>
+          <button type="submit" className="btn btn-primary btn-sm">Comentar</button>
+          <span style={{ fontSize: 12, color: comment.length > 450 ? 'var(--primary)' : 'var(--text-soft)' }}
+                aria-live="polite" aria-atomic="true">
+            {comment.length}/500
+          </span>
+        </div>
       </form>
 
       <ul className="comment-list">
