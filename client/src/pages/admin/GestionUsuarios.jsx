@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import * as usersApi from '../../api/users';
 import { getLibraries } from '../../api/libraries';
 import { OnlineIndicator } from '../../components/OnlineIndicator';
+import { useModalFocus } from '../../hooks/useModalFocus';
 
 const emptyForm = {
   name: '',
@@ -27,6 +28,10 @@ export default function GestionUsuarios() {
   const [formError, setFormError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+
+  const createModalRef = useModalFocus(modal === 'create', closeModal);
+  const editModalRef   = useModalFocus(modal === 'edit',   closeModal);
+  const resetModalRef  = useModalFocus(modal === 'reset',  closeModal);
 
   const load = async () => {
     setLoading(true);
@@ -226,8 +231,8 @@ export default function GestionUsuarios() {
 
       {modal === 'create' && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-card" onClick={e => e.stopPropagation()}>
-            <h3>Nuevo usuario</h3>
+          <div className="modal-card" ref={createModalRef} onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="modal-create-title">
+            <h3 id="modal-create-title">Nuevo usuario</h3>
             {formError && <div className="alert alert-error">{formError}</div>}
             <form onSubmit={handleCreate}>
               <div className="field">
@@ -295,8 +300,8 @@ export default function GestionUsuarios() {
 
       {modal === 'edit' && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-card" onClick={e => e.stopPropagation()}>
-            <h3>Editar usuario</h3>
+          <div className="modal-card" ref={editModalRef} onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="modal-edit-title">
+            <h3 id="modal-edit-title">Editar usuario</h3>
             {formError && <div className="alert alert-error">{formError}</div>}
             <form onSubmit={handleEdit}>
               <div className="field">
@@ -338,8 +343,8 @@ export default function GestionUsuarios() {
 
       {modal === 'reset' && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-card" onClick={e => e.stopPropagation()}>
-            <h3>Restablecer contraseña de {editingUser.name}</h3>
+          <div className="modal-card" ref={resetModalRef} onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="modal-reset-title">
+            <h3 id="modal-reset-title">Restablecer contraseña de {editingUser.name}</h3>
             {formError && <div className="alert alert-error">{formError}</div>}
             <form onSubmit={handleReset}>
               <div className="field">

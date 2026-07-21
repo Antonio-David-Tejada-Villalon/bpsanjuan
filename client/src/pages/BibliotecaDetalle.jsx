@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { getLibrary, toggleLibraryLike, addLibraryComment, addReply, reactToComment, reactToReply, getLibraryHistory } from '../api/libraries';
+import { getLibrary, toggleLibraryLike, getLibraryHistory } from '../api/libraries';
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
 import ShareBtn from '../components/ShareBtn';
 import Toast from '../components/Toast';
-import { timeAgo } from '../utils/timeAgo';
+import LibraryGallery from '../components/LibraryGallery';
+import LibraryComments from '../components/LibraryComments';
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 const getAddressLink = (addr) => {
-  // Texto visible: siempre la dirección legible
   const label = [addr.street, addr.locality].filter(Boolean).join(', ');
-  // Link: primero el campo dedicado mapsUrl, si no existe arma búsqueda
   const href = addr.mapsUrl
     || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(label + ', San Juan, Argentina')}`;
   return { href, label };
@@ -95,79 +94,21 @@ function ContactLink({ href, icon, label, badge, colorClass, isPlain, external }
   );
 }
 
-/* ── Helpers de comentarios ──────────────────────────────────── */
-const roleLabel = { admin: 'Admin', supervisor: 'Supervisor', bibliotecario: 'Bibliotecario' };
-
-function CommentAvatar({ name, picture }) {
-  if (picture) return <img className="comment-avatar" src={picture} alt={name} />;
-  const initials = name ? name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() : '?';
-  return <div className="comment-avatar comment-avatar--initials">{initials}</div>;
-}
-
-function ReactionBar({ likes = [], dislikes = [], currentUserId, onReact }) {
-  const uid = currentUserId?.toString();
-  const liked    = uid && likes.some(id => id.toString() === uid);
-  const disliked = uid && dislikes.some(id => id.toString() === uid);
-  return (
-    <div className="comment-reactions">
-      <button
-        className={`reaction-btn${liked ? ' reaction-btn--liked' : ''}`}
-        onClick={() => onReact('like')}
-        title="Me gusta"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill={liked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/>
-          <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-        </svg>
-        {likes.length > 0 && <span>{likes.length}</span>}
-      </button>
-      <button
-        className={`reaction-btn${disliked ? ' reaction-btn--disliked' : ''}`}
-        onClick={() => onReact('dislike')}
-        title="No me gusta"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill={disliked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/>
-          <path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
-        </svg>
-        {dislikes.length > 0 && <span>{dislikes.length}</span>}
-      </button>
-    </div>
-  );
-}
-
+/* ── Página principal ─────────────────────────────────────────── */
 export default function BibliotecaDetalle() {
   const { id } = useParams();
   const { publicUser, user } = useAuth();
   const [library, setLibrary] = useState(null);
-  const [comment, setComment] = useState('');
-  const [replyingTo, setReplyingTo] = useState(null);
-  const [replyText, setReplyText] = useState('');
   const [error, setError] = useState('');
   const [toast, setToast] = useState({ message: '', type: 'success' });
   const [loading, setLoading] = useState(true);
-  const [lightbox, setLightbox] = useState(null);
-
-  const showToast = (message, type = 'success') => setToast({ message, type });
-
-  const currentUserId = publicUser?._id || user?._id;
-  const canComment = !!(publicUser || user);
-  const canViewHistory = user && (user.role === 'admin' || (user.role === 'supervisor' && user.permissions?.canManageLibraries));
-
   const [history, setHistory] = useState(null);
   const [historyLoading, setHistoryLoading] = useState(false);
 
-  const loadHistory = async () => {
-    setHistoryLoading(true);
-    try {
-      const data = await getLibraryHistory(id);
-      setHistory(data.history);
-    } catch {
-      setHistory([]);
-    } finally {
-      setHistoryLoading(false);
-    }
-  };
+  const canComment = !!(publicUser || user);
+  const canViewHistory = user && (user.role === 'admin' || (user.role === 'supervisor' && user.permissions?.canManageLibraries));
+
+  const showToast = (message, type = 'success') => setToast({ message, type });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -195,56 +136,22 @@ export default function BibliotecaDetalle() {
     }
   };
 
-  const handleComment = async (e) => {
-    e.preventDefault();
-    if (!comment.trim()) return;
+  const loadHistory = async () => {
+    setHistoryLoading(true);
     try {
-      const { comments } = await addLibraryComment(id, comment.trim());
-      setLibrary(l => ({ ...l, comments }));
-      setComment('');
-      setError('');
-      showToast('¡Comentario publicado!');
+      const data = await getLibraryHistory(id);
+      setHistory(data.history);
     } catch {
-      setError('Iniciá sesión para comentar.');
+      setHistory([]);
+    } finally {
+      setHistoryLoading(false);
     }
-  };
-
-  const handleReply = async (e, commentId) => {
-    e.preventDefault();
-    if (!replyText.trim()) return;
-    try {
-      const { comments } = await addReply(id, commentId, replyText.trim());
-      setLibrary(l => ({ ...l, comments }));
-      setReplyText('');
-      setReplyingTo(null);
-    } catch {
-      setError('Iniciá sesión para responder.');
-    }
-  };
-
-  const handleReactComment = async (commentId, type) => {
-    if (!canComment) { setError('Iniciá sesión para reaccionar.'); return; }
-    try {
-      await reactToComment(id, commentId, type);
-      const fresh = await getLibrary(id);
-      setLibrary(fresh.library);
-    } catch { /* ignore */ }
-  };
-
-  const handleReactReply = async (commentId, replyId, type) => {
-    if (!canComment) { setError('Iniciá sesión para reaccionar.'); return; }
-    try {
-      await reactToReply(id, commentId, replyId, type);
-      const fresh = await getLibrary(id);
-      setLibrary(fresh.library);
-    } catch { /* ignore */ }
   };
 
   if (loading) return <div className="page-loading"><div className="spinner" /></div>;
   if (!library) return <p className="empty-state">{error || 'Biblioteca no encontrada.'}</p>;
 
   const dismissToast = () => setToast(t => ({ ...t, message: '' }));
-
   const addr    = library.address || {};
   const contact = library.contact || {};
   const social  = library.socialMedia || {};
@@ -293,6 +200,7 @@ export default function BibliotecaDetalle() {
           }
         })}</script>
       </Helmet>
+
       <nav aria-label="Ruta de navegación" className="breadcrumb">
         <ol className="breadcrumb-list">
           <li><Link to="/">Inicio</Link></li>
@@ -361,75 +269,30 @@ export default function BibliotecaDetalle() {
               <h3 className="lib-section-title">Contacto</h3>
               <div className="lib-contact-list">
                 {addrLink && (
-                  <ContactLink
-                    href={addrLink.href} external
-                    icon={<IconPin />}
-                    label={addrLink.label}
-                    badge="Google Maps"
-                    colorClass="maps"
-                  />
+                  <ContactLink href={addrLink.href} external icon={<IconPin />} label={addrLink.label} badge="Google Maps" colorClass="maps" />
                 )}
                 {transitUrl && (
-                  <ContactLink
-                    href={transitUrl} external
-                    icon={<IconBus />}
-                    label="Cómo llegar en transporte"
-                    badge="Red Tulum"
-                    colorClass="transit"
-                  />
+                  <ContactLink href={transitUrl} external icon={<IconBus />} label="Cómo llegar en transporte" badge="Red Tulum" colorClass="transit" />
                 )}
                 {contact.phone && (
-                  <ContactLink
-                    href={`tel:${contact.phone}`}
-                    icon={<IconPhone />}
-                    label={contact.phone}
-                    badge="Llamar"
-                    colorClass="phone"
-                  />
+                  <ContactLink href={`tel:${contact.phone}`} icon={<IconPhone />} label={contact.phone} badge="Llamar" colorClass="phone" />
                 )}
                 {contact.whatsapp && (
-                  <ContactLink
-                    href={waUrl(contact.whatsapp, library.name)} external
-                    icon={<IconWhatsApp />}
-                    label="WhatsApp"
-                    badge="Abrir chat"
-                    colorClass="wa"
-                  />
+                  <ContactLink href={waUrl(contact.whatsapp, library.name)} external icon={<IconWhatsApp />} label="WhatsApp" badge="Abrir chat" colorClass="wa" />
                 )}
                 {contact.email && (
-                  <ContactLink
-                    href={mailUrl(contact.email, library.name)}
-                    icon={<IconMail />}
-                    label={contact.email}
-                    badge="Escribir"
-                    colorClass="mail"
-                  />
+                  <ContactLink href={mailUrl(contact.email, library.name)} icon={<IconMail />} label={contact.email} badge="Escribir" colorClass="mail" />
                 )}
-                {/* contact.website → DigiBepe */}
                 {contact.website && (
-                  <ContactLink
-                    href={contact.website} external
-                    icon={<IconBook />}
-                    label="Catálogo DigiBepe"
-                    badge="Ver libros"
-                    colorClass="digi"
-                  />
+                  <ContactLink href={contact.website} external icon={<IconBook />} label="Catálogo DigiBepe" badge="Ver libros" colorClass="digi" />
                 )}
-                {/* digibepe field → Sitio web */}
                 {library.digibepe && (
-                  <ContactLink
-                    href={library.digibepe} external
-                    icon={<IconGlobe />}
-                    label={library.digibepe.replace(/^https?:\/\//, '')}
-                    badge="Visitar"
-                    colorClass="web"
-                  />
+                  <ContactLink href={library.digibepe} external icon={<IconGlobe />} label={library.digibepe.replace(/^https?:\/\//, '')} badge="Visitar" colorClass="web" />
                 )}
               </div>
             </div>
           </div>
 
-          {/* Redes sociales */}
           {(social.facebook || social.instagram || social.youtube) && (
             <div className="card" style={{ marginTop: 16 }}>
               <div className="card-body">
@@ -497,34 +360,9 @@ export default function BibliotecaDetalle() {
       </div>
 
       {/* ── Galería ── */}
-      {allImages.length > 1 && (
-        <div className="card" style={{ marginTop: 24 }}>
-          <div className="card-body">
-            <h3 className="lib-section-title">Galería</h3>
-            <div className="lib-gallery">
-              {allImages.map((src, i) => (
-                <button key={i} className="lib-gallery-item" onClick={() => setLightbox(src)}>
-                  <img src={src} alt={`${library.name} ${i + 1}`} />
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <LibraryGallery images={allImages} libraryName={library.name} />
 
-      {/* ── Lightbox ── */}
-      {lightbox && (
-        <div className="modal-overlay" onClick={() => setLightbox(null)}>
-          <div style={{ maxWidth: '90vw', maxHeight: '90vh', position: 'relative' }} onClick={e => e.stopPropagation()}>
-            <img src={lightbox} alt="" style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: 12, display: 'block' }} />
-            <button
-              onClick={() => setLightbox(null)}
-              style={{ position: 'absolute', top: -12, right: -12, background: '#fff', border: 'none', borderRadius: '50%', width: 32, height: 32, cursor: 'pointer', fontSize: 16, fontWeight: 700, boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
-            >✕</button>
-          </div>
-        </div>
-      )}
-
+      {/* ── Error de like ── */}
       {error && (
         <div style={{ marginTop: 12, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <p className="alert alert-error" style={{ margin: 0 }}>{error}</p>
@@ -532,7 +370,7 @@ export default function BibliotecaDetalle() {
         </div>
       )}
 
-      {/* ── Historial de ediciones (admin/supervisor) ── */}
+      {/* ── Historial de ediciones ── */}
       {canViewHistory && (
         <div className="card" style={{ marginTop: 24 }}>
           <div className="card-body">
@@ -583,146 +421,15 @@ export default function BibliotecaDetalle() {
       )}
 
       {/* ── Comentarios ── */}
-      <div className="card" style={{ marginTop: 24 }}>
-        <div className="card-body">
-          <h3 className="lib-section-title">
-            Comentarios ({library.comments?.filter(c => !c.hidden).length ?? 0})
-          </h3>
+      <LibraryComments
+        libraryId={id}
+        initialComments={library.comments || []}
+        canComment={canComment}
+        publicUser={publicUser}
+        user={user}
+        showToast={showToast}
+      />
 
-          {/* Formulario nuevo comentario */}
-          <form onSubmit={handleComment} className="comment-form">
-            <label htmlFor="biblio-comment" className="visually-hidden">Tu comentario</label>
-            <textarea
-              id="biblio-comment"
-              rows={3}
-              placeholder={canComment ? 'Escribí un comentario...' : 'Iniciá sesión con Google para comentar'}
-              value={comment}
-              onChange={e => setComment(e.target.value)}
-              disabled={!canComment}
-              maxLength={500}
-            />
-            <div style={{ display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                <button type="submit" className="btn btn-primary btn-sm" disabled={!canComment}>
-                  Comentar
-                </button>
-                {!canComment && <GoogleLoginBtn className="btn btn-sm btn-outline" />}
-              </div>
-              <span style={{ fontSize: 12, color: comment.length > 450 ? 'var(--primary)' : 'var(--text-soft)' }}
-                    aria-live="polite" aria-atomic="true">
-                {comment.length}/500
-              </span>
-            </div>
-          </form>
-
-          {/* Lista de comentarios */}
-          <ul className="comment-list">
-            {library.comments?.map(c => {
-              const author = c.authorType === 'staff'
-                ? { name: c.staffUser?.name || 'Staff', picture: null, role: c.staffUser?.role }
-                : { name: c.publicUser?.name || 'Usuario', picture: c.publicUser?.picture, role: null };
-
-              return (
-                <li key={c._id} className="comment-item">
-                  <div className="comment-header">
-                    <CommentAvatar name={author.name} picture={author.picture} />
-                    <div className="comment-meta">
-                      <span className="comment-author">
-                        {author.name}
-                        {author.role && (
-                          <span className="comment-role-badge">{roleLabel[author.role] || author.role}</span>
-                        )}
-                      </span>
-                      <span className="comment-time">{timeAgo(c.createdAt)}</span>
-                    </div>
-                  </div>
-                  <p className="comment-text">{c.text}</p>
-                  <div className="comment-actions">
-                    <ReactionBar
-                      likes={c.likes || []}
-                      dislikes={c.dislikes || []}
-                      currentUserId={currentUserId}
-                      onReact={type => handleReactComment(c._id, type)}
-                    />
-                    {canComment && (
-                      <button
-                        className="comment-reply-btn"
-                        onClick={() => setReplyingTo(replyingTo === c._id ? null : c._id)}
-                      >
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/>
-                        </svg>
-                        Responder
-                        {c.replies?.length > 0 && ` (${c.replies.length})`}
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Respuestas */}
-                  {(c.replies?.length > 0 || replyingTo === c._id) && (
-                    <div className="comment-replies">
-                      {c.replies?.map(r => {
-                        const rAuthor = r.authorType === 'staff'
-                          ? { name: r.staffUser?.name || 'Staff', picture: null, role: r.staffUser?.role }
-                          : { name: r.publicUser?.name || 'Usuario', picture: r.publicUser?.picture, role: null };
-                        return (
-                          <div key={r._id} className="reply-item">
-                            <div className="comment-header">
-                              <CommentAvatar name={rAuthor.name} picture={rAuthor.picture} />
-                              <div className="comment-meta">
-                                <span className="comment-author">
-                                  {rAuthor.name}
-                                  {rAuthor.role && (
-                                    <span className="comment-role-badge">{roleLabel[rAuthor.role] || rAuthor.role}</span>
-                                  )}
-                                </span>
-                                <span className="comment-time">{timeAgo(r.createdAt)}</span>
-                              </div>
-                            </div>
-                            <p className="comment-text">{r.text}</p>
-                            <ReactionBar
-                              likes={r.likes || []}
-                              dislikes={r.dislikes || []}
-                              currentUserId={currentUserId}
-                              onReact={type => handleReactReply(c._id, r._id, type)}
-                            />
-                          </div>
-                        );
-                      })}
-
-                      {/* Formulario de respuesta inline */}
-                      {replyingTo === c._id && (
-                        <form className="reply-form" onSubmit={e => handleReply(e, c._id)}>
-                          <label htmlFor={`reply-${c._id}`} className="visually-hidden">Tu respuesta</label>
-                          <textarea
-                            id={`reply-${c._id}`}
-                            rows={2}
-                            placeholder="Escribí tu respuesta..."
-                            value={replyText}
-                            onChange={e => setReplyText(e.target.value)}
-                            autoFocus
-                          />
-                          <div style={{ display: 'flex', gap: 8 }}>
-                            <button type="submit" className="btn btn-primary btn-sm">Responder</button>
-                            <button type="button" className="btn btn-outline btn-sm" onClick={() => { setReplyingTo(null); setReplyText(''); }}>
-                              Cancelar
-                            </button>
-                          </div>
-                        </form>
-                      )}
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-            {library.comments?.length === 0 && (
-              <li style={{ padding: '20px 0', color: 'var(--text-soft)', textAlign: 'center' }}>
-                Todavía no hay comentarios. ¡Sé el primero!
-              </li>
-            )}
-          </ul>
-        </div>
-      </div>
       <Toast message={toast.message} type={toast.type} onDismiss={dismissToast} />
     </div>
   );

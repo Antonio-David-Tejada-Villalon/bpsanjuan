@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -52,6 +52,34 @@ function PageViewTracker() {
   return null;
 }
 
+function ScrollReveal() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    let io;
+    let mo;
+    const raf = requestAnimationFrame(() => {
+      io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
+      const observeCards = () =>
+        document.querySelectorAll('.card:not(.revealed)').forEach(el => io.observe(el));
+
+      observeCards();
+
+      mo = new MutationObserver(observeCards);
+      mo.observe(document.querySelector('#main-content') || document.body, { childList: true, subtree: true });
+    });
+    return () => { cancelAnimationFrame(raf); io?.disconnect(); mo?.disconnect(); };
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   return (
     <HelmetProvider>
@@ -59,6 +87,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <PageViewTracker />
+          <ScrollReveal />
           <Navbar />
           <main id="main-content">
             <Suspense fallback={<SkeletonPage />}>

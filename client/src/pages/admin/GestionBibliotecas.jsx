@@ -6,6 +6,7 @@ import { getDepartments } from '../../api/departments';
 import { getUsers } from '../../api/users';
 import CommentModeration from '../../components/CommentModeration';
 import MessageThread from '../../components/MessageThread';
+import { useModalFocus } from '../../hooks/useModalFocus';
 
 export default function GestionBibliotecas() {
   const { user } = useAuth();
@@ -19,6 +20,9 @@ export default function GestionBibliotecas() {
   const [messagingLibrary, setMessagingLibrary] = useState(null);
 
   const canManage = user.role === 'admin' || user.permissions?.canManageLibraries;
+
+  const moderateModalRef = useModalFocus(!!moderatingLibrary, () => setModeratingLibrary(null));
+  const messagingModalRef = useModalFocus(!!messagingLibrary, () => setMessagingLibrary(null));
 
   const load = async () => {
     setLoading(true);
@@ -126,8 +130,8 @@ export default function GestionBibliotecas() {
 
       {moderatingLibrary && (
         <div className="modal-overlay" onClick={() => setModeratingLibrary(null)}>
-          <div className="modal-card" onClick={e => e.stopPropagation()} style={{ maxWidth: 640 }}>
-            <h3>Comentarios — {moderatingLibrary.name}</h3>
+          <div className="modal-card" ref={moderateModalRef} onClick={e => e.stopPropagation()} style={{ maxWidth: 640 }} role="dialog" aria-modal="true" aria-labelledby="modal-moderate-title">
+            <h3 id="modal-moderate-title">Comentarios — {moderatingLibrary.name}</h3>
             <CommentModeration libraryId={moderatingLibrary._id} canRestore canHardDelete />
             <div className="form-actions">
               <button className="btn btn-outline" onClick={() => setModeratingLibrary(null)}>Cerrar</button>
@@ -138,8 +142,8 @@ export default function GestionBibliotecas() {
 
       {messagingLibrary && (
         <div className="modal-overlay" onClick={() => setMessagingLibrary(null)}>
-          <div className="modal-card" onClick={e => e.stopPropagation()} style={{ maxWidth: 560 }}>
-            <h3>Mensajes — {messagingLibrary.name}</h3>
+          <div className="modal-card" ref={messagingModalRef} onClick={e => e.stopPropagation()} style={{ maxWidth: 560 }} role="dialog" aria-modal="true" aria-labelledby="modal-messaging-title">
+            <h3 id="modal-messaging-title">Mensajes — {messagingLibrary.name}</h3>
             <MessageThread libraryId={messagingLibrary._id} />
             <div className="form-actions">
               <button className="btn btn-outline" onClick={() => setMessagingLibrary(null)}>Cerrar</button>

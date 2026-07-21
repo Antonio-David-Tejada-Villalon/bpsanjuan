@@ -322,7 +322,9 @@ img { max-width: 100%; display: block; }
   overflow: hidden;
   transition: box-shadow var(--transition), transform var(--transition);
   animation: fadeInUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-play-state: paused;
 }
+.card.revealed { animation-play-state: running; }
 .card-hover:hover {
   box-shadow: 0 20px 56px rgba(0, 0, 0, 0.14), 0 1px 0 rgba(255,255,255,0.7) inset;
   transform: translateY(-4px);
