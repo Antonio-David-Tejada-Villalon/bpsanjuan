@@ -1,6 +1,7 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Library = require('../models/Library');
+const EditHistory = require('../models/EditHistory');
 const User = require('../models/User');
 const LibrarySubmission = require('../models/LibrarySubmission');
 const Message = require('../models/Message');
@@ -172,6 +173,17 @@ router.post('/', protect, [
   }
 });
 
+// Etiquetas legibles para el historial de ediciones
+const FIELD_LABELS = {
+  name: 'Nombre', department: 'Departamento', address: 'Dirección',
+  contact: 'Contacto', socialMedia: 'Redes sociales', schedule: 'Horarios',
+  description: 'Descripción', services: 'Servicios', images: 'Imágenes',
+  thumbnail: 'Imagen de portada', assignedUser: 'Bibliotecario asignado',
+  conabipRegistered: 'Registro CONABIP', conabipNumber: 'N° CONABIP',
+  foundedYear: 'Año de fundación', foundedMonth: 'Mes de fundación',
+  foundedDay: 'Día de fundación', isActive: 'Estado activo', digibepe: 'Sitio web',
+};
+
 // ─── PATCH /api/libraries/:id — Editar biblioteca (admin, o supervisor con permiso)
 // El bibliotecario ya NO edita acá directo: sus cambios pasan por
 // POST /api/library-submissions y requieren aprobación (ver ese router).
@@ -200,6 +212,12 @@ router.patch('/:id', protect, urlValidators, async (req, res) => {
       if (req.body[field] !== undefined) updates[field] = req.body[field];
     });
 
+    // Capturar estado original para el diff
+    const original = await Library.findById(req.params.id).lean();
+    if (!original) {
+      return res.status(404).json({ success: false, message: 'Biblioteca no encontrada.' });
+    }
+
     const updated = await Library.findByIdAndUpdate(req.params.id, updates, {
       new: true, runValidators: true
     }).populate('department', 'name slug');
@@ -208,9 +226,43 @@ router.patch('/:id', protect, urlValidators, async (req, res) => {
       return res.status(404).json({ success: false, message: 'Biblioteca no encontrada.' });
     }
 
+    // Guardar historial si hubo cambios reales
+    try {
+      const changes = [];
+      for (const field of Object.keys(updates)) {
+        if (JSON.stringify(original[field]) !== JSON.stringify(updates[field])) {
+          changes.push({ field: FIELD_LABELS[field] || field, from: original[field], to: updates[field] });
+        }
+      }
+      if (changes.length > 0) {
+        await EditHistory.create({ libraryId: req.params.id, editedBy: req.user._id, changes });
+      }
+    } catch { /* historial no crítico */ }
+
     res.status(200).json({ success: true, library: updated });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error al actualizar la biblioteca.' });
+  }
+});
+
+// ─── GET /api/libraries/:id/history — Historial de ediciones (admin/supervisor) ─
+router.get('/:id/history', protect, async (req, res) => {
+  try {
+    const isAdmin = req.user.role === 'admin';
+    const isSupervisorWithPerm = req.user.role === 'supervisor' && req.user.permissions?.canManageLibraries;
+
+    if (!isAdmin && !isSupervisorWithPerm) {
+      return res.status(403).json({ success: false, message: 'No tenés permisos para ver el historial.' });
+    }
+
+    const history = await EditHistory.find({ libraryId: req.params.id })
+      .populate('editedBy', 'name role')
+      .sort({ editedAt: -1 })
+      .limit(50);
+
+    res.json({ success: true, history });
+  } catch {
+    res.status(500).json({ success: false, message: 'Error al obtener el historial.' });
   }
 });
 

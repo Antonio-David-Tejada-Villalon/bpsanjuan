@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { getLibrary, toggleLibraryLike, addLibraryComment, addReply, reactToComment, reactToReply } from '../api/libraries';
+import { getLibrary, toggleLibraryLike, addLibraryComment, addReply, reactToComment, reactToReply, getLibraryHistory } from '../api/libraries';
 import { useAuth } from '../context/AuthContext';
 import GoogleLoginBtn from '../components/GoogleLoginBtn';
 import ShareBtn from '../components/ShareBtn';
@@ -156,6 +156,22 @@ export default function BibliotecaDetalle() {
 
   const currentUserId = publicUser?._id || user?._id;
   const canComment = !!(publicUser || user);
+  const canViewHistory = user && (user.role === 'admin' || (user.role === 'supervisor' && user.permissions?.canManageLibraries));
+
+  const [history, setHistory] = useState(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  const loadHistory = async () => {
+    setHistoryLoading(true);
+    try {
+      const data = await getLibraryHistory(id);
+      setHistory(data.history);
+    } catch {
+      setHistory([]);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -507,6 +523,56 @@ export default function BibliotecaDetalle() {
       )}
 
       {error && <p className="alert alert-error" style={{ marginTop: 12 }}>{error}</p>}
+
+      {/* ── Historial de ediciones (admin/supervisor) ── */}
+      {canViewHistory && (
+        <div className="card" style={{ marginTop: 24 }}>
+          <div className="card-body">
+            <div className="edit-history-head">
+              <h3 className="lib-section-title">Historial de ediciones</h3>
+              {history === null && !historyLoading && (
+                <button className="btn btn-outline btn-sm" onClick={loadHistory}>Cargar historial</button>
+              )}
+            </div>
+            {historyLoading && <div className="spinner" style={{ margin: '16px auto' }} />}
+            {history !== null && history.length === 0 && (
+              <p style={{ color: 'var(--text-soft)', fontSize: 14 }}>Sin ediciones registradas todavía.</p>
+            )}
+            {history !== null && history.length > 0 && (
+              <ul className="edit-history-list">
+                {history.map(entry => (
+                  <li key={entry._id} className="edit-history-item">
+                    <div className="edit-history-dot" />
+                    <div className="edit-history-body">
+                      <div className="edit-history-meta">
+                        <span className="edit-history-who">{entry.editedBy?.name || 'Usuario'}</span>
+                        <span className="edit-history-role">{entry.editedBy?.role}</span>
+                        <span className="edit-history-when">
+                          {new Date(entry.editedAt).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
+                      <ul className="edit-history-fields">
+                        {entry.changes.map((c, i) => (
+                          <li key={i} className="edit-history-field">
+                            <span className="edit-history-field-name">{c.field}</span>
+                            {typeof c.from !== 'object' && typeof c.to !== 'object' && (
+                              <span className="edit-history-diff">
+                                <span className="edit-history-from">{String(c.from ?? '—')}</span>
+                                <span className="edit-history-arrow">→</span>
+                                <span className="edit-history-to">{String(c.to ?? '—')}</span>
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── Comentarios ── */}
       <div className="card" style={{ marginTop: 24 }}>

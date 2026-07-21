@@ -44,3 +44,6 @@ export const reactToComment = (libraryId, commentId, type) =>
 
 export const reactToReply = (libraryId, commentId, replyId, type) =>
   api.post(`/libraries/${libraryId}/comments/${commentId}/replies/${replyId}/react`, { type }).then(res => res.data);
+
+export const getLibraryHistory = (id) =>
+  api.get(`/libraries/${id}/history`).then(res => res.data);
