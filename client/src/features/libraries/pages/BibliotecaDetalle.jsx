@@ -29,6 +29,42 @@ const mailUrl = (email, name) => {
   return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 };
 
+// Agrupa días consecutivos con el mismo horario en un rango ("Lunes a Viernes 07:30–14:00")
+// en vez de repetir una fila por cada día. Días no reconocidos o con horario propio quedan sueltos.
+const WEEKDAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+const groupSchedule = (schedule) => {
+  const byDay = new Map();
+  const extras = [];
+  schedule.forEach(s => {
+    const idx = WEEKDAYS.indexOf(s.day);
+    if (idx === -1 || byDay.has(idx)) extras.push(s);
+    else byDay.set(idx, s);
+  });
+
+  const groups = [];
+  let current = null;
+  WEEKDAYS.forEach((day, idx) => {
+    const s = byDay.get(idx);
+    if (!s) { current = null; return; }
+    if (current && current.open === s.open && current.close === s.close && current.lastIdx === idx - 1) {
+      current.endDay = day;
+      current.lastIdx = idx;
+    } else {
+      current = { startDay: day, endDay: day, lastIdx: idx, open: s.open, close: s.close };
+      groups.push(current);
+    }
+  });
+
+  return [
+    ...groups.map(g => ({
+      label: g.startDay === g.endDay ? g.startDay : `${g.startDay} a ${g.endDay}`,
+      open: g.open,
+      close: g.close
+    })),
+    ...extras.map(s => ({ label: s.day, open: s.open, close: s.close }))
+  ];
+};
+
 /* ── Iconos SVG ───────────────────────────────────────────────── */
 const Ico = ({ d, stroke = true, size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={stroke ? 'none' : 'currentColor'}
@@ -326,9 +362,9 @@ export default function BibliotecaDetalle() {
               <div className="card-body">
                 <h3 className="lib-section-title"><IconClock /> Horarios</h3>
                 <ul className="lib-schedule-list">
-                  {library.schedule.map((s, i) => (
+                  {groupSchedule(library.schedule).map((s, i) => (
                     <li key={i}>
-                      <span className="lib-schedule-day">{s.day}</span>
+                      <span className="lib-schedule-day">{s.label}</span>
                       <span className="lib-schedule-time">{s.open} – {s.close}</span>
                     </li>
                   ))}
