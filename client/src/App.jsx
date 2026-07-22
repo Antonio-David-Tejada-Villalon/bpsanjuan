@@ -1,52 +1,53 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import ScrollToTopBtn from './components/ScrollToTopBtn';
-import CookieConsent from './components/CookieConsent';
-import ProtectedRoute from './components/ProtectedRoute';
-import { SkeletonPage } from './components/Skeleton';
-import { usePageView } from './hooks/usePageView';
+import { AuthProvider } from '@/features/auth/context/AuthContext';
+import { ThemeProvider } from '@/shared/context/ThemeContext';
+import Navbar from '@/shared/components/Navbar';
+import Footer from '@/shared/components/Footer';
+import ScrollToTopBtn from '@/shared/components/ScrollToTopBtn';
+import CookieConsent from '@/shared/components/CookieConsent';
+import ProtectedRoute from '@/features/auth/components/ProtectedRoute';
+import { SkeletonPage } from '@/shared/components/Skeleton';
+import { usePageView } from '@/features/analytics/hooks/usePageView';
 
 // ── Páginas públicas ─────────────────────────────────────────────
-const Home              = lazy(() => import('./pages/Home'));
-const Nosotros          = lazy(() => import('./pages/Nosotros'));
-const Noticias          = lazy(() => import('./pages/Noticias'));
-const NoticiaDetalle    = lazy(() => import('./pages/NoticiaDetalle'));
-const Departamento      = lazy(() => import('./pages/Departamento'));
-const BibliotecaDetalle = lazy(() => import('./pages/BibliotecaDetalle'));
-const Login             = lazy(() => import('./pages/Login'));
-const GoogleCallback    = lazy(() => import('./pages/GoogleCallback'));
-const MiPerfil          = lazy(() => import('./pages/MiPerfil'));
-const NoticiasPorTag    = lazy(() => import('./pages/NoticiasPorTag'));
-const FeriaDelLibro     = lazy(() => import('./pages/FeriaDelLibro'));
-const EquipoMiembro     = lazy(() => import('./pages/EquipoMiembro'));
-const Privacidad        = lazy(() => import('./pages/Privacidad'));
-const Accesibilidad     = lazy(() => import('./pages/Accesibilidad'));
-const NotFound          = lazy(() => import('./pages/NotFound'));
+const Home              = lazy(() => import('@/pages/Home'));
+const Nosotros          = lazy(() => import('@/pages/Nosotros'));
+const Noticias          = lazy(() => import('@/features/news/pages/Noticias'));
+const NoticiaDetalle    = lazy(() => import('@/features/news/pages/NoticiaDetalle'));
+const Departamento      = lazy(() => import('@/features/departments/pages/Departamento'));
+const BibliotecaDetalle = lazy(() => import('@/features/libraries/pages/BibliotecaDetalle'));
+const Login             = lazy(() => import('@/features/auth/pages/Login'));
+const GoogleCallback    = lazy(() => import('@/features/auth/pages/GoogleCallback'));
+const MiPerfil          = lazy(() => import('@/features/users/pages/MiPerfil'));
+const NoticiasPorTag    = lazy(() => import('@/features/news/pages/NoticiasPorTag'));
+const FeriaDelLibro     = lazy(() => import('@/pages/FeriaDelLibro'));
+const EquipoMiembro     = lazy(() => import('@/pages/EquipoMiembro'));
+const Privacidad        = lazy(() => import('@/pages/Privacidad'));
+const Accesibilidad     = lazy(() => import('@/pages/Accesibilidad'));
+const NotFound          = lazy(() => import('@/pages/NotFound'));
 
 // ── Panel admin / supervisor ─────────────────────────────────────
-const Dashboard              = lazy(() => import('./pages/admin/Dashboard'));
-const AdminHome              = lazy(() => import('./pages/admin/AdminHome'));
-const GestionUsuarios        = lazy(() => import('./pages/admin/GestionUsuarios'));
-const GestionBibliotecas     = lazy(() => import('./pages/admin/GestionBibliotecas'));
-const GestionNoticias        = lazy(() => import('./pages/admin/GestionNoticias'));
-const GestionDepartamentos   = lazy(() => import('./pages/admin/GestionDepartamentos'));
-const BibliotecaForm         = lazy(() => import('./pages/admin/BibliotecaForm'));
-const NoticiaForm            = lazy(() => import('./pages/admin/NoticiaForm'));
-const Aprobaciones           = lazy(() => import('./pages/admin/Aprobaciones'));
-const GestionUsuariosPublicos = lazy(() => import('./pages/admin/GestionUsuariosPublicos'));
-const ActivityLogs           = lazy(() => import('./pages/admin/ActivityLogs'));
-const Analytics              = lazy(() => import('./pages/admin/Analytics'));
+const Dashboard              = lazy(() => import('@/features/admin-shell/pages/Dashboard'));
+const AdminHome              = lazy(() => import('@/features/admin-shell/pages/AdminHome'));
+const GestionUsuarios        = lazy(() => import('@/features/users/admin/GestionUsuarios'));
+const GestionBibliotecas     = lazy(() => import('@/features/libraries/admin/GestionBibliotecas'));
+const GestionNoticias        = lazy(() => import('@/features/news/admin/GestionNoticias'));
+const GestionDepartamentos   = lazy(() => import('@/features/departments/admin/GestionDepartamentos'));
+const BibliotecaForm         = lazy(() => import('@/features/libraries/admin/BibliotecaForm'));
+const NoticiaForm            = lazy(() => import('@/features/news/admin/NoticiaForm'));
+const Aprobaciones           = lazy(() => import('@/features/libraries/admin/Aprobaciones'));
+const GestionUsuariosPublicos = lazy(() => import('@/features/users/admin/GestionUsuariosPublicos'));
+const ActivityLogs           = lazy(() => import('@/features/activity-log/admin/ActivityLogs'));
+const Analytics              = lazy(() => import('@/features/analytics/admin/Analytics'));
+const NewsletterSubscribers  = lazy(() => import('@/features/newsletter/admin/NewsletterSubscribers'));
 
 // ── Panel bibliotecario ──────────────────────────────────────────
-const PanelLayout          = lazy(() => import('./pages/bibliotecario/PanelLayout'));
-const MiBiblioteca         = lazy(() => import('./pages/bibliotecario/MiBiblioteca'));
-const ModeracionComentarios = lazy(() => import('./pages/bibliotecario/ModeracionComentarios'));
-const Mensajes             = lazy(() => import('./pages/bibliotecario/Mensajes'));
+const PanelLayout          = lazy(() => import('@/features/libraries/bibliotecario/PanelLayout'));
+const MiBiblioteca         = lazy(() => import('@/features/libraries/bibliotecario/MiBiblioteca'));
+const ModeracionComentarios = lazy(() => import('@/features/libraries/bibliotecario/ModeracionComentarios'));
+const Mensajes             = lazy(() => import('@/features/messaging/pages/Mensajes'));
 
 function PageViewTracker() {
   usePageView();
@@ -130,6 +131,7 @@ function App() {
                   <Route path="comunidad" element={<GestionUsuariosPublicos />} />
                   <Route path="actividad" element={<ActivityLogs />} />
                   <Route path="analiticas" element={<Analytics />} />
+                  <Route path="newsletter" element={<NewsletterSubscribers />} />
                 </Route>
 
                 <Route

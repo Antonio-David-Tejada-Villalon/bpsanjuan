@@ -443,6 +443,13 @@ img { max-width: 100%; display: block; }
   color: var(--warning);
   box-shadow: none;
 }
+.badge-muted {
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--text-muted);
+  box-shadow: none;
+  font-weight: 500;
+}
 
 /* ─── Mensajería ──────────────────────────────────────────────── */
 .message-thread { display: flex; flex-direction: column; gap: 14px; }

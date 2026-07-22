@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { getLibraries } from '../api/libraries';
+import { getLibraries } from '@/features/libraries/api/libraries';
 import './Nosotros.css';
 
 const OBJECTIVES = [

@@ -121,6 +121,27 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// ─── GET /api/libraries/admin/all — Listar TODAS las bibliotecas, activas e inactivas (staff) ─
+router.get('/admin/all', protect, async (req, res) => {
+  try {
+    const isAdmin = req.user.role === 'admin';
+    const isSupervisorWithPerm = req.user.role === 'supervisor' && req.user.permissions?.canManageLibraries;
+
+    if (!isAdmin && !isSupervisorWithPerm) {
+      return res.status(403).json({ success: false, message: 'Sin permisos para ver todas las bibliotecas.' });
+    }
+
+    const libraries = await Library.find()
+      .populate('department', 'name slug')
+      .select('-comments')
+      .sort({ name: 1 });
+
+    res.status(200).json({ success: true, count: libraries.length, libraries });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al obtener bibliotecas.' });
+  }
+});
+
 // ─── POST /api/libraries — Crear biblioteca (admin o supervisor con permiso) ─
 router.post('/', protect, [
   body('name').trim().notEmpty().withMessage('El nombre es requerido'),

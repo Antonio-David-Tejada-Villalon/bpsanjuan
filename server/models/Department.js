@@ -41,7 +41,8 @@ departmentSchema.virtual('libraryCount', {
   ref: 'Library',
   localField: '_id',
   foreignField: 'department',
-  count: true
+  count: true,
+  match: { isActive: true }
 });
 
 module.exports = mongoose.model('Department', departmentSchema);

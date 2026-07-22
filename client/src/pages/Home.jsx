@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { getDepartments } from '../api/departments';
-import { getNews } from '../api/news';
-import { subscribeNewsletter } from '../api/newsletter';
-import LibrarySearch from '../components/LibrarySearch';
-import InstagramGallery from '../components/InstagramGallery';
+import { getDepartments } from '@/features/departments/api/departments';
+import { getNews } from '@/features/news/api/news';
+import { subscribeNewsletter } from '@/features/newsletter/api/newsletter';
+import LibrarySearch from '@/features/libraries/components/LibrarySearch';
+import InstagramGallery from '@/shared/components/InstagramGallery';
 
 const newsFallback = `data:image/svg+xml,${encodeURIComponent(
   '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="170" viewBox="0 0 400 170"><rect width="400" height="170" fill="#FA7506"/><text x="200" y="95" text-anchor="middle" dominant-baseline="middle" font-family="system-ui,sans-serif" font-size="64" font-weight="700" fill="rgba(255,255,255,0.15)">DBP</text></svg>'
@@ -118,7 +118,13 @@ export default function Home() {
                 />
                 <div className="card-body">
                   <h3 className="dept-card-title">{dept.name}</h3>
-                  <span className="badge">{dept.libraryCount ?? 0} bibliotecas</span>
+                  {dept.libraryCount > 0 ? (
+                    <span className="badge">{dept.libraryCount} biblioteca{dept.libraryCount > 1 ? 's' : ''}</span>
+                  ) : (
+                    <span className="badge badge-muted" title="Todavía no hay bibliotecas populares registradas en este departamento. Se agregarán próximamente.">
+                      Aún sin bibliotecas
+                    </span>
+                  )}
                 </div>
               </Link>
             ))}

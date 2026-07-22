@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { getPublicProfile } from '../api/users';
-import NewsCard from '../components/NewsCard';
+import { getPublicProfile } from '@/features/users/api/users';
+import NewsCard from '@/features/news/components/NewsCard';
 
 const ROLE_LABELS = {
   admin:        'Dirección',

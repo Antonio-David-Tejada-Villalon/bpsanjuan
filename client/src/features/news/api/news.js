@@ -1,0 +1,31 @@
+import api from '@/shared/api/axios';
+
+export const getNews = (params = {}, signal) =>
+  api.get('/news', { params, signal }).then(res => res.data);
+
+export const getNewsItem = (id, signal) =>
+  api.get(`/news/${id}`, { signal }).then(res => res.data);
+
+export const getAllNewsAdmin = () =>
+  api.get('/news/admin/all').then(res => res.data);
+
+export const createNews = (data) =>
+  api.post('/news', data).then(res => res.data);
+
+export const updateNews = (id, data) =>
+  api.patch(`/news/${id}`, data).then(res => res.data);
+
+export const deleteNews = (id) =>
+  api.delete(`/news/${id}`).then(res => res.data);
+
+export const toggleNewsLike = (id) =>
+  api.post(`/news/${id}/like`).then(res => res.data);
+
+export const addNewsComment = (id, text) =>
+  api.post(`/news/${id}/comments`, { text }).then(res => res.data);
+
+export const hideNewsComment = (newsId, commentId, reason) =>
+  api.patch(`/news/${newsId}/comments/${commentId}/hide`, { reason }).then(res => res.data);
+
+export const unhideNewsComment = (newsId, commentId) =>
+  api.patch(`/news/${newsId}/comments/${commentId}/unhide`).then(res => res.data);
